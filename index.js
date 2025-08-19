@@ -7,7 +7,7 @@ const port = process.env.port || 3000;
 const { LocalAuth, Client } = require('whatsapp-web.js')
 
 // =============== MQTT SETUP =================
-const mqttBroker = "103.27.206.14";  // or your own broker
+const mqttBroker = "mqtt://103.27.206.14:1883";  // or your own broker
 const mqttTopic = "R1.JC.05";                 // change to your topic
 const mqttClient = mqtt.connect(mqttBroker);
 
