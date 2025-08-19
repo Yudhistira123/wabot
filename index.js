@@ -26,22 +26,46 @@ mqttClient.on("connect", () => {
     }
   });
 
-  // mqttClient.subscribe(mqttTopic, (err) => {
-  //   if (!err) {
-  //     console.log(`📡 Subscribed to topic: ${mqttTopic}`);
-  //   } else {
-  //     console.error("❌ MQTT subscribe error:", err);
-  //   }
-  // });
-
+  
 });
+
+
+
+
+
 
 mqttClient.on("message", (topic, message) => {
   console.log(`📩 MQTT message from [${topic}]: ${message.toString()}`);
 
+
+  const numbers = [
+  "628122132341@c.us",
+  // "6285220757725@c.us",s
+  // "628122233610@c.us",
+  // "6285975386345@c.us",
+  "628121462983@c.us"
+];
+
+async function sendMessages() {
+  for (const number of numbers) {
+    try {
+      await client.sendMessage(number, ` Lampu ${topic} : ${message.toString()}`);
+      console.log(`✅ Message sent to ${number}`);
+    } catch (err) {
+      console.error(`❌ Failed to send to ${number}:`, err);
+    }
+  }
+}
+
   // example: send to WhatsApp number when MQTT message received
-  const number = "628122132341@c.us"; 
-  client.sendMessage(number, ` Lampu ${topic} : ${message.toString()}`);
+  //const number = "628122132341@c.us"; 
+  //8122132341, 852 - 2075 - 7725, 812 - 2233 - 610, 859 - 7538 - 6345, 812 - 1462 - 983;
+//   [2:47 PM, 8/19/2025] Yudhistira Sulaeman: 852-2075-7725 acas
+// [2:49 PM, 8/19/2025] Yudhistira Sulaeman:   812-2233-610 herry
+// [2:50 PM, 8/19/2025] Yudhistira Sulaeman:   859-7538-6345 asep
+//   [2: 50 PM, 8 / 19 / 2025] Yudhistira Sulaeman: 812 - 1462 - 983 hakim
+  
+ // client.sendMessage(number, ` Lampu ${topic} : ${message.toString()}`);
 });
 
 
