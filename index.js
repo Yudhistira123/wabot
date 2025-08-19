@@ -86,6 +86,7 @@ client.on('message', async (message) => {
       // 🔹 Call your webservice
       const response = await axios.get('https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasein}'); 
       let base64String = response.data.gambar; 
+      console.log('Base64 String:', base64String);
       // 🔹 Clean base64 if it has prefix
       base64String = base64String.replace(/^data:image\/\w+;base64,/, "");
       
