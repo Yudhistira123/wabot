@@ -8,16 +8,10 @@ const { LocalAuth, Client } = require('whatsapp-web.js')
 
 // =============== MQTT SETUP =================
 const mqttBroker = "mqtt://103.27.206.14:1883";  // or your own broker
-const mqttTopic1 = "R1.JC.05";
-const mqttTopic2 = "R1.JC.06";
-
 const mqttTopics = ["R1.JC.05", "R1.JC.06"];
-// change to your topic
 const mqttClient = mqtt.connect(mqttBroker);
-
 mqttClient.on("connect", () => {
   console.log("✅ Connected to MQTT broker");
-
   mqttClient.subscribe(mqttTopics, (err) => {
     if (!err) {
       console.log(`📡 Subscribed to topics: ${mqttTopics.join(", ")}`);
@@ -25,8 +19,6 @@ mqttClient.on("connect", () => {
       console.error("❌ MQTT subscribe error:", err);
     }
   });
-
-  
 });
 
 const numbers = [
@@ -54,13 +46,6 @@ mqttClient.on("message", (topic, message) => {
 });
 
 
-  // mqttClient.on("message", (topic, message) => {
-  //   console.log(`📩 MQTT message from [${topic}]: ${message.toString()}`);
-  //   sendMessages();
-
-  
-  // });
-
   // example: send to WhatsApp number when MQTT message received
   //const number = "628122132341@c.us"; 
   //8122132341, 852 - 2075 - 7725, 812 - 2233 - 610, 859 - 7538 - 6345, 812 - 1462 - 983;
@@ -68,12 +53,7 @@ mqttClient.on("message", (topic, message) => {
 // [2:49 PM, 8/19/2025] Yudhistira Sulaeman:   812-2233-610 herry
 // [2:50 PM, 8/19/2025] Yudhistira Sulaeman:   859-7538-6345 asep
 //   [2: 50 PM, 8 / 19 / 2025] Yudhistira Sulaeman: 812 - 1462 - 983 hakim
-  
- // client.sendMessage(number, ` Lampu ${topic} : ${message.toString()}`);
-// });
-
-
-
+ 
 const client=new Client({
   authStrategy: new LocalAuth({clientId: "yudhi-boot"}),
     puppeteer: {
@@ -103,20 +83,17 @@ client.on('message', async (message) => {
    // 🔹 Format numbers with country code (62 = Indonesia)
   const number1 = "628122132341@c.us";    // 08122132341 → 628122132341
   const number2 = "6287882977936@c.us";   // 087882977936 → 6287882977936
-
   // 🔹 Send message
   await client.sendMessage(number1, "Hello 08122132341, where is mastaka 🚀");
   await client.sendMessage(number2, "Hello 087882977936, where is mastaka 🚀");
-
   console.log("Messages sent!");
   }  else {
     await message.reply('I am not sure how to respond to that.');
   }
 });
 
-
-
 client.initialize();
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 }
