@@ -2,8 +2,35 @@ const express = require('express');
 const qrcode = require('qrcode-terminal');
 const axios = require('axios');
 const app = express();
+const mqtt = require('mqtt');
 const port = process.env.port || 3000;
 const { LocalAuth, Client } = require('whatsapp-web.js')
+
+// =============== MQTT SETUP =================
+const mqttBroker = "103.27.206.14";  // or your own broker
+const mqttTopic = "R1.JC.05";                 // change to your topic
+const mqttClient = mqtt.connect(mqttBroker);
+
+mqttClient.on("connect", () => {
+  console.log("✅ Connected to MQTT broker");
+  mqttClient.subscribe(mqttTopic, (err) => {
+    if (!err) {
+      console.log(`📡 Subscribed to topic: ${mqttTopic}`);
+    } else {
+      console.error("❌ MQTT subscribe error:", err);
+    }
+  });
+});
+
+mqttClient.on("message", (topic, message) => {
+  console.log(`📩 MQTT message from [${topic}]: ${message.toString()}`);
+
+  // example: send to WhatsApp number when MQTT message received
+  const number = "628122132341@c.us"; 
+  client.sendMessage(number, `MQTT says: ${message.toString()}`);
+});
+
+
 
 const client=new Client({
   authStrategy: new LocalAuth({clientId: "yudhi-boot"}),
