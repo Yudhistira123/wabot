@@ -8,18 +8,32 @@ const { LocalAuth, Client } = require('whatsapp-web.js')
 
 // =============== MQTT SETUP =================
 const mqttBroker = "mqtt://103.27.206.14:1883";  // or your own broker
-const mqttTopic = "R1.JC.05";                 // change to your topic
+const mqttTopic1 = "R1.JC.05";
+const mqttTopic2 = "R1.JC.06";
+
+const mqttTopics = ["R1.JC.05", "R1.JC.06"];
+// change to your topic
 const mqttClient = mqtt.connect(mqttBroker);
 
 mqttClient.on("connect", () => {
   console.log("✅ Connected to MQTT broker");
-  mqttClient.subscribe(mqttTopic, (err) => {
+
+  mqttClient.subscribe(mqttTopics, (err) => {
     if (!err) {
-      console.log(`📡 Subscribed to topic: ${mqttTopic}`);
+      console.log(`📡 Subscribed to topics: ${mqttTopics.join(", ")}`);
     } else {
       console.error("❌ MQTT subscribe error:", err);
     }
   });
+
+  // mqttClient.subscribe(mqttTopic, (err) => {
+  //   if (!err) {
+  //     console.log(`📡 Subscribed to topic: ${mqttTopic}`);
+  //   } else {
+  //     console.error("❌ MQTT subscribe error:", err);
+  //   }
+  // });
+
 });
 
 mqttClient.on("message", (topic, message) => {
