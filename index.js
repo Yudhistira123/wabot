@@ -30,7 +30,17 @@ client.on('message', async (message) => {
     await message.reply('pong Yudhistira Sulaeman hari selasa Bandung Jabar Indonesia Banget...');
   } else if (message.body === 'hello') {
     await message.reply('Hello! How can I help you?');
-  } else {
+  }else if (message.body === 'kirim') {
+   // 🔹 Format numbers with country code (62 = Indonesia)
+  const number1 = "628122132341@c.us";    // 08122132341 → 628122132341
+  const number2 = "6287882977936@c.us";   // 087882977936 → 6287882977936
+
+  // 🔹 Send message
+  await client.sendMessage(number1, "Hello 08122132341, where is mastaka 🚀");
+  await client.sendMessage(number2, "Hello 087882977936, where is mastaka 🚀");
+
+  console.log("Messages sent!");
+  }  else {
     await message.reply('I am not sure how to respond to that.');
   }
 });
