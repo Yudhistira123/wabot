@@ -50,12 +50,12 @@ async function sendMessages() {
 
 
 
-mqttClient.on("message", (topic, message) => {
-  console.log(`📩 MQTT message from [${topic}]: ${message.toString()}`);
- sendMessages();
+  mqttClient.on("message", (topic, message) => {
+    console.log(`📩 MQTT message from [${topic}]: ${message.toString()}`);
+    sendMessages();
 
   
-}
+  });
 
   // example: send to WhatsApp number when MQTT message received
   //const number = "628122132341@c.us"; 
@@ -66,7 +66,7 @@ mqttClient.on("message", (topic, message) => {
 //   [2: 50 PM, 8 / 19 / 2025] Yudhistira Sulaeman: 812 - 1462 - 983 hakim
   
  // client.sendMessage(number, ` Lampu ${topic} : ${message.toString()}`);
-});
+// });
 
 
 
