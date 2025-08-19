@@ -79,10 +79,11 @@ client.on('message', async (message) => {
     await message.reply('pong Yudhistira Sulaeman hari selasa Bandung Jabar Indonesia Banget...');
   } else if (message.body === 'hello') {
     await message.reply('Hello! How can I help you?');
-  } else if (message.body === 'kirim') {
+  } else if (message.body.startsWith("ambil ")) {
+    const noPasien = message.body.split(" ")[1]; 
     try {
       // 🔹 Call your webservice
-      const response = await axios.get('https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=2748'); 
+      const response = await axios.get('https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasein}'); 
       let base64String = response.data.gambar; 
       // 🔹 Clean base64 if it has prefix
       base64String = base64String.replace(/^data:image\/\w+;base64,/, "");
