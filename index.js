@@ -4,7 +4,7 @@ const axios = require('axios');
 const app = express();
 const mqtt = require('mqtt');
 const port = process.env.port || 3000;
-const { LocalAuth, Client } = require('whatsapp-web.js')
+const { LocalAuth, Client,MessageMedia } = require('whatsapp-web.js')
 
 // =============== MQTT SETUP =================
 const mqttBroker = "mqtt://103.27.206.14:1883";  // or your own broker
@@ -83,14 +83,12 @@ client.on('message', async (message) => {
     try {
       // 🔹 Call your webservice
       const response = await axios.get('https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=2748'); 
-      // replace with your API URL
-
-      // 🔹 Send result back to WhatsApp
-      await message.reply(
-        `Flag: ${response.data.flag_photo}\n` +
-        `Gambar: ${response.data.gambar}`
-      );
-
+      let base64String = response.data.gambar; 
+      // 🔹 Clean base64 if it has prefix
+      base64String = base64String.replace(/^data:image\/\w+;base64,/, "");
+      
+      const media = new MessageMedia("image/png", base64String, "myImage.png");
+       await client.sendMessage("628122132341@c.us", media);
     } catch (error) {
       console.error('Error calling API:', error.message);
       await message.reply('❌ Failed to fetch data from API');
