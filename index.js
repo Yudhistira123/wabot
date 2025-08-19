@@ -29,16 +29,7 @@ mqttClient.on("connect", () => {
   
 });
 
-
-
-
-
-
-mqttClient.on("message", (topic, message) => {
-  console.log(`📩 MQTT message from [${topic}]: ${message.toString()}`);
-
-
-  const numbers = [
+const numbers = [
   "628122132341@c.us",
   // "6285220757725@c.us",s
   // "628122233610@c.us",
@@ -55,6 +46,15 @@ async function sendMessages() {
       console.error(`❌ Failed to send to ${number}:`, err);
     }
   }
+
+
+
+
+mqttClient.on("message", (topic, message) => {
+  console.log(`📩 MQTT message from [${topic}]: ${message.toString()}`);
+ sendMessages();
+
+  
 }
 
   // example: send to WhatsApp number when MQTT message received
