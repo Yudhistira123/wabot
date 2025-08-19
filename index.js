@@ -55,6 +55,9 @@ mqttClient.on("message", (topic, message) => {
 //   [2: 50 PM, 8 / 19 / 2025] Yudhistira Sulaeman: 812 - 1462 - 983 hakim
 
 
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+}); 
 
 app.get("/send", async (req, res) => {
   const number = req.query.number;  // ex: ?number=628122132341
