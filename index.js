@@ -81,12 +81,12 @@ client.on('message', async (message) => {
     await message.reply('Hello! How can I help you?');
   } else if (message.body.startsWith("ambil ")) {
     const noPasien = message.body.split(" ")[1].trim(); 
-    console.log('Fetching data for noPasien:', noPasien);
+    //console.log('Fetching data for noPasien:', noPasien);
     try {
       // 🔹 Call your webservice
-      const response = await axios.get('https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasein}'); 
+      const response = await axios.get('https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}'); 
       let base64String = response.data.gambar; 
-      console.log('Base64 String:', base64String);
+      //console.log('Base64 String:', base64String);
       // 🔹 Clean base64 if it has prefix
       base64String = base64String.replace(/^data:image\/\w+;base64,/, "");
       
