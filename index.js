@@ -37,7 +37,7 @@ const numbers = [
   "628121462983@c.us"
 ];
 
-async function sendMessages() {
+async function sendMessages(topic, message) {
   for (const number of numbers) {
     try {
       await client.sendMessage(number, ` Lampu ${topic} : ${message.toString()}`);
@@ -47,15 +47,18 @@ async function sendMessages() {
     }
   }
 
+mqttClient.on("message", (topic, message) => {
+  console.log(`📩 MQTT message from [${topic}]: ${message.toString()}`);
+  sendMessages(topic, message);
+});
 
 
-
-  mqttClient.on("message", (topic, message) => {
-    console.log(`📩 MQTT message from [${topic}]: ${message.toString()}`);
-    sendMessages();
+  // mqttClient.on("message", (topic, message) => {
+  //   console.log(`📩 MQTT message from [${topic}]: ${message.toString()}`);
+  //   sendMessages();
 
   
-  });
+  // });
 
   // example: send to WhatsApp number when MQTT message received
   //const number = "628122132341@c.us"; 
