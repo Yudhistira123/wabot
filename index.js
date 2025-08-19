@@ -129,13 +129,6 @@ client.on('message', async (message) => {
   }
 });
 
-client.initialize();
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-}
-);
-
 app.get("/send", async (req, res) => {
   const number = req.query.number;  // ex: ?number=628122132341
   const text = req.query.text;      // ex: ?text=Hello
@@ -155,3 +148,11 @@ app.get("/status", (req, res) => {
 app.get("/ping", (req, res) => {
   res.send("pong");
 });
+
+client.initialize();
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+}
+);
+
