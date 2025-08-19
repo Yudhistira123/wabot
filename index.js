@@ -27,7 +27,7 @@ client.on('ready', () => {
 client.on('message', async (message) => {
   console.log('Received message:', message.body);
   if (message.body === 'ping') {
-    await message.reply('pong Yudhistira Sulaeman hari selasa Bandung');
+    await message.reply('pong Yudhistira Sulaeman hari selasa Bandung Jabar');
   } else if (message.body === 'hello') {
     await message.reply('Hello! How can I help you?');
   } else {
