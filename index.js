@@ -80,7 +80,7 @@ client.on('message', async (message) => {
   } else if (message.body === 'hello') {
     await message.reply('Hello! How can I help you?');
   } else if (message.body.startsWith("ambil ")) {
-    const noPasien = message.body.split(" ")[1]; 
+    const noPasien = message.body.split(" ")[1].trim(); 
     console.log('Fetching data for noPasien:', noPasien);
     try {
       // 🔹 Call your webservice
