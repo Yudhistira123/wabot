@@ -81,6 +81,7 @@ client.on('message', async (message) => {
     await message.reply('Hello! How can I help you?');
   } else if (message.body.startsWith("ambil ")) {
     const noPasien = message.body.split(" ")[1]; 
+    console.log('Fetching data for noPasien:', noPasien);
     try {
       // 🔹 Call your webservice
       const response = await axios.get('https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasein}'); 
