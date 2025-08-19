@@ -47,12 +47,25 @@ mqttClient.on("message", (topic, message) => {
 
 
   // example: send to WhatsApp number when MQTT message received
-  //const number = "628122132341@c.us"; 
+  //const number = "628122132341@c.us";
   //8122132341, 852 - 2075 - 7725, 812 - 2233 - 610, 859 - 7538 - 6345, 812 - 1462 - 983;
 //   [2:47 PM, 8/19/2025] Yudhistira Sulaeman: 852-2075-7725 acas
 // [2:49 PM, 8/19/2025] Yudhistira Sulaeman:   812-2233-610 herry
 // [2:50 PM, 8/19/2025] Yudhistira Sulaeman:   859-7538-6345 asep
 //   [2: 50 PM, 8 / 19 / 2025] Yudhistira Sulaeman: 812 - 1462 - 983 hakim
+
+
+
+app.get("/send", async (req, res) => {
+  const number = req.query.number;  // ex: ?number=628122132341
+  const text = req.query.text;      // ex: ?text=Hello
+  try {
+    await client.sendMessage(`${number}@c.us`, text);
+    res.json({ status: "ok", sent: text });
+  } catch (e) {
+    res.json({ status: "error", message: e.message });
+  }
+});
  
 const client=new Client({
   authStrategy: new LocalAuth({clientId: "yudhi-boot"}),
