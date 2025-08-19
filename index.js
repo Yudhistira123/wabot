@@ -98,7 +98,17 @@ client.on('message', async (message) => {
       base64String = base64String.replace(/^data:image\/\w+;base64,/, "");
       
       const media = new MessageMedia("image/png", base64String, "myImage.png");
-      await client.sendMessage("628122132341@c.us", media,{caption: `🧾 Data pasien ${noPasien}\nNama: ${nama}\nJK: ${jekel}\nAlamat: ${alamat}\nTlp: ${tlp}\nTgl Lahir: ${dlahir}\nAlergi: ${alergi}`});
+      //await client.sendMessage("628122132341@c.us", media,{caption: `🧾 Data pasien ${noPasien}\nNama: ${nama}\nJK: ${jekel}\nAlamat: ${alamat}\nTlp: ${tlp}\nTgl Lahir: ${dlahir}\nAlergi: ${alergi}`});
+   await client.sendMessage("628122132341@c.us", media, {
+  caption: 
+`🧾 Data pasien ${noPasien}
+👤 Nama: ${nama}
+🚻 JK: ${jekel}
+🏠 Alamat: ${alamat}
+📞 Tlp: ${tlp}
+🎂 Tgl Lahir: ${dlahir}
+⚠️ Alergi: ${alergi}`
+});
     } catch (error) {
       console.error('Error calling API:', error.message);
       await message.reply('❌ Failed to fetch data from API');
