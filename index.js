@@ -27,7 +27,7 @@ mqttClient.on("message", (topic, message) => {
 
   // example: send to WhatsApp number when MQTT message received
   const number = "628122132341@c.us"; 
-  client.sendMessage(number, `MQTT says: ${message.toString()}`);
+  client.sendMessage(number, ` Lampu ${topic} : ${message.toString()}`);
 });
 
 
