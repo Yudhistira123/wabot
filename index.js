@@ -3,7 +3,7 @@ const qrcode = require('qrcode-terminal');
 const axios = require('axios');
 const app = express();
 const mqtt = require('mqtt');
-const port = process.env.port || 3000;
+const port = process.env.PORT || 3000;
 const { LocalAuth, Client,MessageMedia } = require('whatsapp-web.js')
 
 // =============== MQTT SETUP =================
