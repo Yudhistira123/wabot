@@ -129,25 +129,25 @@ client.on('message', async (message) => {
   }
 });
 
-// app.get("/send", async (req, res) => {
-//   const number = req.query.number;  // ex: ?number=628122132341
-//   const text = req.query.text;      // ex: ?text=Hello
-//   try {
-//     await client.sendMessage(`${number}@c.us`, text);
-//     res.json({ status: "ok", sent: text });
-//   } catch (e) {
-//     res.json({ status: "error", message: e.message });
-//   }
-// });
-// app.get("/", (req, res) => {
-//   res.send("WhatsApp Bot is running...");
-// });
-// app.get("/status", (req, res) => {
-//   res.json({ status: "ok", message: "WhatsApp Bot is running..." });
-// });
-// app.get("/ping", (req, res) => {
-//   res.send("pong");
-// });
+app.get("/send", async (req, res) => {
+  const number = req.query.number;  // ex: ?number=628122132341
+  const text = req.query.text;      // ex: ?text=Hello
+  try {
+    await client.sendMessage(`${number}@c.us`, text);
+    res.json({ status: "ok", sent: text });
+  } catch (e) {
+    res.json({ status: "error", message: e.message });
+  }
+});
+app.get("/", (req, res) => {
+  res.send("WhatsApp Bot is running...");
+});
+app.get("/status", (req, res) => {
+  res.json({ status: "ok", message: "WhatsApp Bot is running..." });
+});
+app.get("/ping", (req, res) => {
+  res.send("pong");
+});
 
 client.initialize();
 
