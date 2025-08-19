@@ -46,6 +46,7 @@ async function sendMessages(topic, message) {
       console.error(`❌ Failed to send to ${number}:`, err);
     }
   }
+}
 
 mqttClient.on("message", (topic, message) => {
   console.log(`📩 MQTT message from [${topic}]: ${message.toString()}`);
