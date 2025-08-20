@@ -193,8 +193,10 @@ client.on('message', async (message) => {
   }
 });
 
-client.initialize();
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 }
 );
+
+client.initialize();
