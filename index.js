@@ -6,9 +6,7 @@ const port = process.env.PORT || 3000;
 const { Client, LocalAuth } = require('whatsapp-web.js');
 
 
-client.on('qr', (qr) => {
-  qrcode.generate(qr, { small: true }); // tampilkan QR langsung di terminal
-});
+
 
 const client = new Client({
   authStrategy: new LocalAuth({ clientId: "session-yudhi-boot" }),
@@ -25,6 +23,10 @@ const client = new Client({
       '--disable-gpu'
     ]
   }
+});
+
+client.on('qr', (qr) => {
+  qrcode.generate(qr, { small: true }); // tampilkan QR langsung di terminal
 });
 
 client.on('qr', (qr) => {
