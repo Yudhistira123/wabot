@@ -40,24 +40,7 @@ mqttClient.on("connect", () => {
   });
 });
 
-const numbers = [
-  "628122132341@c.us",
-  "6285220757725@c.us",
-  "628122233610@c.us",
-  "6285975386345@c.us",
-  "628121462983@c.us"
-];
 
-async function sendMessages(topic, message) {
-  for (const number of numbers) {
-    try {
-      await client.sendMessage(number, ` Lampu ${topic} : ${message.toString()}`);
-      console.log(`✅ Message sent to ${number}`);
-    } catch (err) {
-      console.error(`❌ Failed to send to ${number}:`, err);
-    }
-  }
-}
 
 mqttClient.on("message", (topic, message) => {
   console.log(`📩 MQTT message from [${topic}]: ${message.toString()}`);
@@ -147,6 +130,25 @@ client.on('message', async (message) => {
     await message.reply('I am not sure how to respond to that.');
   }
 });
+
+const numbers = [
+  "628122132341@c.us",
+  "6285220757725@c.us",
+  "628122233610@c.us",
+  "6285975386345@c.us",
+  "628121462983@c.us"
+];
+
+async function sendMessages(topic, message) {
+  for (const number of numbers) {
+    try {
+      await client.sendMessage(number, ` Lampu ${topic} : ${message.toString()}`);
+      console.log(`✅ Message sent to ${number}`);
+    } catch (err) {
+      console.error(`❌ Failed to send to ${number}:`, err);
+    }
+  }
+}
 
 app.get("/send", async (req, res) => {
   const number = req.query.number;  // ex: ?number=628122132341
