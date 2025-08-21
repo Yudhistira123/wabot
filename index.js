@@ -104,9 +104,12 @@ client.on('message', async (message) => {
     } 
   } else {
      if (message.body.toLowerCase().includes("jadwal sholat")) {
-
-       const idKotaArray = await getKodeKota("bandung");
-
+    const namaKota = message.body.toLowerCase().replace("jadwal sholat", "").trim();
+    if (!namaKota) {
+      await message.reply("⚠️ Tolong sebutkan nama kota. Contoh: *jadwal sholat bandung*");     
+      return;    
+    }
+  const idKotaArray = await getKodeKota(namaKota);
   if (idKotaArray.length === 0) {
     await message.reply("⚠️ Tidak ditemukan kota dengan nama Bandung.");
     return;
