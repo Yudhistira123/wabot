@@ -110,13 +110,16 @@ if (message.from.endsWith('@g.us')) {  // <- cek kalau pengirim dari grup
     }
 else {
   
-  if (message.body.toLowerCase().includes("jadwal sholat")) {
-    const sholatData = await getSholatByCoord(-6.91, 107.61); // Bandung
-console.log("Jadwal Sholat Data:", sholatData);
-    if (sholatData) {
+ 
+    if (message.body.toLowerCase().includes("jadwal sholat")) {
+    const sholatData = await getSholatByLocation(1219); // 1219 = Bandung
+
+    if (sholatData && sholatData.data) {
       const jadwal = sholatData.data.jadwal;
 
-      let replyMsg = `🕌 *Jadwal Sholat Bandung*\nTanggal: ${jadwal.tanggal}\n\n` +
+      let replyMsg =
+        `🕌 *Jadwal Sholat ${sholatData.data.lokasi}*\nTanggal: ${jadwal.tanggal}\n\n` +
+        `Imsak: ${jadwal.imsak}\n` +
         `Subuh: ${jadwal.subuh}\n` +
         `Dzuhur: ${jadwal.dzuhur}\n` +
         `Ashar: ${jadwal.ashar}\n` +
@@ -127,11 +130,7 @@ console.log("Jadwal Sholat Data:", sholatData);
     } else {
       client.sendMessage(message.from, "⚠️ Gagal mengambil jadwal sholat.");
     }
-  }
-
-// -- msg group
-  console.log('Received message:', message.body);
-  if (message.body === 'ping') {
+  }else if (message.body === 'ping') {
     await message.reply('pong Yudhistira Sulaeman hari selasa Bandung Jabar Indonesia Banget...');
   } else if (message.body === 'hello') {
     await message.reply('Hello! How can I help you?');
@@ -182,14 +181,16 @@ console.log("Jadwal Sholat Data:", sholatData);
   }
 });
 
-async function getSholatByCoord(lat, lng) {
+async function getSholatByLocation(kodeLokasi) {
   try {
-    const res = await axios.get("https://waktu-sholat.vercel.app/prayer", {
-      params: { latitude: lat, longitude: lng }
-    });
+    // ambil tanggal hari ini dalam format YYYY-MM-DD
+    const today = new Date().toISOString().split("T")[0];
+
+    const res = await axios.get(`https://api.myquran.com/v2/sholat/jadwal/${kodeLokasi}/${today}`);
+
     return res.data;
   } catch (err) {
-    console.error("Error fetching sholat data:", err);
+    console.error("Gagal ambil jadwal sholat:", err.message);
     return null;
   }
 }
