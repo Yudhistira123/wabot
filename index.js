@@ -101,32 +101,39 @@ client.on('message', async (message) => {
     } else if (message.body.toLowerCase().includes("halo")) {
       await message.reply("🤖 halo juga!");
       console.log(`🤖 Reply ke ${sender}: halo juga!`);
-    } else if (message.body.toLowerCase().includes("jadwal sholat")) {
-      const sholatData = await getSholatByLocation(1219); // 1219 = Bandung
-
-      if (sholatData && sholatData.data) {
-        const jadwal = sholatData.data.jadwal;
-
-        let replyMsg =
-          `🕌 *Jadwal Sholat ${sholatData.data.lokasi}*\n` +
-          `📅 Tanggal: ${jadwal.tanggal}\n\n` +
-          `🌅 Imsak     : ${jadwal.imsak} WIB\n` +
-          `🌄 Subuh     : ${jadwal.subuh} WIB\n` +
-          `☀️ Dzuhur    : ${jadwal.dzuhur} WIB\n` +
-          `🌇 Ashar     : ${jadwal.ashar} WIB\n` +
-          `🌆 Maghrib   : ${jadwal.maghrib} WIB\n` +
-          `🌙 Isya      : ${jadwal.isya} WIB`;
-
-        // await message.reply(message.from, replyMsg);
-        await message.reply(replyMsg);
-      } else {
-        //await message.reply(message.from, "⚠️ Gagal mengambil jadwal sholat.");
-        await message.reply("⚠️ Gagal mengambil jadwal sholat.");
-      }
-  
-    }
+    } 
   } else {
-   if (message.body === 'ping') {
+     if (message.body.toLowerCase().includes("jadwal sholat")) {
+
+       const idKotaArray = await getKodeKota("bandung");
+
+  if (idKotaArray.length === 0) {
+    await message.reply("⚠️ Tidak ditemukan kota dengan nama Bandung.");
+    return;
+  }
+       for (const idKota of idKotaArray) {
+         const sholatData = await getSholatByLocation(idKota); // 1219 = Bandung
+         if (sholatData && sholatData.data) {
+           const jadwal = sholatData.data.jadwal;
+
+           let replyMsg =
+             `🕌 *Jadwal Sholat ${sholatData.data.lokasi}*\n` +
+             `📅 Tanggal: ${jadwal.tanggal}\n\n` +
+             `🌅 Imsak     : ${jadwal.imsak} WIB\n` +
+             `🌄 Subuh     : ${jadwal.subuh} WIB\n` +
+             `☀️ Dzuhur    : ${jadwal.dzuhur} WIB\n` +
+             `🌇 Ashar     : ${jadwal.ashar} WIB\n` +
+             `🌆 Maghrib   : ${jadwal.maghrib} WIB\n` +
+             `🌙 Isya      : ${jadwal.isya} WIB`;
+
+           // await message.reply(message.from, replyMsg);
+           await message.reply(replyMsg);
+         } else {
+           //await message.reply(message.from, "⚠️ Gagal mengambil jadwal sholat.");
+           await message.reply("⚠️ Gagal mengambil jadwal sholat.");
+         }
+       }
+    }else if (message.body === 'ping') {
     await message.reply('pong Yudhistira Sulaeman hari selasa Bandung Jabar Indonesia Banget...');
   } else if (message.body === 'hello') {
     await message.reply('Hello! How can I help you?');
@@ -188,6 +195,27 @@ async function getSholatByLocation(kodeLokasi) {
   } catch (err) {
     console.error("Gagal ambil jadwal sholat:", err.message);
     return null;
+  }
+}
+
+async function getKodeKota(namaKota) {
+  try {
+    const res = await axios.get(`https://api.myquran.com/v2/sholat/kota/cari/${namaKota}`);
+    if (res.data.status && res.data.data.length > 0) {
+      let idKotaArray = [];
+
+      // looping isi data
+      res.data.data.forEach((kota) => {
+        idKotaArray.push(kota.id); 
+      });
+
+      return idKotaArray;
+    } else {
+      return [];
+    }
+  } catch (err) {
+    console.error("Gagal mengambil kode kota:", err);
+    return [];
   }
 }
 
