@@ -121,9 +121,9 @@ if (message.from.endsWith('@g.us')) {  // <- cek kalau pengirim dari grup
   `🌆 Maghrib   : ${jadwal.maghrib} WIB\n` +
   `🌙 Isya      : ${jadwal.isya} WIB`;
 
-     await client.reply(message.from, replyMsg);
+     await message.reply(message.from, replyMsg);
     } else {
-     await client.reply(message.from, "⚠️ Gagal mengambil jadwal sholat.");
+     await message.reply(message.from, "⚠️ Gagal mengambil jadwal sholat.");
     }
   }
 }
