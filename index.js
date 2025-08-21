@@ -112,7 +112,7 @@ else {
   
   if (message.body.toLowerCase().includes("jadwal sholat")) {
     const sholatData = await getSholatByCoord(-6.91, 107.61); // Bandung
-
+console.log("Jadwal Sholat Data:", sholatData.data.jadwal);
     if (sholatData) {
       const jadwal = sholatData.data.jadwal;
 
