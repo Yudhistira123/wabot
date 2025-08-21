@@ -93,7 +93,16 @@ if (message.from.endsWith('@g.us')) {  // <- cek kalau pengirim dari grup
         
         // Ambil info pengirim
         const sender = message._data.notifyName || msg.from;
-        console.log(`👤 Pengirim: ${sender}`);
+  console.log(`👤 Pengirim: ${sender}`);
+  // Cek isi pesan
+        if (msg.body.toLowerCase().includes("hi")) {
+            await msg.reply("🤖 aya naon");
+            console.log(`🤖 Reply ke ${sender}: aya naon`);
+        }
+        if (msg.body.toLowerCase().includes("halo")) {
+            await msg.reply("🤖 halo juga!");
+            console.log(`🤖 Reply ke ${sender}: halo juga!`);
+        }
     }
 else{
 
