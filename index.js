@@ -83,6 +83,21 @@ client.on('ready',async () => {
 
 
 client.on('message', async (message) => {
+// message group
+if (message.from.endsWith('@g.us')) {  // <- cek kalau pengirim dari grup
+        console.log(`📩 Pesan dari Grup: ${message.body}`);
+        
+        // Ambil info group
+        const chat = await message.getChat();
+        console.log(`👥 Nama Grup: ${chat.name}`);
+        
+        // Ambil info pengirim
+        const sender = message._data.notifyName || msg.from;
+        console.log(`👤 Pengirim: ${sender}`);
+    }
+else{
+
+// -- msg group
   console.log('Received message:', message.body);
   if (message.body === 'ping') {
     await message.reply('pong Yudhistira Sulaeman hari selasa Bandung Jabar Indonesia Banget...');
@@ -131,6 +146,7 @@ client.on('message', async (message) => {
   // console.log("Messages sent!");
   }  else {
     await message.reply('I am not sure how to respond to that.');
+  }
   }
 });
 
