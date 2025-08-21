@@ -88,25 +88,25 @@ client.on('message', async (message) => {
 
 
 // message group
-if (message.from.endsWith('@g.us')) {  // <- cek kalau pengirim dari grup
-        console.log(`📩 Pesan dari Grup: ${message.body}`);
+  if (message.from.endsWith('@g.us')) {  // <- cek kalau pengirim dari grup
+    console.log(`📩 Pesan dari Grup: ${message.body}`);
         
-        // Ambil info group
-        const chat = await message.getChat();
-        console.log(`👥 Nama Grup: ${chat.name}`);
+    // Ambil info group
+    const chat = await message.getChat();
+    console.log(`👥 Nama Grup: ${chat.name}`);
         
-        // Ambil info pengirim
-        const sender = message._data.notifyName || msg.from;
-  console.log(`👤 Pengirim: ${sender}`);
-  // Cek isi pesan
-        if (message.body.toLowerCase().includes("hi")) {
-            await message.reply("🤖 aya naon");
-            console.log(`🤖 Reply ke ${sender}: aya naon`);
-        }else if (message.body.toLowerCase().includes("halo")) {
-            await message.reply("🤖 halo juga!");
-            console.log(`🤖 Reply ke ${sender}: halo juga!`);
-        }
-else {
+    // Ambil info pengirim
+    const sender = message._data.notifyName || msg.from;
+    console.log(`👤 Pengirim: ${sender}`);
+    // Cek isi pesan
+    if (message.body.toLowerCase().includes("hi")) {
+      await message.reply("🤖 aya naon");
+      console.log(`🤖 Reply ke ${sender}: aya naon`);
+    } else if (message.body.toLowerCase().includes("halo")) {
+      await message.reply("🤖 halo juga!");
+      console.log(`🤖 Reply ke ${sender}: halo juga!`);
+    }
+  } else {
    if (message.body.toLowerCase().includes("jadwal sholat")) {
     const sholatData = await getSholatByLocation(1219); // 1219 = Bandung
 
