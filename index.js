@@ -83,6 +83,10 @@ client.on('ready',async () => {
 
 
 client.on('message', async (message) => {
+
+  
+
+
 // message group
 if (message.from.endsWith('@g.us')) {  // <- cek kalau pengirim dari grup
         console.log(`📩 Pesan dari Grup: ${message.body}`);
@@ -104,7 +108,26 @@ if (message.from.endsWith('@g.us')) {  // <- cek kalau pengirim dari grup
             console.log(`🤖 Reply ke ${sender}: halo juga!`);
         }
     }
-else{
+else {
+  
+  if (message.body.toLowerCase().includes("jadwal sholat")) {
+    const sholatData = await getSholatByCoord(-6.91, 107.61); // Bandung
+
+    if (sholatData) {
+      const jadwal = sholatData.data.jadwal;
+
+      let replyMsg = `🕌 *Jadwal Sholat Bandung*\nTanggal: ${jadwal.tanggal}\n\n` +
+        `Subuh: ${jadwal.subuh}\n` +
+        `Dzuhur: ${jadwal.dzuhur}\n` +
+        `Ashar: ${jadwal.ashar}\n` +
+        `Maghrib: ${jadwal.maghrib}\n` +
+        `Isya: ${jadwal.isya}`;
+
+      client.sendMessage(message.from, replyMsg);
+    } else {
+      client.sendMessage(message.from, "⚠️ Gagal mengambil jadwal sholat.");
+    }
+  }
 
 // -- msg group
   console.log('Received message:', message.body);
@@ -158,6 +181,19 @@ else{
   }
   }
 });
+
+async function getSholatByCoord(lat, lng) {
+  try {
+    const res = await axios.get("https://waktu-sholat.vercel.app/prayer", {
+      params: { latitude: lat, longitude: lng }
+    });
+    return res.data;
+  } catch (err) {
+    console.error("Error fetching sholat data:", err);
+    return null;
+  }
+}
+
 
 const numbers = [
   "628122132341@c.us",
