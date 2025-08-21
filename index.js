@@ -88,54 +88,56 @@ client.on('message', async (message) => {
     console.log(`📩 Pesan dari Grup: ${message.body}`);
         
     // Ambil info group
-    const chat = await message.getChat();
-    console.log(`👥 Nama Grup: ${chat.name}`);
-        
-    // Ambil info pengirim
-    const sender = message._data.notifyName || msg.from;
-    console.log(`👤 Pengirim: ${sender}`);
-    // Cek isi pesan
-    if (message.body.toLowerCase().includes("hi")) {
-      await message.reply("🤖 aya naon");
-      console.log(`🤖 Reply ke ${sender}: aya naon`);
-    } else if (message.body.toLowerCase().includes("halo")) {
-      await message.reply("🤖 halo juga!");
-      console.log(`🤖 Reply ke ${sender}: halo juga!`);
-    } else if (message.body.toLowerCase().includes("jadwal sholat")) {
-    const namaKota = message.body.toLowerCase().replace("jadwal sholat", "").trim();
-    if (!namaKota) {
-      await message.reply("⚠️ Tolong sebutkan nama kota. Contoh: *jadwal sholat bandung*");     
-      return;    
-    }
-  const idKotaArray = await getKodeKota(namaKota);
-  if (idKotaArray.length === 0) {
-    await message.reply(`⚠️ Tidak ditemukan kota dengan nama ${namaKota}.`);
+const chat = await message.getChat();
+console.log(`👥 Nama Grup: ${chat.name}`);
+
+// Ambil info pengirim
+const sender = message._data.notifyName || message.from;
+console.log(`👤 Pengirim: ${sender}`);
+
+// Cek isi pesan
+if (message.body.toLowerCase().includes("hi")) {
+  await chat.sendMessage("🤖 aya naon");
+  console.log(`🤖 Reply ke ${sender}: aya naon`);
+} else if (message.body.toLowerCase().includes("halo")) {
+  await chat.sendMessage("🤖 halo juga!");
+  console.log(`🤖 Reply ke ${sender}: halo juga!`);
+} else if (message.body.toLowerCase().includes("jadwal sholat")) {
+  const namaKota = message.body.toLowerCase().replace("jadwal sholat", "").trim();
+
+  if (!namaKota) {
+    await chat.sendMessage("⚠️ Tolong sebutkan nama kota. Contoh: *jadwal sholat bandung*");
     return;
   }
-       for (const idKota of idKotaArray) {
-         const sholatData = await getSholatByLocation(idKota); // 1219 = Bandung
-         if (sholatData && sholatData.data) {
-           const jadwal = sholatData.data.jadwal;
 
-           let replyMsg =
-             `🕌 *Jadwal Sholat ${sholatData.data.lokasi}*\n` +
-             `📅 Tanggal: ${jadwal.tanggal}\n\n` +
-             `🌅 Imsak     : ${jadwal.imsak} WIB\n` +
-             `🌄 Subuh     : ${jadwal.subuh} WIB\n` +
-             `☀️ Dzuhur    : ${jadwal.dzuhur} WIB\n` +
-             `🌇 Ashar     : ${jadwal.ashar} WIB\n` +
-             `🌆 Maghrib   : ${jadwal.maghrib} WIB\n` +
-             `🌙 Isya      : ${jadwal.isya} WIB`;
+  const idKotaArray = await getKodeKota(namaKota);
 
-           // await message.reply(message.from, replyMsg);
-           await message.reply(replyMsg);
-         } else {
-           //await message.reply(message.from, "⚠️ Gagal mengambil jadwal sholat.");
-           await message.reply("⚠️ Gagal mengambil jadwal sholat.");
-         }
-       }
-      
+  if (idKotaArray.length === 0) {
+    await chat.sendMessage(`⚠️ Tidak ditemukan kota dengan nama ${namaKota}.`);
+    return;
+  }
+
+  for (const idKota of idKotaArray) {
+    const sholatData = await getSholatByLocation(idKota);
+    if (sholatData && sholatData.data) {
+      const jadwal = sholatData.data.jadwal;
+
+      let replyMsg =
+        `🕌 *Jadwal Sholat ${sholatData.data.lokasi}*\n` +
+        `📅 Tanggal: ${jadwal.tanggal}\n\n` +
+        `🌅 Imsak     : ${jadwal.imsak} WIB\n` +
+        `🌄 Subuh     : ${jadwal.subuh} WIB\n` +
+        `☀️ Dzuhur    : ${jadwal.dzuhur} WIB\n` +
+        `🌇 Ashar     : ${jadwal.ashar} WIB\n` +
+        `🌆 Maghrib   : ${jadwal.maghrib} WIB\n` +
+        `🌙 Isya      : ${jadwal.isya} WIB`;
+
+      await chat.sendMessage(replyMsg);
+    } else {
+      await chat.sendMessage("⚠️ Gagal mengambil jadwal sholat.");
     }
+  }   
+}
   } else {
 
     if (message.body === 'ping') {
