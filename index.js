@@ -111,7 +111,7 @@ client.on('message', async (message) => {
     }
   const idKotaArray = await getKodeKota(namaKota);
   if (idKotaArray.length === 0) {
-    await message.reply("⚠️ Tidak ditemukan kota dengan nama Bandung.");
+    await message.reply(`⚠️ Tidak ditemukan kota dengan nama ${namaKota}.`);
     return;
   }
        for (const idKota of idKotaArray) {
