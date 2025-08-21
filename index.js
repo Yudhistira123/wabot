@@ -112,17 +112,18 @@ if (message.from.endsWith('@g.us')) {  // <- cek kalau pengirim dari grup
       const jadwal = sholatData.data.jadwal;
 
       let replyMsg =
-        `🕌 *Jadwal Sholat ${sholatData.data.lokasi}*\nTanggal: ${jadwal.tanggal}\n\n` +
-        `Imsak: ${jadwal.imsak}\n` +
-        `Subuh: ${jadwal.subuh}\n` +
-        `Dzuhur: ${jadwal.dzuhur}\n` +
-        `Ashar: ${jadwal.ashar}\n` +
-        `Maghrib: ${jadwal.maghrib}\n` +
-        `Isya: ${jadwal.isya}`;
+  `🕌 *Jadwal Sholat ${sholatData.data.lokasi}*\n` +
+  `📅 Tanggal: ${jadwal.tanggal}\n\n` +
+  `🌅 Imsak     : ${jadwal.imsak} WIB\n` +
+  `🌄 Subuh     : ${jadwal.subuh} WIB\n` +
+  `☀️ Dzuhur    : ${jadwal.dzuhur} WIB\n` +
+  `🌇 Ashar     : ${jadwal.ashar} WIB\n` +
+  `🌆 Maghrib   : ${jadwal.maghrib} WIB\n` +
+  `🌙 Isya      : ${jadwal.isya} WIB`;
 
-      client.sendMessage(message.from, replyMsg);
+      client.reply(message.from, replyMsg);
     } else {
-      client.sendMessage(message.from, "⚠️ Gagal mengambil jadwal sholat.");
+      client.reply(message.from, "⚠️ Gagal mengambil jadwal sholat.");
     }
   }
 }
