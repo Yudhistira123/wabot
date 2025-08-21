@@ -40,13 +40,10 @@ mqttClient.on("connect", () => {
   });
 });
 
-
-
 mqttClient.on("message", (topic, message) => {
   console.log(`📩 MQTT message from [${topic}]: ${message.toString()}`);
   sendMessages(topic, message);
 });
-
 
   // example: send to WhatsApp number when MQTT message received
   //const number = "628122132341@c.us";
@@ -56,18 +53,6 @@ mqttClient.on("message", (topic, message) => {
 // [2:50 PM, 8/19/2025] Yudhistira Sulaeman:   859-7538-6345 asep
 //   [2: 50 PM, 8 / 19 / 2025] Yudhistira Sulaeman: 812 - 1462 - 983 hakim
 
-
-
-
-
-// const client=new Client({
-//   authStrategy: new LocalAuth({clientId: "yudhi-boot"}),
-//     puppeteer: {
-//         headless: true,
-//         args: ['--no-sandbox', '--disable-setuid-sandbox']
-//     }   
-// });
-
 client.on('qr', (qr) => {
   console.log('QR RECEIVED', qr);
   qrcode.generate(qr, { small: true });
@@ -76,9 +61,27 @@ client.on('qr', (qr) => {
 client.on('authenticated', () => {
   console.log('Client is authenticated');
 });
-client.on('ready', () => {
+client.on('ready',async () => {
   console.log('Client is ready!');
+  // Ambil semua chat
+  const chats = await client.getChats();
+  const groups = chats.filter(chat => chat.isGroup);
+
+  console.log("\n=== LIST GROUP ===");
+  groups.forEach((group, index) => {
+    console.log(`${index + 1}. ${group.name} => ${group.id._serialized}`);
+  });
+
+  // // Kirim pesan ke grup berdasarkan ID langsung
+  // const groupId = "120363043622833009@g.us"; // ganti sesuai hasil console
+  // await client.sendMessage(groupId, "Hello 👋 ini pesan otomatis dari bot!");
+
+  // // Kirim pesan ke grup berdasarkan nama
+  // sendToGroupByName("Family Group", "Halo semua! 😎");
+
 });
+
+
 client.on('message', async (message) => {
   console.log('Received message:', message.body);
   if (message.body === 'ping') {
