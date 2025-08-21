@@ -123,9 +123,11 @@ client.on('message', async (message) => {
   `🌆 Maghrib   : ${jadwal.maghrib} WIB\n` +
   `🌙 Isya      : ${jadwal.isya} WIB`;
 
-     await message.reply(message.from, replyMsg);
+      // await message.reply(message.from, replyMsg);
+      await message.reply(replyMsg);
     } else {
-     await message.reply(message.from, "⚠️ Gagal mengambil jadwal sholat.");
+      //await message.reply(message.from, "⚠️ Gagal mengambil jadwal sholat.");
+       await message.reply("⚠️ Gagal mengambil jadwal sholat.");
     }
   
 }else if (message.body === 'ping') {
