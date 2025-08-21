@@ -102,16 +102,10 @@ if (message.from.endsWith('@g.us')) {  // <- cek kalau pengirim dari grup
         if (message.body.toLowerCase().includes("hi")) {
             await message.reply("🤖 aya naon");
             console.log(`🤖 Reply ke ${sender}: aya naon`);
-        }
-        if (message.body.toLowerCase().includes("halo")) {
+        }else if (message.body.toLowerCase().includes("halo")) {
             await message.reply("🤖 halo juga!");
             console.log(`🤖 Reply ke ${sender}: halo juga!`);
-        }
-    }
-else {
-  
- 
-    if (message.body.toLowerCase().includes("jadwal sholat")) {
+        }else if (message.body.toLowerCase().includes("jadwal sholat")) {
     const sholatData = await getSholatByLocation(1219); // 1219 = Bandung
 
     if (sholatData && sholatData.data) {
@@ -130,7 +124,12 @@ else {
     } else {
       client.sendMessage(message.from, "⚠️ Gagal mengambil jadwal sholat.");
     }
-  }else if (message.body === 'ping') {
+  }
+}
+else {
+  
+ 
+     if (message.body === 'ping') {
     await message.reply('pong Yudhistira Sulaeman hari selasa Bandung Jabar Indonesia Banget...');
   } else if (message.body === 'hello') {
     await message.reply('Hello! How can I help you?');
