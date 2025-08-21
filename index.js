@@ -101,9 +101,7 @@ client.on('message', async (message) => {
     } else if (message.body.toLowerCase().includes("halo")) {
       await message.reply("🤖 halo juga!");
       console.log(`🤖 Reply ke ${sender}: halo juga!`);
-    } 
-  } else {
-     if (message.body.toLowerCase().includes("jadwal sholat")) {
+    } else if (message.body.toLowerCase().includes("jadwal sholat")) {
     const namaKota = message.body.toLowerCase().replace("jadwal sholat", "").trim();
     if (!namaKota) {
       await message.reply("⚠️ Tolong sebutkan nama kota. Contoh: *jadwal sholat bandung*");     
@@ -136,7 +134,11 @@ client.on('message', async (message) => {
            await message.reply("⚠️ Gagal mengambil jadwal sholat.");
          }
        }
-    }else if (message.body === 'ping') {
+      
+    }
+  } else {
+
+    if (message.body === 'ping') {
     await message.reply('pong Yudhistira Sulaeman hari selasa Bandung Jabar Indonesia Banget...');
   } else if (message.body === 'hello') {
     await message.reply('Hello! How can I help you?');
