@@ -27,8 +27,6 @@ const client = new Client({
     ]
   }
 });
-
-
 mqttClient.on("connect", () => {
   console.log("✅ Connected to MQTT broker");
   mqttClient.subscribe(mqttTopics, (err) => {
@@ -39,25 +37,14 @@ mqttClient.on("connect", () => {
     }
   });
 });
-
 mqttClient.on("message", (topic, message) => {
   console.log(`📩 MQTT message from [${topic}]: ${message.toString()}`);
   sendMessages(topic, message);
 });
-
-  // example: send to WhatsApp number when MQTT message received
-  //const number = "628122132341@c.us";
-  //8122132341, 852 - 2075 - 7725, 812 - 2233 - 610, 859 - 7538 - 6345, 812 - 1462 - 983;
-//   [2:47 PM, 8/19/2025] Yudhistira Sulaeman: 852-2075-7725 acas
-// [2:49 PM, 8/19/2025] Yudhistira Sulaeman:   812-2233-610 herry
-// [2:50 PM, 8/19/2025] Yudhistira Sulaeman:   859-7538-6345 asep
-//   [2: 50 PM, 8 / 19 / 2025] Yudhistira Sulaeman: 812 - 1462 - 983 hakim
-
 client.on('qr', (qr) => {
   console.log('QR RECEIVED', qr);
   qrcode.generate(qr, { small: true });
 });
-
 client.on('authenticated', () => {
   console.log('Client is authenticated');
 });
@@ -80,139 +67,162 @@ client.on('ready',async () => {
   // sendToGroupByName("Family Group", "Halo semua! 😎");
 
 });
-
-
 client.on('message', async (message) => {
-// message group
+  // message group
   if (message.from.endsWith('@g.us')) {  // <- cek kalau pengirim dari grup
-
-
     console.log(`📩 Pesan dari Grup: ${message.body}`);
-        
     // Ambil info group
-const chat = await message.getChat();
-console.log(`👥 Nama Grup: ${chat.name}`);
-
-// Ambil info pengirim
-const sender = message._data.notifyName || message.from;
+    const chat = await message.getChat();
+    console.log(`👥 Nama Grup: ${chat.name}`);
+    // Ambil info pengirim
+    const sender = message._data.notifyName || message.from;
     console.log(`👤 Pengirim: ${sender}`);
     
-    // ambil detail info group
+    // Change to your admin number
+    const adminNumber = "628122132341";
 
-    if (chat.isGroup) {
-      console.log(`👥 Group Name: ${chat.name}`);
-      console.log(`👥 Group Members: ${chat.participants.length}`);
+    for (const participant of chat.participants) {
 
-      for (const participant of chat.participants) {
-        const contact = await client.getContactById(participant.id._serialized);
+      const contact = await client.getContactById(participant.id._serialized);
+      const name = contact.pushname || contact.number;
+      const avatarUrl = await contact.getProfilePicUrl();
+      await sendAvatar(participant,adminNumber, name, avatarUrl);
+      await message.reply("✅ All avatars are being sent to admin.");
+    }
+    // Cek isi pesan
+    if (message.body.toLowerCase().includes("hi")) {
+      await chat.sendMessage("🤖 aya naon");
+      console.log(`🤖 Reply ke ${sender}: aya naon`);
+    } else if (message.body.toLowerCase().includes("halo")) {
+      await chat.sendMessage("🤖 halo juga!");
+      console.log(`🤖 Reply ke ${sender}: halo juga!`);
+    } else if (message.body.toLowerCase().includes("jadwal sholat")) {
+      const namaKota = message.body.toLowerCase().replace("jadwal sholat", "").trim();
 
-        // Number
-        const number = contact.number;
-
-        // Name (either WA name or saved name)
-        const name = contact.pushname || contact.name || number;
-
-        // Profile picture (returns URL, may fail if privacy restricted)
-        let avatar;
-        try {
-          avatar = await contact.getProfilePicUrl();
-        } catch (err) {
-          avatar = "No avatar available";
-        }
-
-        console.log(`👤 ${name} (${number})`);
-        console.log(`📸 Avatar: ${avatar}`);
+      if (!namaKota) {
+        await chat.sendMessage("⚠️ Tolong sebutkan nama kota. Contoh: *jadwal sholat bandung*");
+        return;
       }
-    }
-  
-    // end detail info group
-
-// Cek isi pesan
-if (message.body.toLowerCase().includes("hi")) {
-  await chat.sendMessage("🤖 aya naon");
-  console.log(`🤖 Reply ke ${sender}: aya naon`);
-} else if (message.body.toLowerCase().includes("halo")) {
-  await chat.sendMessage("🤖 halo juga!");
-  console.log(`🤖 Reply ke ${sender}: halo juga!`);
-} else if (message.body.toLowerCase().includes("jadwal sholat")) {
-  const namaKota = message.body.toLowerCase().replace("jadwal sholat", "").trim();
-
-  if (!namaKota) {
-    await chat.sendMessage("⚠️ Tolong sebutkan nama kota. Contoh: *jadwal sholat bandung*");
-    return;
-  }
-
-  const idKotaArray = await getKodeKota(namaKota);
-
-  if (idKotaArray.length === 0) {
-    await chat.sendMessage(`⚠️ Tidak ditemukan kota dengan nama ${namaKota}.`);
-    return;
-  }
-
-  for (const idKota of idKotaArray) {
-    const sholatData = await getSholatByLocation(idKota);
-    if (sholatData && sholatData.data) {
-      const jadwal = sholatData.data.jadwal;
-      let replyMsg =
-        `🕌 *Jadwal Sholat ${sholatData.data.lokasi}*\n` +
-        `📅 Tanggal: ${jadwal.tanggal}\n\n` +
-        `🌅 Imsak     : ${jadwal.imsak} WIB\n` +
-        `🌄 Subuh     : ${jadwal.subuh} WIB\n` +
-        `☀️ Dzuhur    : ${jadwal.dzuhur} WIB\n` +
-        `🌇 Ashar     : ${jadwal.ashar} WIB\n` +
-        `🌆 Maghrib   : ${jadwal.maghrib} WIB\n` +
-        `🌙 Isya      : ${jadwal.isya} WIB`;
-      await chat.sendMessage(replyMsg);
-    } else {
-      await chat.sendMessage("⚠️ Gagal mengambil jadwal sholat.");
-    }
-  }   
-}
-  } else {
-
-    if (message.body === 'ping') {
-    await message.reply('pong Yudhistira Sulaeman hari selasa Bandung Jabar Indonesia Banget...');
-  } else if (message.body === 'hello') {
-    await message.reply('Hello! How can I help you?');
-  } else if (message.body.startsWith("ambil ")) {
-   
-    //console.log('Fetching data for noPasien:', noPasien);
-    try {
-       const noPasien = message.body.split(" ")[1].trim(); 
-      // 🔹 Call your webservice
-      const response = await axios.get(`https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}`); 
-      let base64String = response.data.gambar; 
-      let nama = response.data.nama; 
-      let dlahir = response.data.dlahir; 
-      let jekel = response.data.jekel; 
-      let alamat = response.data.alamat; 
-      let tlp = response.data.tlp; 
-      let alergi = response.data.alergi; 
-      console.log(`https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}`);
-      // 🔹 Clean base64 if it has prefix
-      base64String = base64String.replace(/^data:image\/\w+;base64,/, "");
+      const idKotaArray = await getKodeKota(namaKota);
+      if (idKotaArray.length === 0) {
+        await chat.sendMessage(`⚠️ Tidak ditemukan kota dengan nama ${namaKota}.`);
+        return;
+      }
+      for (const idKota of idKotaArray) {
+        const sholatData = await getSholatByLocation(idKota);
+        if (sholatData && sholatData.data) {
+          const jadwal = sholatData.data.jadwal;
+          let replyMsg =
+            `🕌 *Jadwal Sholat ${sholatData.data.lokasi}*\n` +
+            `📅 Tanggal: ${jadwal.tanggal}\n\n` +
+            `🌅 Imsak     : ${jadwal.imsak} WIB\n` +
+            `🌄 Subuh     : ${jadwal.subuh} WIB\n` +
+            `☀️ Dzuhur    : ${jadwal.dzuhur} WIB\n` +
+            `🌇 Ashar     : ${jadwal.ashar} WIB\n` +
+            `🌆 Maghrib   : ${jadwal.maghrib} WIB\n` +
+            `🌙 Isya      : ${jadwal.isya} WIB`;
+          await chat.sendMessage(replyMsg);
+        } else {
+          await chat.sendMessage("⚠️ Gagal mengambil jadwal sholat.");
+        }
+      }
       
-      const media = new MessageMedia("image/png", base64String, "myImage.png");
-      //await client.sendMessage("628122132341@c.us", media,{caption: `🧾 Data pasien ${noPasien}\nNama: ${nama}\nJK: ${jekel}\nAlamat: ${alamat}\nTlp: ${tlp}\nTgl Lahir: ${dlahir}\nAlergi: ${alergi}`});
-   await client.sendMessage("628122132341@c.us", media, {
-  caption: 
-`🧾 Data pasien ${noPasien}
+    }
+  } else {
+        if (message.body === 'ping') {
+          await message.reply('pong Yudhistira Sulaeman hari selasa Bandung Jabar Indonesia Banget...');
+        } else if (message.body === 'hello') {
+          await message.reply('Hello! How can I help you?');
+        } else if (message.body.startsWith("ambil ")) {
+   
+          //console.log('Fetching data for noPasien:', noPasien);
+          try {
+            const noPasien = message.body.split(" ")[1].trim();
+            // 🔹 Call your webservice
+            const response = await axios.get(`https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}`);
+            let base64String = response.data.gambar;
+            let nama = response.data.nama;
+            let dlahir = response.data.dlahir;
+            let jekel = response.data.jekel;
+            let alamat = response.data.alamat;
+            let tlp = response.data.tlp;
+            let alergi = response.data.alergi;
+            console.log(`https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}`);
+            // 🔹 Clean base64 if it has prefix
+            base64String = base64String.replace(/^data:image\/\w+;base64,/, "");
+      
+            const media = new MessageMedia("image/png", base64String, "myImage.png");
+            //await client.sendMessage("628122132341@c.us", media,{caption: `🧾 Data pasien ${noPasien}\nNama: ${nama}\nJK: ${jekel}\nAlamat: ${alamat}\nTlp: ${tlp}\nTgl Lahir: ${dlahir}\nAlergi: ${alergi}`});
+            await client.sendMessage("628122132341@c.us", media, {
+              caption:
+                `🧾 Data pasien ${noPasien}
 👤 Nama: ${nama}
 🚻 JK: ${jekel}
 🏠 Alamat: ${alamat}
 📞 Tlp: ${tlp}
 🎂 Tgl Lahir: ${dlahir}
 ⚠️ Alergi: ${alergi}`
-});
-    } catch (error) {
-      console.error('Error calling API:', error.message);
-      await message.reply('❌ Failed to fetch data from API');
+            });
+          } catch (error) {
+            console.error('Error calling API:', error.message);
+            await message.reply('❌ Failed to fetch data from API');
+          }
+        } else {
+          await message.reply('I am not sure how to respond to that.');
+        }
+      }
+    });
+
+// getdetilInfogroup
+// Function: download avatar and send to target number
+async function sendAvatar(participant,toNumber, name, avatarUrl) {
+  try {
+    if (!avatarUrl) {
+      console.log(`⚠️ ${name} has no avatar.`);
+      return;
     }
-  }  else {
-    await message.reply('I am not sure how to respond to that.');
+
+    // Download avatar
+    const response = await axios.get(avatarUrl, { responseType: "arraybuffer" });
+    const media = new MessageMedia(
+      "image/jpeg",
+      Buffer.from(response.data, "binary").toString("base64"),
+      `${name}.jpg`
+    );
+
+    // Send to target number (admin)
+    await client.sendMessage(`${toNumber}@c.us`, media, {caption: `📸 Avatar of ${name} (${participant.id._serialized})`,});
+    console.log(`✅ Avatar of ${name} sent to ${toNumber}`);
+  } catch (err) {
+    console.error(`❌ Failed for ${name}:`, err.message);
   }
-  }
-});
+}
+
+// client.on("message", async (message) => {
+//   // Trigger command in a group
+//   if (message.body.toLowerCase() === "!getavatars" && message.from.endsWith("@g.us")) {
+//     const chat = await message.getChat();
+
+//     console.log(`👥 Group: ${chat.name}`);
+
+//     // Change to your admin number
+//     const adminNumber = "6281312188272";
+
+//     for (const participant of chat.participants) {
+//       const contact = await client.getContactById(participant.id._serialized);
+//       const name = contact.pushname || contact.number;
+//       const avatarUrl = await contact.getProfilePicUrl();
+
+//       await sendAvatar(adminNumber, name, avatarUrl);
+//     }
+
+//     await message.reply("✅ All avatars are being sent to admin.");
+//   }
+// });
+
+
+
+// endGetDetailInfoGroup
 
 async function getSholatByLocation(kodeLokasi) {
   try {
