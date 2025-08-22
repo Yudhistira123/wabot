@@ -111,20 +111,24 @@ client.on('message', async (message) => {
         if (sholatData && sholatData.data) {
           const jadwal = sholatData.data.jadwal;
           let replyMsg =
-            `🕌 *Jadwal Sholat ${sholatData.data.lokasi}*\n` +
-            `📅 Tanggal: ${jadwal.tanggal}\n\n` +
-            `🌅 Imsak     : ${jadwal.imsak} WIB\n` +
-            `🌄 Subuh     : ${jadwal.subuh} WIB\n` +
-            `☀️ Dzuhur    : ${jadwal.dzuhur} WIB\n` +
-            `🌇 Ashar     : ${jadwal.ashar} WIB\n` +
-            `🌆 Maghrib   : ${jadwal.maghrib} WIB\n` +
-            `🌙 Isya      : ${jadwal.isya} WIB`;
+              `🕌 *Jadwal Sholat ${sholatData.data.lokasi}*\n` +
+              `📅 Tanggal: ${jadwal.tanggal}\n\n` +
+              `🌅 Imsak     : ${jadwal.imsak} WIB\n` +
+              `🌄 Subuh     : ${jadwal.subuh} WIB\n` +
+              `🌤️ Terbit    : ${jadwal.terbit} WIB\n` +
+              `🌞 Dhuha     : ${jadwal.dhuha} WIB\n` +
+              `☀️ Dzuhur    : ${jadwal.dzuhur} WIB\n` +
+              `🌇 Ashar     : ${jadwal.ashar} WIB\n` +
+              `🌆 Maghrib   : ${jadwal.maghrib} WIB\n` +
+              `🌙 Isya      : ${jadwal.isya} WIB`;
+          
           await chat.sendMessage(replyMsg);
         } else {
           await chat.sendMessage("⚠️ Gagal mengambil jadwal sholat.");
         }
       }
-      
+
+       
     } else if (message.type === "location") {
       //const chat = await message.getChat();
       const { latitude, longitude, description } = message.location; // ✅ lowercase 'location'
