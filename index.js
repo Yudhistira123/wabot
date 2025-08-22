@@ -78,17 +78,17 @@ client.on('message', async (message) => {
     const sender = message._data.notifyName || message.from;
     console.log(`👤 Pengirim: ${sender}`);
     
-    if (message.body.toLowerCase().includes("sg4")) { 
-        // Change to your admin number
-        const adminNumber = "628122132341";
-        for (const participant of chat.participants) {
-          const contact = await client.getContactById(participant.id._serialized);
-          const name = contact.pushname || contact.number;
-          const avatarUrl = await contact.getProfilePicUrl();
-          await sendAvatar(participant,adminNumber, name, avatarUrl);
-      //   await message.reply("✅ All avatars are being sent to admin.");
-        }
-       }else if (message.body.toLowerCase().includes("naon")) {
+    if (message.body.toLowerCase().includes("sg4")) {
+      // Change to your admin number
+      const adminNumber = "628122132341";
+      for (const participant of chat.participants) {
+        const contact = await client.getContactById(participant.id._serialized);
+        const name = contact.pushname || contact.number;
+        const avatarUrl = await contact.getProfilePicUrl();
+        await sendAvatar(participant, adminNumber, name, avatarUrl);
+        //   await message.reply("✅ All avatars are being sent to admin.");
+      }
+    } else if (message.body.toLowerCase().includes("naon")) {
       await chat.sendMessage("🤖 aya naon");
       console.log(`🤖 Reply ke ${sender}: aya naon`);
     } else if (message.body.toLowerCase().includes("halo")) {
@@ -124,47 +124,48 @@ client.on('message', async (message) => {
         }
       }
       
-    }else if (message.type === "location") {
-    //const chat = await message.getChat();
-    const { latitude, longitude, description } = message.location; // ✅ lowercase 'location'
+    } else if (message.type === "location") {
+      //const chat = await message.getChat();
+      const { latitude, longitude, description } = message.location; // ✅ lowercase 'location'
 
-    console.log(`📍 Lokasi diterima: ${latitude}, ${longitude} (${description || "tanpa deskripsi"})`);
+      console.log(`📍 Lokasi diterima: ${latitude}, ${longitude} (${description || "tanpa deskripsi"})`);
 
   
-    const weather = await getWeather(latitude, longitude);
+      const weather = await getWeather(latitude, longitude);
 
-    if (weather) {
-      const replyMsg =
-        `🌍 *Informasi Cuaca Lengkap*\n\n` +
-        `📍 Lokasi: ${weather.name}, ${weather.sys.country}\n` +
-        `🌐 Koordinat: ${weather.coord.lat}, ${weather.coord.lon}\n\n` +
+      if (weather) {
+        const replyMsg =
+          `🌍 *Informasi Cuaca Lengkap*\n\n` +
+          `📍 Lokasi: ${weather.name}, ${weather.sys.country}\n` +
+          `🌐 Koordinat: ${weather.coord.lat}, ${weather.coord.lon}\n\n` +
 
-        `🌤️ Cuaca: ${weather.weather[0].main} - ${weather.weather[0].description}\n` +
-        `🌡️ Suhu: ${weather.main.temp}°C\n` +
-        `🤒 Terasa: ${weather.main.feels_like}°C\n` +
-        `🌡️ Suhu Min: ${weather.main.temp_min}°C\n` +
-        `🌡️ Suhu Max: ${weather.main.temp_max}°C\n` +
-        `💧 Kelembapan: ${weather.main.humidity}%\n` +
-        `🌬️ Tekanan: ${weather.main.pressure} hPa\n` +
-        `🌊 Tekanan Laut: ${weather.main.sea_level ?? "-"} hPa\n` +
-        `🏞️ Tekanan Darat: ${weather.main.grnd_level ?? "-"} hPa\n\n` +
+          `🌤️ Cuaca: ${weather.weather[0].main} - ${weather.weather[0].description}\n` +
+          `🌡️ Suhu: ${weather.main.temp}°C\n` +
+          `🤒 Terasa: ${weather.main.feels_like}°C\n` +
+          `🌡️ Suhu Min: ${weather.main.temp_min}°C\n` +
+          `🌡️ Suhu Max: ${weather.main.temp_max}°C\n` +
+          `💧 Kelembapan: ${weather.main.humidity}%\n` +
+          `🌬️ Tekanan: ${weather.main.pressure} hPa\n` +
+          `🌊 Tekanan Laut: ${weather.main.sea_level ?? "-"} hPa\n` +
+          `🏞️ Tekanan Darat: ${weather.main.grnd_level ?? "-"} hPa\n\n` +
 
-        `👀 Jarak Pandang: ${weather.visibility} m\n` +
-        `💨 Angin: ${weather.wind.speed} m/s, Arah ${weather.wind.deg}°, Gust ${weather.wind.gust ?? "-"} m/s\n` +
-        `☁️ Awan: ${weather.clouds.all}%\n\n` +
+          `👀 Jarak Pandang: ${weather.visibility} m\n` +
+          `💨 Angin: ${weather.wind.speed} m/s, Arah ${weather.wind.deg}°, Gust ${weather.wind.gust ?? "-"} m/s\n` +
+          `☁️ Awan: ${weather.clouds.all}%\n\n` +
 
-        `🌅 Sunrise: ${new Date(weather.sys.sunrise * 1000).toLocaleTimeString("id-ID")}\n` +
-        `🌇 Sunset: ${new Date(weather.sys.sunset * 1000).toLocaleTimeString("id-ID")}\n\n` +
+          `🌅 Sunrise: ${new Date(weather.sys.sunrise * 1000).toLocaleTimeString("id-ID")}\n` +
+          `🌇 Sunset: ${new Date(weather.sys.sunset * 1000).toLocaleTimeString("id-ID")}\n\n` +
 
-        `🕒 Zona Waktu: UTC${weather.timezone / 3600}\n` +
-        `🆔 City ID: ${weather.id}\n` +
-        `📡 Source: ${weather.base}\n` +
-        `⏱️ Data Timestamp: ${new Date(weather.dt * 1000).toLocaleString("id-ID")}`;
+          `🕒 Zona Waktu: UTC${weather.timezone / 3600}\n` +
+          `🆔 City ID: ${weather.id}\n` +
+          `📡 Source: ${weather.base}\n` +
+          `⏱️ Data Timestamp: ${new Date(weather.dt * 1000).toLocaleString("id-ID")}`;
 
-      const chat = await message.getChat();
-      await chat.sendMessage(replyMsg);
-      console.log(`✅ Sent weather info to group: ${chat.name}`);
-    } 
+        const chat = await message.getChat();
+        await chat.sendMessage(replyMsg);
+        console.log(`✅ Sent weather info to group: ${chat.name}`);
+      }
+    }
   } else {
     if (message.body === 'ping') {
       await message.reply('pong Yudhistira Sulaeman hari selasa Bandung Jabar Indonesia Banget...');
