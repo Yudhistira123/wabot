@@ -112,7 +112,7 @@ client.on('message', async (message) => {
           const jadwal = sholatData.data.jadwal;
           let replyMsg =
               `🕌 *Jadwal Sholat ${sholatData.data.lokasi}*\n` +
-              `📅 Tanggal: ${jadwal.tanggal}\n\n` +
+              `📅 Hari,Tgl: ${jadwal.tanggal}\n\n` +
               `🌅 Imsak     : ${jadwal.imsak} WIB\n` +
               `🌄 Subuh     : ${jadwal.subuh} WIB\n` +
               `🌤️ Terbit    : ${jadwal.terbit} WIB\n` +
