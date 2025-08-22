@@ -165,6 +165,7 @@ client.on('message', async (message) => {
         await message.reply('❌ Failed to fetch data from API');
       }
     } else if (message.body.toLowerCase().includes("cuaca bandung")) {
+      const chat = await message.getChat();
       const lat = -6.8970880895150986;
       const lon = 107.57989849841634;
       await sendWeather(chat, lat, lon);
