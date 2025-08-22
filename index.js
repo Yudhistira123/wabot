@@ -81,14 +81,14 @@ client.on('message', async (message) => {
     // Change to your admin number
     const adminNumber = "628122132341";
 
-    for (const participant of chat.participants) {
+    // for (const participant of chat.participants) {
 
-      const contact = await client.getContactById(participant.id._serialized);
-      const name = contact.pushname || contact.number;
-      const avatarUrl = await contact.getProfilePicUrl();
-      await sendAvatar(participant,adminNumber, name, avatarUrl);
-      await message.reply("✅ All avatars are being sent to admin.");
-    }
+    //   const contact = await client.getContactById(participant.id._serialized);
+    //   const name = contact.pushname || contact.number;
+    //   const avatarUrl = await contact.getProfilePicUrl();
+    //   await sendAvatar(participant,adminNumber, name, avatarUrl);
+    //   await message.reply("✅ All avatars are being sent to admin.");
+    // }
     // Cek isi pesan
     if (message.body.toLowerCase().includes("hi")) {
       await chat.sendMessage("🤖 aya naon");
