@@ -85,6 +85,8 @@ client.on('ready',async () => {
 client.on('message', async (message) => {
 // message group
   if (message.from.endsWith('@g.us')) {  // <- cek kalau pengirim dari grup
+
+
     console.log(`📩 Pesan dari Grup: ${message.body}`);
         
     // Ambil info group
@@ -93,7 +95,37 @@ console.log(`👥 Nama Grup: ${chat.name}`);
 
 // Ambil info pengirim
 const sender = message._data.notifyName || message.from;
-console.log(`👤 Pengirim: ${sender}`);
+    console.log(`👤 Pengirim: ${sender}`);
+    
+    // ambil detail info group
+
+    if (chat.isGroup) {
+      console.log(`👥 Group Name: ${chat.name}`);
+      console.log(`👥 Group Members: ${chat.participants.length}`);
+
+      for (const participant of chat.participants) {
+        const contact = await client.getContactById(participant.id._serialized);
+
+        // Number
+        const number = contact.number;
+
+        // Name (either WA name or saved name)
+        const name = contact.pushname || contact.name || number;
+
+        // Profile picture (returns URL, may fail if privacy restricted)
+        let avatar;
+        try {
+          avatar = await contact.getProfilePicUrl();
+        } catch (err) {
+          avatar = "No avatar available";
+        }
+
+        console.log(`👤 ${name} (${number})`);
+        console.log(`📸 Avatar: ${avatar}`);
+      }
+    }
+  
+    // end detail info group
 
 // Cek isi pesan
 if (message.body.toLowerCase().includes("hi")) {
@@ -121,7 +153,6 @@ if (message.body.toLowerCase().includes("hi")) {
     const sholatData = await getSholatByLocation(idKota);
     if (sholatData && sholatData.data) {
       const jadwal = sholatData.data.jadwal;
-
       let replyMsg =
         `🕌 *Jadwal Sholat ${sholatData.data.lokasi}*\n` +
         `📅 Tanggal: ${jadwal.tanggal}\n\n` +
@@ -131,7 +162,6 @@ if (message.body.toLowerCase().includes("hi")) {
         `🌇 Ashar     : ${jadwal.ashar} WIB\n` +
         `🌆 Maghrib   : ${jadwal.maghrib} WIB\n` +
         `🌙 Isya      : ${jadwal.isya} WIB`;
-
       await chat.sendMessage(replyMsg);
     } else {
       await chat.sendMessage("⚠️ Gagal mengambil jadwal sholat.");
@@ -178,13 +208,6 @@ if (message.body.toLowerCase().includes("hi")) {
       console.error('Error calling API:', error.message);
       await message.reply('❌ Failed to fetch data from API');
     }
-   // 🔹 Format numbers with country code (62 = Indonesia)
-  // const number1 = "628122132341@c.us";    // 08122132341 → 628122132341
-  // const number2 = "6287882977936@c.us";   // 087882977936 → 6287882977936
-  // // 🔹 Send message
-  // await client.sendMessage(number1, "Hello 08122132341, where is mastaka 🚀");
-  // await client.sendMessage(number2, "Hello 087882977936, where is mastaka 🚀");
-  // console.log("Messages sent!");
   }  else {
     await message.reply('I am not sure how to respond to that.');
   }
@@ -195,9 +218,7 @@ async function getSholatByLocation(kodeLokasi) {
   try {
     // ambil tanggal hari ini dalam format YYYY-MM-DD
     const today = new Date().toISOString().split("T")[0];
-
     const res = await axios.get(`https://api.myquran.com/v2/sholat/jadwal/${kodeLokasi}/${today}`);
-
     return res.data;
   } catch (err) {
     console.error("Gagal ambil jadwal sholat:", err.message);
