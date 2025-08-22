@@ -164,7 +164,28 @@ client.on('message', async (message) => {
             console.error('Error calling API:', error.message);
             await message.reply('❌ Failed to fetch data from API');
           }
-        } else {
+        } else if (message.body.toLowerCase().includes("cuaca bandung")) {
+    const lat = -6.8970880895150986;
+    const lon = 107.57989849841634;
+
+    const weather = await getWeather(lat, lon);
+
+    if (weather) {
+      const replyMsg =
+        `🌤️ *Cuaca ${weather.name}*\n\n` +
+        `🌡️ Suhu      : ${weather.main.temp}°C\n` +
+        `🤒 Terasa    : ${weather.main.feels_like}°C\n` +
+        `💧 Kelembapan: ${weather.main.humidity}%\n` +
+        `🌬️ Angin     : ${weather.wind.speed} m/s\n` +
+        `☁️ Kondisi   : ${weather.weather[0].description}`;
+
+      const chat = await message.getChat();
+      await chat.sendMessage(replyMsg);
+      console.log(`✅ Sent weather info to group: ${chat.name}`);
+    } else {
+      await message.reply("⚠️ Gagal mengambil data cuaca.");
+    }
+  } else {
           await message.reply('I am not sure how to respond to that.');
         }
       }
@@ -172,6 +193,21 @@ client.on('message', async (message) => {
 
 // getdetilInfogroup
 // Function: download avatar and send to target number
+
+async function getWeather(lat, lon) {
+  const apiKey = "44747099862079d031d937f5cd84a57e"; // <- pakai key kamu
+  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=ID`;
+
+  try {
+    const response = await axios.get(url);
+    return response.data;
+  } catch (err) {
+    console.error("❌ Error getWeather:", err.message);
+    return null;
+  }
+}
+
+
 async function sendAvatar(participant,toNumber, name, avatarUrl) {
   try {
     if (!avatarUrl) {
