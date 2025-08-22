@@ -126,48 +126,49 @@ client.on('message', async (message) => {
       
     }
   } else {
-        if (message.body === 'ping') {
-          await message.reply('pong Yudhistira Sulaeman hari selasa Bandung Jabar Indonesia Banget...');
-        } else if (message.body === 'hello') {
-          await message.reply('Hello! How can I help you?');
-        } else if (message.body.startsWith("ambil ")) {
+    if (message.body === 'ping') {
+      await message.reply('pong Yudhistira Sulaeman hari selasa Bandung Jabar Indonesia Banget...');
+    } else if (message.body === 'hello') {
+      await message.reply('Hello! How can I help you?');
+    } else if (message.body.startsWith("ambil ")) {
    
-          //console.log('Fetching data for noPasien:', noPasien);
-          try {
-            const noPasien = message.body.split(" ")[1].trim();
-            // 🔹 Call your webservice
-            const response = await axios.get(`https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}`);
-            let base64String = response.data.gambar;
-            let nama = response.data.nama;
-            let dlahir = response.data.dlahir;
-            let jekel = response.data.jekel;
-            let alamat = response.data.alamat;
-            let tlp = response.data.tlp;
-            let alergi = response.data.alergi;
-            console.log(`https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}`);
-            // 🔹 Clean base64 if it has prefix
-            base64String = base64String.replace(/^data:image\/\w+;base64,/, "");
+      //console.log('Fetching data for noPasien:', noPasien);
+      try {
+        const noPasien = message.body.split(" ")[1].trim();
+        // 🔹 Call your webservice
+        const response = await axios.get(`https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}`);
+        let base64String = response.data.gambar;
+        let nama = response.data.nama;
+        let dlahir = response.data.dlahir;
+        let jekel = response.data.jekel;
+        let alamat = response.data.alamat;
+        let tlp = response.data.tlp;
+        let alergi = response.data.alergi;
+        console.log(`https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}`);
+        // 🔹 Clean base64 if it has prefix
+        base64String = base64String.replace(/^data:image\/\w+;base64,/, "");
       
-            const media = new MessageMedia("image/png", base64String, "myImage.png");
-            //await client.sendMessage("628122132341@c.us", media,{caption: `🧾 Data pasien ${noPasien}\nNama: ${nama}\nJK: ${jekel}\nAlamat: ${alamat}\nTlp: ${tlp}\nTgl Lahir: ${dlahir}\nAlergi: ${alergi}`});
-            await client.sendMessage("628122132341@c.us", media, {
-              caption:
-                `🧾 Data pasien ${noPasien}
+        const media = new MessageMedia("image/png", base64String, "myImage.png");
+        //await client.sendMessage("628122132341@c.us", media,{caption: `🧾 Data pasien ${noPasien}\nNama: ${nama}\nJK: ${jekel}\nAlamat: ${alamat}\nTlp: ${tlp}\nTgl Lahir: ${dlahir}\nAlergi: ${alergi}`});
+        await client.sendMessage("628122132341@c.us", media, {
+          caption:
+            `🧾 Data pasien ${noPasien}
 👤 Nama: ${nama}
 🚻 JK: ${jekel}
 🏠 Alamat: ${alamat}
 📞 Tlp: ${tlp}
 🎂 Tgl Lahir: ${dlahir}
 ⚠️ Alergi: ${alergi}`
-            });
-          } catch (error) {
-            console.error('Error calling API:', error.message);
-            await message.reply('❌ Failed to fetch data from API');
-          }
-        } else if (message.body.toLowerCase().includes("cuaca bandung")) {
-    const lat = -6.8970880895150986;
-    const lon = 107.57989849841634;
-
+        });
+      } catch (error) {
+        console.error('Error calling API:', error.message);
+        await message.reply('❌ Failed to fetch data from API');
+      }
+      //  } else if (message.body.toLowerCase().includes("cuaca bandung")) {
+    }else if  (message.location) {
+    const chat = await message.getChat();
+    const { lat, lon } = message.location;
+    console.log(`📍 Lokasi diterima: ${lat}, ${lon}`);
     const weather = await getWeather(lat, lon);
 
     if (weather) {
