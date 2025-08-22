@@ -4,7 +4,8 @@ const axios = require('axios');
 const app = express();
 const mqtt = require('mqtt');
 const port = process.env.PORT || 3000;
-const { LocalAuth, Client,MessageMedia } = require('whatsapp-web.js')
+const { LocalAuth, Client, MessageMedia } = require('whatsapp-web.js');
+const puppeteer = require("puppeteer");
 
 // =============== MQTT SETUP =================
 const mqttBroker = "mqtt://103.27.206.14:1883";  // or your own broker
