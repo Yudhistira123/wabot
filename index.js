@@ -175,7 +175,7 @@ client.on('message', async (message) => {
     console.log(`📍 Lokasi diterima: ${latitude}, ${longitude}`);
 
     //await sendWeather(chat, latitude, longitude);
-  }
+  
     const weather = await getWeather(latitude, longitude);
 
     if (weather) {
