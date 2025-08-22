@@ -126,50 +126,85 @@ client.on('message', async (message) => {
       
     }
   } else {
-    if (message.body === 'ping') {
-      await message.reply('pong Yudhistira Sulaeman hari selasa Bandung Jabar Indonesia Banget...');
-    } else if (message.body === 'hello') {
-      await message.reply('Hello! How can I help you?');
-    } else if (message.body.startsWith("ambil ")) {
+        if (message.body === 'ping') {
+          await message.reply('pong Yudhistira Sulaeman hari selasa Bandung Jabar Indonesia Banget...');
+        } else if (message.body === 'hello') {
+          await message.reply('Hello! How can I help you?');
+        } else if (message.body.startsWith("ambil ")) {
    
-      //console.log('Fetching data for noPasien:', noPasien);
-      try {
-        const noPasien = message.body.split(" ")[1].trim();
-        // 🔹 Call your webservice
-        const response = await axios.get(`https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}`);
-        let base64String = response.data.gambar;
-        let nama = response.data.nama;
-        let dlahir = response.data.dlahir;
-        let jekel = response.data.jekel;
-        let alamat = response.data.alamat;
-        let tlp = response.data.tlp;
-        let alergi = response.data.alergi;
-        console.log(`https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}`);
-        // 🔹 Clean base64 if it has prefix
-        base64String = base64String.replace(/^data:image\/\w+;base64,/, "");
+          //console.log('Fetching data for noPasien:', noPasien);
+          try {
+            const noPasien = message.body.split(" ")[1].trim();
+            // 🔹 Call your webservice
+            const response = await axios.get(`https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}`);
+            let base64String = response.data.gambar;
+            let nama = response.data.nama;
+            let dlahir = response.data.dlahir;
+            let jekel = response.data.jekel;
+            let alamat = response.data.alamat;
+            let tlp = response.data.tlp;
+            let alergi = response.data.alergi;
+            console.log(`https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}`);
+            // 🔹 Clean base64 if it has prefix
+            base64String = base64String.replace(/^data:image\/\w+;base64,/, "");
       
-        const media = new MessageMedia("image/png", base64String, "myImage.png");
-        //await client.sendMessage("628122132341@c.us", media,{caption: `🧾 Data pasien ${noPasien}\nNama: ${nama}\nJK: ${jekel}\nAlamat: ${alamat}\nTlp: ${tlp}\nTgl Lahir: ${dlahir}\nAlergi: ${alergi}`});
-        await client.sendMessage("628122132341@c.us", media, {
-          caption:
-            `🧾 Data pasien ${noPasien}
+            const media = new MessageMedia("image/png", base64String, "myImage.png");
+            //await client.sendMessage("628122132341@c.us", media,{caption: `🧾 Data pasien ${noPasien}\nNama: ${nama}\nJK: ${jekel}\nAlamat: ${alamat}\nTlp: ${tlp}\nTgl Lahir: ${dlahir}\nAlergi: ${alergi}`});
+            await client.sendMessage("628122132341@c.us", media, {
+              caption:
+                `🧾 Data pasien ${noPasien}
 👤 Nama: ${nama}
 🚻 JK: ${jekel}
 🏠 Alamat: ${alamat}
 📞 Tlp: ${tlp}
 🎂 Tgl Lahir: ${dlahir}
 ⚠️ Alergi: ${alergi}`
-        });
-      } catch (error) {
-        console.error('Error calling API:', error.message);
-        await message.reply('❌ Failed to fetch data from API');
-      }
-    } else if (message.body.toLowerCase().includes("cuaca bandung")) {
+            });
+          } catch (error) {
+            console.error('Error calling API:', error.message);
+            await message.reply('❌ Failed to fetch data from API');
+          }
+        } else if (message.body.toLowerCase().includes("cuaca bandung")) {
+    const lat = -6.8970880895150986;
+    const lon = 107.57989849841634;
+
+    const weather = await getWeather(lat, lon);
+
+    if (weather) {
+      const replyMsg =
+        `🌍 *Informasi Cuaca Lengkap*\n\n` +
+        `📍 Lokasi: ${weather.name}, ${weather.sys.country}\n` +
+        `🌐 Koordinat: ${weather.coord.lat}, ${weather.coord.lon}\n\n` +
+
+        `🌤️ Cuaca: ${weather.weather[0].main} - ${weather.weather[0].description}\n` +
+        `🌡️ Suhu: ${weather.main.temp}°C\n` +
+        `🤒 Terasa: ${weather.main.feels_like}°C\n` +
+        `🌡️ Suhu Min: ${weather.main.temp_min}°C\n` +
+        `🌡️ Suhu Max: ${weather.main.temp_max}°C\n` +
+        `💧 Kelembapan: ${weather.main.humidity}%\n` +
+        `🌬️ Tekanan: ${weather.main.pressure} hPa\n` +
+        `🌊 Tekanan Laut: ${weather.main.sea_level ?? "-"} hPa\n` +
+        `🏞️ Tekanan Darat: ${weather.main.grnd_level ?? "-"} hPa\n\n` +
+
+        `👀 Jarak Pandang: ${weather.visibility} m\n` +
+        `💨 Angin: ${weather.wind.speed} m/s, Arah ${weather.wind.deg}°, Gust ${weather.wind.gust ?? "-"} m/s\n` +
+        `☁️ Awan: ${weather.clouds.all}%\n\n` +
+
+        `🌅 Sunrise: ${new Date(weather.sys.sunrise * 1000).toLocaleTimeString("id-ID")}\n` +
+        `🌇 Sunset: ${new Date(weather.sys.sunset * 1000).toLocaleTimeString("id-ID")}\n\n` +
+
+        `🕒 Zona Waktu: UTC${weather.timezone / 3600}\n` +
+        `🆔 City ID: ${weather.id}\n` +
+        `📡 Source: ${weather.base}\n` +
+        `⏱️ Data Timestamp: ${new Date(weather.dt * 1000).toLocaleString("id-ID")}`;
+
       const chat = await message.getChat();
-      const lat = -6.8970880895150986;
-      const lon = 107.57989849841634;
-      await sendWeather(chat, lat, lon);
-    }else {
+      await chat.sendMessage(replyMsg);
+      console.log(`✅ Sent weather info to group: ${chat.name}`);
+    } else {
+      await message.reply("⚠️ Gagal mengambil data cuaca.");
+    }
+  } else {
           await message.reply('I am not sure how to respond to that.');
         }
       }
@@ -178,51 +213,16 @@ client.on('message', async (message) => {
 // getdetilInfogroup
 // Function: download avatar and send to target number
 
-async function sendWeather(chat, lat, lon) {
-  const apiKey = "44747099862079d031d937f5cd84a57e";
+async function getWeather(lat, lon) {
+  const apiKey = "44747099862079d031d937f5cd84a57e"; // <- pakai key kamu
   const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=ID`;
 
   try {
-    const { data } = await axios.get(url);
-
-    // Mapping emoji berdasarkan kondisi cuaca
-    const weatherMain = data.weather[0].main.toLowerCase();
-    let weatherEmoji = "🌍";
-
-    if (weatherMain.includes("clear")) weatherEmoji = "☀️";
-    else if (weatherMain.includes("cloud")) weatherEmoji = "⛅";
-    else if (weatherMain.includes("rain")) weatherEmoji = "🌧️";
-    else if (weatherMain.includes("thunderstorm")) weatherEmoji = "🌩️";
-    else if (weatherMain.includes("snow")) weatherEmoji = "❄️";
-    else if (weatherMain.includes("mist") || weatherMain.includes("fog") || weatherMain.includes("haze")) weatherEmoji = "🌫️";
-
-    const replyMsg = 
-`${weatherEmoji} *Informasi Cuaca Lengkap*
-🏙️ Kota: ${data.name}, ${data.sys.country}
-📍 Koordinat: [${data.coord.lat}, ${data.coord.lon}]
-🌡️ Suhu: ${data.main.temp}°C (Terasa ${data.main.feels_like}°C)
-🌡️ Min: ${data.main.temp_min}°C | Maks: ${data.main.temp_max}°C
-💧 Kelembapan: ${data.main.humidity}%
-🌬️ Angin: ${data.wind.speed} m/s (${data.wind.deg}°)
-${weatherEmoji} Kondisi: ${data.weather[0].description}
-☁️ Awan: ${data.clouds.all}%
-📈 Tekanan: ${data.main.pressure} hPa
-🌅 Matahari Terbit: ${new Date(data.sys.sunrise * 1000).toLocaleTimeString("id-ID")}
-🌇 Matahari Terbenam: ${new Date(data.sys.sunset * 1000).toLocaleTimeString("id-ID")}
-⏰ Zona Waktu: GMT${data.timezone / 3600 >= 0 ? "+" : ""}${data.timezone / 3600}`;
-
-    // ambil ikon dari weather API
-    const iconUrl = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
-
-    // ambil media dari url
-    const media = await MessageMedia.fromUrl(iconUrl);
-
-    // kirim gambar + caption info cuaca
-    await chat.sendMessage(media, { caption: replyMsg });
-
-  } catch (error) {
-    console.error("Gagal ambil data cuaca:", error.message);
-    await chat.sendMessage("⚠️ Gagal mengambil informasi cuaca.");
+    const response = await axios.get(url);
+    return response.data;
+  } catch (err) {
+    console.error("❌ Error getWeather:", err.message);
+    return null;
   }
 }
 
