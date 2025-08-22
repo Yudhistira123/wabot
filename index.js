@@ -166,9 +166,11 @@ client.on('message', async (message) => {
       }
       //  } else if (message.body.toLowerCase().includes("cuaca bandung")) {
     }else if (message.type === "location") {
-    console.log("=== FULL MESSAGE OBJECT ===");
-    console.dir(message, { depth: null }); // biar semua field kelihatan
-  
+    const chat = await message.getChat();
+    const { latitude, longitude, description } = message.location; // ✅ lowercase 'location'
+
+    console.log(`📍 Lokasi diterima: ${latitude}, ${longitude} (${description || "tanpa deskripsi"})`);
+
   
     const weather = await getWeather(latitude, longitude);
 
