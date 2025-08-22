@@ -165,17 +165,18 @@ client.on('message', async (message) => {
         await message.reply('❌ Failed to fetch data from API');
       }
       //  } else if (message.body.toLowerCase().includes("cuaca bandung")) {
-    }else if  (message.type === "location") {
-    // const chat = await message.getChat();
-      //   const { lat, lon } = message.location;
-      
-      const { lat, lon } = await message.getLocation;
+    }else if (message.type === "location") {
+    const chat = await message.getChat();
 
-    //   const loc = await message.getLocation();
-    // const { lat, lon } = loc;
-      
-    console.log(`📍 Lokasi diterima: ${lat}, ${lon}`);
-    const weather = await getWeather(lat, lon);
+    // Ambil data lokasi
+    const loc = await message.getLocation();
+    const { latitude, longitude } = loc;
+
+    console.log(`📍 Lokasi diterima: ${latitude}, ${longitude}`);
+
+    //await sendWeather(chat, latitude, longitude);
+  }
+    const weather = await getWeather(latitude, longitude);
 
     if (weather) {
       const replyMsg =
