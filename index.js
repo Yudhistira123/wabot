@@ -326,7 +326,8 @@ async function sendAvatar(participant,toNumber, name, avatarUrl) {
 async function getSholatByLocation(kodeLokasi) {
   try {
     // ambil tanggal hari ini dalam format YYYY-MM-DD
-    const today = new Date().toISOString().split("T")[0];
+   // const today = new Date().toISOString().split("T")[0];
+    const today = new Date().toLocaleDateString("sv-SE"); 
     const res = await axios.get(`https://api.myquran.com/v2/sholat/jadwal/${kodeLokasi}/${today}`);
     return res.data;
   } catch (err) {
