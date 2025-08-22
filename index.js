@@ -78,19 +78,17 @@ client.on('message', async (message) => {
     const sender = message._data.notifyName || message.from;
     console.log(`👤 Pengirim: ${sender}`);
     
-    // Change to your admin number
-    const adminNumber = "628122132341";
-
-    for (const participant of chat.participants) {
-
-      const contact = await client.getContactById(participant.id._serialized);
-      const name = contact.pushname || contact.number;
-      const avatarUrl = await contact.getProfilePicUrl();
-    //  await sendAvatar(participant,adminNumber, name, avatarUrl);
-   //   await message.reply("✅ All avatars are being sent to admin.");
-    }
-    // Cek isi pesan
-    if (message.body.toLowerCase().includes("hi")) {
+    if (message.body.toLowerCase().includes("sg4")) { 
+        // Change to your admin number
+        const adminNumber = "628122132341";
+        for (const participant of chat.participants) {
+          const contact = await client.getContactById(participant.id._serialized);
+          const name = contact.pushname || contact.number;
+          const avatarUrl = await contact.getProfilePicUrl();
+          await sendAvatar(participant,adminNumber, name, avatarUrl);
+      //   await message.reply("✅ All avatars are being sent to admin.");
+        }
+       }else if (message.body.toLowerCase().includes("naon")) {
       await chat.sendMessage("🤖 aya naon");
       console.log(`🤖 Reply ke ${sender}: aya naon`);
     } else if (message.body.toLowerCase().includes("halo")) {
@@ -98,7 +96,6 @@ client.on('message', async (message) => {
       console.log(`🤖 Reply ke ${sender}: halo juga!`);
     } else if (message.body.toLowerCase().includes("jadwal sholat")) {
       const namaKota = message.body.toLowerCase().replace("jadwal sholat", "").trim();
-
       if (!namaKota) {
         await chat.sendMessage("⚠️ Tolong sebutkan nama kota. Contoh: *jadwal sholat bandung*");
         return;
