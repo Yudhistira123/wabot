@@ -174,8 +174,41 @@ client.on('message', async (message) => {
   } else {
     if (message.body.toLowerCase() === "hasil club") {
       
-        const reply = await getClubActivities();
-        message.reply(reply);
+        const clubInfo = await getClubInfo();
+    const activities = await getClubActivities();
+
+    if (!clubInfo) {
+        msg.reply("❌ Gagal ambil info club.");
+        return;
+    }
+
+    // Send cover image first
+    if (clubInfo.cover_photo_small) {
+        try {
+            const media = await MessageMedia.fromUrl(clubInfo.cover_photo_small);
+            await client.sendMessage(msg.from, media, { caption: `🏃 *${clubInfo.name}*` });
+        } catch (err) {
+            console.error("❌ Error sending cover photo:", err.message);
+        }
+    }
+
+    // Build text reply
+    let reply = `🌍 Lokasi: ${clubInfo.city}, ${clubInfo.state}, ${clubInfo.country}\n` +
+                `👥 Member: ${clubInfo.member_count}\n\n` +
+                `ℹ️ ${clubInfo.description || "No description"}\n\n` +
+                `=== Aktivitas Terbaru ===\n\n`;
+
+    activities.forEach((act, i) => {
+        reply += `${i + 1}. ${act.athlete.firstname} ${act.athlete.lastname}\n` +
+                 `📌 ${act.name}\n` +
+                 `📏 ${(act.distance / 1000).toFixed(2)} km\n` +
+                 `⏱️ ${(act.moving_time / 60).toFixed(0)} menit\n` +
+                 `⛰️ Elevasi: ${act.total_elevation_gain} m\n\n`;
+    });
+      message.reply(reply);
+      
+
+
     }else if (message.body === 'ping') {
       await message.reply('pong Yudhistira Sulaeman hari selasa Bandung Jabar Indonesia Banget...');
     } else if (message.body === 'hello') {
@@ -319,7 +352,7 @@ async function getClubActivities() {
     try {
       if (!accessToken) await getAccessToken();
       
-      const clubInfo = await getClubInfo(CLUB_ID);
+      //const clubInfo = await getClubInfo(CLUB_ID);
        const res = await axios.get(
             `https://www.strava.com/api/v3/clubs/${CLUB_ID}/activities`,
             {
@@ -328,19 +361,19 @@ async function getClubActivities() {
             }
         );
       console.log(JSON.stringify(res.data, null, 2));
-let reply = `🏃 Aktivitas Terbaru di Club: ${clubInfo?.name || "Unknown"}\n\n`;
+//let reply = `🏃 Aktivitas Terbaru di Club: ${clubInfo?.name || "Unknown"}\n\n`;
 
-res.data.forEach((act, i) => {
-    const dateLocal = new Date(act.start_date_local).toLocaleString();
+// res.data.forEach((act, i) => {
+//     const dateLocal = new Date(act.start_date_local).toLocaleString();
 
-    reply += `${i + 1}. ${act.athlete.firstname} ${act.athlete.lastname}\n` +
-             `📌 ${act.name}\n` +
-             `📅 Tanggal: ${dateLocal}\n` +
-             `🌍 Lokasi: ${act.location_country || "Tidak diketahui"}\n` +
-             `📏 ${(act.distance / 1000).toFixed(2)} km\n` +
-             `⏱️ ${(act.moving_time / 60).toFixed(0)} menit\n` +
-             `⛰️ Elevasi: ${act.total_elevation_gain} m\n\n`;
-});
+//     reply += `${i + 1}. ${act.athlete.firstname} ${act.athlete.lastname}\n` +
+//              `📌 ${act.name}\n` +
+//              `📅 Tanggal: ${dateLocal}\n` +
+//              `🌍 Lokasi: ${act.location_country || "Tidak diketahui"}\n` +
+//              `📏 ${(act.distance / 1000).toFixed(2)} km\n` +
+//              `⏱️ ${(act.moving_time / 60).toFixed(0)} menit\n` +
+//              `⛰️ Elevasi: ${act.total_elevation_gain} m\n\n`;
+// });
 
 
        
@@ -355,7 +388,7 @@ res.data.forEach((act, i) => {
         //              `❤️ Kudus: ${act.kudos_count}\n\n`;
         // });
 
-        return reply || "Belum ada aktivitas di club.";
+        return res.data ;
     } catch (err) {
         console.error("❌ Error getClubActivities:", err.message);
         return "Gagal ambil data Club Strava.";
