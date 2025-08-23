@@ -223,24 +223,24 @@ client.on('message', async (message) => {
      
         const data = await getLeaderboard(CLUB_ID);
 
-        for (let i = 0; i < data.length; i++) {
-          const athlete = data[i];
-          const pace = ((athlete.moving_time / 60) / (athlete.distance / 1000)).toFixed(2);
+      //   for (let i = 0; i < data.length; i++) {
+      //     const athlete = data[i];
+      //     const pace = ((athlete.moving_time / 60) / (athlete.distance / 1000)).toFixed(2);
 
-        const caption = 
-      `🏅 Rank ${i + 1}
-      👤 ${athlete.athlete_firstname} ${athlete.athlete_lastname}
-      📏 ${(athlete.distance / 1000).toFixed(2)} km
-      ⏱️ ${(athlete.moving_time / 60).toFixed(0)} min
-      🏃 Pace: ${pace} min/km
-      ⛰️ Elev: ${athlete.elev_gain} m`;
+      //   const caption = 
+      // `🏅 Rank ${i + 1}
+      // 👤 ${athlete.athlete_firstname} ${athlete.athlete_lastname}
+      // 📏 ${(athlete.distance / 1000).toFixed(2)} km
+      // ⏱️ ${(athlete.moving_time / 60).toFixed(0)} min
+      // 🏃 Pace: ${pace} min/km
+      // ⛰️ Elev: ${athlete.elev_gain} m`;
 
-          // ambil gambar profil
-          const media = await MessageMedia.fromUrl(athlete.athlete_profile);
-          const chat = await message.getChat();
-          await chat.sendMessage(media, { caption });
+      //     // ambil gambar profil
+      //     const media = await MessageMedia.fromUrl(athlete.athlete_profile);
+      //     const chat = await message.getChat();
+      //     await chat.sendMessage(media, { caption });
        //   await client.sendMessage(chatId, media, { caption });      
-      }
+     // }
     }
   } else {
     if (message.body === 'ping') {
@@ -366,6 +366,7 @@ async function getLeaderboard(CLUB_ID) {
     `https://www.strava.com/api/v3/clubs/${CLUB_ID}/leaderboard`,
     { headers: { Authorization: `Bearer ${accessToken}` } }
   );
+    console.log("📊 leaderboard:", JSON.stringify(res.data, null, 2));
   return res.data;
 }
 
