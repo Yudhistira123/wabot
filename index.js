@@ -173,7 +173,22 @@ client.on('message', async (message) => {
     }
   } else {
     if (message.body.toLowerCase() === "hasil club") {
-        const reply = await getClubActivities();
+      const clubInfo = await getClubInfo(CLUB_ID);
+
+let reply = `🏃 Aktivitas Terbaru di Club: ${clubInfo?.name || "Unknown"}\n\n`;
+
+res.data.forEach((act, i) => {
+    const dateLocal = new Date(act.start_date_local).toLocaleString();
+
+    reply += `${i + 1}. ${act.athlete.firstname} ${act.athlete.lastname}\n` +
+             `📌 ${act.name}\n` +
+             `📅 Tanggal: ${dateLocal}\n` +
+             `🌍 Lokasi: ${act.location_country || "Tidak diketahui"}\n` +
+             `📏 ${(act.distance / 1000).toFixed(2)} km\n` +
+             `⏱️ ${(act.moving_time / 60).toFixed(0)} menit\n` +
+             `⛰️ Elevasi: ${act.total_elevation_gain} m\n\n`;
+});
+       // const reply = await getClubActivities();
         message.reply(reply);
     }else if (message.body === 'ping') {
       await message.reply('pong Yudhistira Sulaeman hari selasa Bandung Jabar Indonesia Banget...');
@@ -291,6 +306,27 @@ async function getAccessToken() {
         console.error("❌ Error refresh token:", err.message);
     }
 }
+
+async function getClubInfo(clubId) {
+    try {
+        if (!accessToken) await getAccessToken();
+
+        const res = await axios.get(
+            `https://www.strava.com/api/v3/clubs/${clubId}`,
+            {
+                headers: { Authorization: `Bearer ${accessToken}` }
+            }
+        );
+
+        console.log("📊 Club Info:", JSON.stringify(res.data, null, 2));
+        return res.data;
+    } catch (err) {
+        console.error("❌ Error getClubInfo:", err.message);
+        return null;
+    }
+}
+
+
 
 // --- Function: Get Club Activities ---
 async function getClubActivities() {
