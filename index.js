@@ -178,7 +178,7 @@ client.on('message', async (message) => {
     const activities = await getClubActivities(CLUB_ID);
 
     if (!clubInfo) {
-        msg.reply("❌ Gagal ambil info club.");
+        message.reply("❌ Gagal ambil info club.");
         return;
     }
 
@@ -186,7 +186,7 @@ client.on('message', async (message) => {
     if (clubInfo.cover_photo_small) {
         try {
             const media = await MessageMedia.fromUrl(clubInfo.cover_photo_small);
-            await client.sendMessage(msg.from, media, { caption: `🏃 *${clubInfo.name}*` });
+            await client.sendMessage(message.from, media, { caption: `🏃 *${clubInfo.name}*` });
         } catch (err) {
             console.error("❌ Error sending cover photo:", err.message);
         }
