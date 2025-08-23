@@ -170,9 +170,7 @@ client.on('message', async (message) => {
         await chat.sendMessage(replyMsg);
         console.log(`✅ Sent weather info to group: ${chat.name}`);
       }
-    }
-  } else {
-    if (message.body.toLowerCase() === "hasil club") {
+    }else if (message.body.toLowerCase() === "hasil club xx") {
       
     const clubInfo = await getClubInfo(CLUB_ID);
     const activities = await getClubActivities(CLUB_ID);
@@ -215,12 +213,15 @@ client.on('message', async (message) => {
              `⏱️ ${movingMinutes} menit\n` +
              `🏃 Pace: ${paceFormatted}\n` +
              `⛰️ Elevasi: ${act.total_elevation_gain} m\n\n`;
-    });
-      message.reply(reply);
+      });
       
-
-
-    }else if (message.body === 'ping') {
+        const chat = await message.getChat();
+        await chat.sendMessage(reply);
+    //  message.reply(reply);
+      
+    }
+  } else {
+    if (message.body === 'ping') {
       await message.reply('pong Yudhistira Sulaeman hari selasa Bandung Jabar Indonesia Banget...');
     } else if (message.body === 'hello') {
       await message.reply('Hello! How can I help you?');
