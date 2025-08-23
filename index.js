@@ -221,7 +221,7 @@ client.on('message', async (message) => {
       
     } else if (message.body.toLowerCase() === "hasil leader lari") {
      
-        const data = await getLeaderboard(CLUB_ID);
+       // const data = await getLeaderboard(CLUB_ID);
 
       //   for (let i = 0; i < data.length; i++) {
       //     const athlete = data[i];
