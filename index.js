@@ -196,14 +196,15 @@ client.on('message', async (message) => {
     let reply = `🌍 Lokasi: ${clubInfo.city}, ${clubInfo.state}, ${clubInfo.country}\n` +
                 `👥 Member: ${clubInfo.member_count}\n\n` +
                 `ℹ️ ${clubInfo.description || "No description"}\n\n` +
-                `=== Aktivitas Terbaru ===\n\n`;
+                `=== 15 Aktivitas Terbaru ===\n\n`;
 
     activities.forEach((act, i) => {
         reply += `${i + 1}. ${act.athlete.firstname} ${act.athlete.lastname}\n` +
-                 `📌 ${act.name}\n` +
-                 `📏 ${(act.distance / 1000).toFixed(2)} km\n` +
-                 `⏱️ ${(act.moving_time / 60).toFixed(0)} menit\n` +
-                 `⛰️ Elevasi: ${act.total_elevation_gain} m\n\n`;
+             `📌 ${act.name}\n` +
+             `📏 ${distanceKm.toFixed(2)} km\n` +
+             `⏱️ ${movingMinutes} menit\n` +
+             `🏃 Pace: ${paceFormatted}\n` +
+             `⛰️ Elevasi: ${act.total_elevation_gain} m\n\n`;
     });
       message.reply(reply);
       
@@ -337,7 +338,7 @@ async function getClubInfo(CLUB_ID) {
             }
         );
 
-        console.log("📊 Club Info:", JSON.stringify(res.data, null, 2));
+      //  console.log("📊 Club Info:", JSON.stringify(res.data, null, 2));
         return res.data;
     } catch (err) {
         console.error("❌ Error getClubInfo:", err.message);
@@ -357,10 +358,10 @@ async function getClubActivities(CLUB_ID) {
             `https://www.strava.com/api/v3/clubs/${CLUB_ID}/activities`,
             {
                 headers: { Authorization: `Bearer ${accessToken}` },
-                params: { per_page: 20 } // ambil 5 aktivitas terbaru
+                params: { per_page: 15 } // ambil 5 aktivitas terbaru
             }
         );
-      console.log(JSON.stringify(res.data, null, 2));
+   //   console.log(JSON.stringify(res.data, null, 2));
 //let reply = `🏃 Aktivitas Terbaru di Club: ${clubInfo?.name || "Unknown"}\n\n`;
 
 // res.data.forEach((act, i) => {
