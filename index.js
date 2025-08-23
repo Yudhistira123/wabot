@@ -172,7 +172,10 @@ client.on('message', async (message) => {
       }
     }
   } else {
-    if (message.body === 'ping') {
+    if (msg.body.toLowerCase() === "hasil club") {
+        const reply = await getClubActivities();
+        msg.reply(reply);
+    }else if (message.body === 'ping') {
       await message.reply('pong Yudhistira Sulaeman hari selasa Bandung Jabar Indonesia Banget...');
     } else if (message.body === 'hello') {
       await message.reply('Hello! How can I help you?');
@@ -264,6 +267,59 @@ client.on('message', async (message) => {
 
 // getdetilInfogroup
 // Function: download avatar and send to target number
+
+// Strava API Credentials
+const CLIENT_ID = "54707";
+const CLIENT_SECRET = "24def89a80ad1fe7586f0303af693787576075b3";
+const REFRESH_TOKEN = "729818486aef1199b8a0e2ffb481e6f8c7f72e47";
+const CLUB_ID = "728531"; // ID Club Lari
+
+let accessToken = "";
+
+// --- Function: Refresh Token Strava ---
+async function getAccessToken() {
+    try {
+        const res = await axios.post("https://www.strava.com/oauth/token", {
+            client_id: CLIENT_ID,
+            client_secret: CLIENT_SECRET,
+            refresh_token: REFRESH_TOKEN,
+            grant_type: "refresh_token"
+        });
+        accessToken = res.data.access_token;
+        console.log("✅ Access Token diperbarui");
+    } catch (err) {
+        console.error("❌ Error refresh token:", err.message);
+    }
+}
+
+// --- Function: Get Club Activities ---
+async function getClubActivities() {
+    try {
+        if (!accessToken) await getAccessToken();
+        const res = await axios.get(
+            `https://www.strava.com/api/v3/clubs/${CLUB_ID}/activities`,
+            {
+                headers: { Authorization: `Bearer ${accessToken}` },
+                params: { per_page: 5 } // ambil 5 aktivitas terbaru
+            }
+        );
+
+        let reply = `🏃 Aktivitas Terbaru di Club (ID: ${CLUB_ID}):\n\n`;
+        res.data.forEach((act, i) => {
+            reply += `${i + 1}. ${act.athlete.firstname} ${act.athlete.lastname}\n` +
+                     `📌 ${act.name}\n` +
+                     `📏 ${(act.distance / 1000).toFixed(2)} km\n` +
+                     `⏱️ ${(act.moving_time / 60).toFixed(0)} menit\n` +
+                     `❤️ Kudus: ${act.kudos_count}\n\n`;
+        });
+
+        return reply || "Belum ada aktivitas di club.";
+    } catch (err) {
+        console.error("❌ Error getClubActivities:", err.message);
+        return "Gagal ambil data Club Strava.";
+    }
+}
+
 
 async function getWeather(lat, lon) {
   const apiKey = "44747099862079d031d937f5cd84a57e"; // <- pakai key kamu
