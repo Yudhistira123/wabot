@@ -172,9 +172,9 @@ client.on('message', async (message) => {
       }
     }
   } else {
-    if (msg.body.toLowerCase() === "hasil club") {
+    if (message.body.toLowerCase() === "hasil club") {
         const reply = await getClubActivities();
-        msg.reply(reply);
+        message.reply(reply);
     }else if (message.body === 'ping') {
       await message.reply('pong Yudhistira Sulaeman hari selasa Bandung Jabar Indonesia Banget...');
     } else if (message.body === 'hello') {
