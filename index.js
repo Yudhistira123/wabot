@@ -170,7 +170,7 @@ client.on('message', async (message) => {
         await chat.sendMessage(replyMsg);
         console.log(`✅ Sent weather info to group: ${chat.name}`);
       }
-    }else if (message.body.toLowerCase() === "hasil club xx") {
+    }else if (message.body.toLowerCase() === "hasil club lari") {
       
     const clubInfo = await getClubInfo(CLUB_ID);
     const activities = await getClubActivities(CLUB_ID);
