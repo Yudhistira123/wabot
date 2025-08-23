@@ -174,8 +174,8 @@ client.on('message', async (message) => {
   } else {
     if (message.body.toLowerCase() === "hasil club") {
       
-        const clubInfo = await getClubInfo();
-    const activities = await getClubActivities();
+    const clubInfo = await getClubInfo(CLUB_ID);
+    const activities = await getClubActivities(CLUB_ID);
 
     if (!clubInfo) {
         msg.reply("❌ Gagal ambil info club.");
@@ -326,12 +326,12 @@ async function getAccessToken() {
     }
 }
 
-async function getClubInfo(clubId) {
+async function getClubInfo(CLUB_ID) {
     try {
         if (!accessToken) await getAccessToken();
 
         const res = await axios.get(
-            `https://www.strava.com/api/v3/clubs/${clubId}`,
+            `https://www.strava.com/api/v3/clubs/${CLUB_ID}`,
             {
                 headers: { Authorization: `Bearer ${accessToken}` }
             }
@@ -348,7 +348,7 @@ async function getClubInfo(clubId) {
 
 
 // --- Function: Get Club Activities ---
-async function getClubActivities() {
+async function getClubActivities(CLUB_ID) {
     try {
       if (!accessToken) await getAccessToken();
       
