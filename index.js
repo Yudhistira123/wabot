@@ -197,7 +197,10 @@ client.on('message', async (message) => {
                 `👥 Member: ${clubInfo.member_count}\n\n` +
                 `ℹ️ ${clubInfo.description || "No description"}\n\n` +
       `=== 15 Aktivitas Terbaru ===\n\n`;
+
       
+
+      activities.forEach((act, i) => {
       const distanceKm = act.distance / 1000;
     const movingMinutes = (act.moving_time / 60).toFixed(0);
 
@@ -206,8 +209,6 @@ client.on('message', async (message) => {
     const paceMin = Math.floor(paceSecPerKm / 60);
     const paceSec = Math.round(paceSecPerKm % 60);
     const paceFormatted = `${paceMin}:${paceSec.toString().padStart(2, "0")} /km`;
-
-    activities.forEach((act, i) => {
         reply += `${i + 1}. ${act.athlete.firstname} ${act.athlete.lastname}\n` +
              `📌 ${act.name}\n` +
              `📏 ${distanceKm.toFixed(2)} km\n` +
