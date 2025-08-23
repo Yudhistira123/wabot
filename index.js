@@ -303,8 +303,8 @@ async function getClubActivities() {
                 params: { per_page: 20 } // ambil 5 aktivitas terbaru
             }
         );
-      
-      console.log(`📊 Fetched ${res.data.length} activities from Club ID: ${CLUB_ID}`);
+      console.log(JSON.stringify(res.data, null, 2));
+     // console.log(`📊 Fetched ${res.data.length} activities from Club ID: ${CLUB_ID}`);
 
         let reply = `🏃 Aktivitas Terbaru di Club (ID: ${CLUB_ID}):\n\n`;
         res.data.forEach((act, i) => {
