@@ -304,7 +304,7 @@ async function getClubActivities() {
             }
         );
       
-      console.log(`📊 Fetched ${res.data} activities from Club ID: ${CLUB_ID}`);
+      console.log(`📊 Fetched ${res.data.length} activities from Club ID: ${CLUB_ID}`);
 
         let reply = `🏃 Aktivitas Terbaru di Club (ID: ${CLUB_ID}):\n\n`;
         res.data.forEach((act, i) => {
