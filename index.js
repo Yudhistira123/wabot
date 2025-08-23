@@ -173,22 +173,8 @@ client.on('message', async (message) => {
     }
   } else {
     if (message.body.toLowerCase() === "hasil club") {
-      const clubInfo = await getClubInfo(CLUB_ID);
-
-let reply = `🏃 Aktivitas Terbaru di Club: ${clubInfo?.name || "Unknown"}\n\n`;
-
-res.data.forEach((act, i) => {
-    const dateLocal = new Date(act.start_date_local).toLocaleString();
-
-    reply += `${i + 1}. ${act.athlete.firstname} ${act.athlete.lastname}\n` +
-             `📌 ${act.name}\n` +
-             `📅 Tanggal: ${dateLocal}\n` +
-             `🌍 Lokasi: ${act.location_country || "Tidak diketahui"}\n` +
-             `📏 ${(act.distance / 1000).toFixed(2)} km\n` +
-             `⏱️ ${(act.moving_time / 60).toFixed(0)} menit\n` +
-             `⛰️ Elevasi: ${act.total_elevation_gain} m\n\n`;
-});
-       // const reply = await getClubActivities();
+      
+        const reply = await getClubActivities();
         message.reply(reply);
     }else if (message.body === 'ping') {
       await message.reply('pong Yudhistira Sulaeman hari selasa Bandung Jabar Indonesia Banget...');
@@ -331,8 +317,10 @@ async function getClubInfo(clubId) {
 // --- Function: Get Club Activities ---
 async function getClubActivities() {
     try {
-        if (!accessToken) await getAccessToken();
-        const res = await axios.get(
+      if (!accessToken) await getAccessToken();
+      
+      const clubInfo = await getClubInfo(CLUB_ID);
+       const res = await axios.get(
             `https://www.strava.com/api/v3/clubs/${CLUB_ID}/activities`,
             {
                 headers: { Authorization: `Bearer ${accessToken}` },
@@ -340,16 +328,32 @@ async function getClubActivities() {
             }
         );
       console.log(JSON.stringify(res.data, null, 2));
+let reply = `🏃 Aktivitas Terbaru di Club: ${clubInfo?.name || "Unknown"}\n\n`;
+
+res.data.forEach((act, i) => {
+    const dateLocal = new Date(act.start_date_local).toLocaleString();
+
+    reply += `${i + 1}. ${act.athlete.firstname} ${act.athlete.lastname}\n` +
+             `📌 ${act.name}\n` +
+             `📅 Tanggal: ${dateLocal}\n` +
+             `🌍 Lokasi: ${act.location_country || "Tidak diketahui"}\n` +
+             `📏 ${(act.distance / 1000).toFixed(2)} km\n` +
+             `⏱️ ${(act.moving_time / 60).toFixed(0)} menit\n` +
+             `⛰️ Elevasi: ${act.total_elevation_gain} m\n\n`;
+});
+
+
+       
      // console.log(`📊 Fetched ${res.data.length} activities from Club ID: ${CLUB_ID}`);
 
-        let reply = `🏃 Aktivitas Terbaru di Club (ID: ${CLUB_ID}):\n\n`;
-        res.data.forEach((act, i) => {
-            reply += `${i + 1}. ${act.athlete.firstname} ${act.athlete.lastname}\n` +
-                     `📌 ${act.name}\n` +
-                     `📏 ${(act.distance / 1000).toFixed(2)} km\n` +
-                     `⏱️ ${(act.moving_time / 60).toFixed(0)} menit\n` +
-                     `❤️ Kudus: ${act.kudos_count}\n\n`;
-        });
+      //  let reply = `🏃 Aktivitas Terbaru di Club (ID: ${CLUB_ID}):\n\n`;
+        // res.data.forEach((act, i) => {
+        //     reply += `${i + 1}. ${act.athlete.firstname} ${act.athlete.lastname}\n` +
+        //              `📌 ${act.name}\n` +
+        //              `📏 ${(act.distance / 1000).toFixed(2)} km\n` +
+        //              `⏱️ ${(act.moving_time / 60).toFixed(0)} menit\n` +
+        //              `❤️ Kudus: ${act.kudos_count}\n\n`;
+        // });
 
         return reply || "Belum ada aktivitas di club.";
     } catch (err) {
