@@ -219,6 +219,28 @@ client.on('message', async (message) => {
         await chat.sendMessage(reply);
     //  message.reply(reply);
       
+    } else if (message.body.toLowerCase() === "hasil leader lari") {
+     
+        const data = await getLeaderboard(CLUB_ID);
+
+        for (let i = 0; i < data.length; i++) {
+          const athlete = data[i];
+          const pace = ((athlete.moving_time / 60) / (athlete.distance / 1000)).toFixed(2);
+
+        const caption = 
+      `🏅 Rank ${i + 1}
+      👤 ${athlete.athlete_firstname} ${athlete.athlete_lastname}
+      📏 ${(athlete.distance / 1000).toFixed(2)} km
+      ⏱️ ${(athlete.moving_time / 60).toFixed(0)} min
+      🏃 Pace: ${pace} min/km
+      ⛰️ Elev: ${athlete.elev_gain} m`;
+
+          // ambil gambar profil
+          const media = await MessageMedia.fromUrl(athlete.athlete_profile);
+          const chat = await message.getChat();
+          await chat.sendMessage(media, { caption });
+       //   await client.sendMessage(chatId, media, { caption });      
+      }
     }
   } else {
     if (message.body === 'ping') {
@@ -338,6 +360,17 @@ async function getAccessToken() {
     }
 }
 
+async function getLeaderboard(CLUB_ID) {
+  if (!accessToken) await getAccessToken();
+  const res = await axios.get(
+    `https://www.strava.com/api/v3/clubs/${CLUB_ID}/leaderboard`,
+    { headers: { Authorization: `Bearer ${accessToken}` } }
+  );
+  return res.data;
+}
+
+
+
 async function getClubInfo(CLUB_ID) {
     try {
         if (!accessToken) await getAccessToken();
@@ -372,34 +405,6 @@ async function getClubActivities(CLUB_ID) {
                 params: { per_page: 15 } // ambil 5 aktivitas terbaru
             }
         );
-   //   console.log(JSON.stringify(res.data, null, 2));
-//let reply = `🏃 Aktivitas Terbaru di Club: ${clubInfo?.name || "Unknown"}\n\n`;
-
-// res.data.forEach((act, i) => {
-//     const dateLocal = new Date(act.start_date_local).toLocaleString();
-
-//     reply += `${i + 1}. ${act.athlete.firstname} ${act.athlete.lastname}\n` +
-//              `📌 ${act.name}\n` +
-//              `📅 Tanggal: ${dateLocal}\n` +
-//              `🌍 Lokasi: ${act.location_country || "Tidak diketahui"}\n` +
-//              `📏 ${(act.distance / 1000).toFixed(2)} km\n` +
-//              `⏱️ ${(act.moving_time / 60).toFixed(0)} menit\n` +
-//              `⛰️ Elevasi: ${act.total_elevation_gain} m\n\n`;
-// });
-
-
-       
-     // console.log(`📊 Fetched ${res.data.length} activities from Club ID: ${CLUB_ID}`);
-
-      //  let reply = `🏃 Aktivitas Terbaru di Club (ID: ${CLUB_ID}):\n\n`;
-        // res.data.forEach((act, i) => {
-        //     reply += `${i + 1}. ${act.athlete.firstname} ${act.athlete.lastname}\n` +
-        //              `📌 ${act.name}\n` +
-        //              `📏 ${(act.distance / 1000).toFixed(2)} km\n` +
-        //              `⏱️ ${(act.moving_time / 60).toFixed(0)} menit\n` +
-        //              `❤️ Kudus: ${act.kudos_count}\n\n`;
-        // });
-
         return res.data ;
     } catch (err) {
         console.error("❌ Error getClubActivities:", err.message);
