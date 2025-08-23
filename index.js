@@ -300,9 +300,11 @@ async function getClubActivities() {
             `https://www.strava.com/api/v3/clubs/${CLUB_ID}/activities`,
             {
                 headers: { Authorization: `Bearer ${accessToken}` },
-                params: { per_page: 5 } // ambil 5 aktivitas terbaru
+                params: { per_page: 20 } // ambil 5 aktivitas terbaru
             }
         );
+      
+      console.log(`📊 Fetched ${res} activities from Club ID: ${CLUB_ID}`);
 
         let reply = `🏃 Aktivitas Terbaru di Club (ID: ${CLUB_ID}):\n\n`;
         res.data.forEach((act, i) => {
