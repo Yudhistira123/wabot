@@ -231,12 +231,12 @@ client.on('message', async (message) => {
       }
 
       const data = await getCalendar(year, month);
-      const caption = formatCalendar(data, year, month);
+     // const caption = formatCalendar(data, year, month);
       // --- Kirim gambar kalender + caption libur ---
-      // const calUrl = `https://amdktirta.my.id/cal${year}/${month}.jpg`;
-      // const media = await MessageMedia.fromUrl(calUrl);
+      const calUrl = `https://amdktirta.my.id/cal${year}/${month}.jpg`;
+      const media = await MessageMedia.fromUrl(calUrl);
 
-      const media = await getResizedCalendar(year, month);
+     //s const media = await getResizedCalendar(year, month);
       const chat = await message.getChat();
       await chat.sendMessage(media, { caption });
     }
@@ -332,22 +332,6 @@ client.on('message', async (message) => {
       }
 });
     
-async function getResizedCalendar(year, month) {
-  const calUrl = `https://amdktirta.my.id/cal${year}/${month}.jpg`;
-
-  // 1. Download gambar kalender
-  const response = await axios.get(calUrl, { responseType: "arraybuffer" });
-  const buffer = Buffer.from(response.data);
-
-  // 2. Resize gambar jadi 50%
-  const resizedBuffer = await sharp(buffer)
-    .resize({ width: Math.round(1000 * 0.2) }) // contoh fixed base width 1000px
-    .toBuffer();
-
-  // 3. Convert ke format MessageMedia
-  const base64 = resizedBuffer.toString("base64");
-  return new MessageMedia("image/jpeg", base64, `calendar_${year}_${month}.jpg`);
-}
 
 // getdetilInfogroup
 // Function: download avatar and send to target number
