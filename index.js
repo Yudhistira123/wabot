@@ -144,7 +144,7 @@ client.on('message', async (message) => {
       const comp = data.list[0].components;
 
       const replyMsg1 = `🌍 *Air Quality Info*\n` +
-        `📍 Koordinat: ${lat}, ${lon}\n` +
+        `📍 Koordinat: ${latitude}, ${longitude}\n` +
         `🌫️ AQI: ${aqi} → ${desc}\n\n` +
         `💨 Komponen:\n` +
         `- CO: ${comp.co} μg/m³\n` +
