@@ -341,8 +341,8 @@ async function getResizedCalendar(year, month) {
 
   // 2. Ambil metadata (ukuran asli)
   const metadata = await sharp(buffer).metadata();
-  const newWidth = Math.round(metadata.width * 0.5);   // 50% width
-  const newHeight = Math.round(metadata.height * 0.5); // 50% height
+  const newWidth = Math.round(metadata.width * 0.1);   // 50% width
+  const newHeight = Math.round(metadata.height * 0.1); // 50% height
 
   // 3. Resize sesuai ukuran baru
   const resizedBuffer = await sharp(buffer)
