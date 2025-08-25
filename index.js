@@ -229,9 +229,10 @@ client.on('message', async (message) => {
         await message.reply("⚠️ Format salah.\nContoh: *kalendar 2025 9*");
         return;
       }
+      const yearNum = parseInt(year, 10);
       const currentYear = new Date().getFullYear();
       console.log('Current Year:', currentYear);
-      if (year > (currentYear + 1)) {
+      if (yearNum > (currentYear + 1)) {
          console.log('Year exceeds limit:', year);
         await message.reply(`⚠️ Maximum year is *${currentYear}*`);
         return;
