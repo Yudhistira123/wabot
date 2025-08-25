@@ -232,14 +232,19 @@ client.on('message', async (message) => {
       const yearNum = parseInt(year, 10);
       const currentYear = new Date().getFullYear();
       console.log('Current Year:', currentYear);
-      if (yearNum >= (currentYear + 1)) {
-         console.log('Year exceeds limit:', year);
+      if (yearNum >currentYear) {
         await message.reply(`⚠️ Maximum year is *${currentYear}*`);
         return;
       }
 
       const data = await getCalendar(year, month);
       const caption = formatCalendar(data, year, month);
+
+      if (yearNum < currentYear) {
+        // 🔹 Tahun lampau → hanya caption tanpa media
+        await message.reply(caption);
+        return;
+      }
       // --- Kirim gambar kalender + caption libur ---
       const calUrl = `https://amdktirta.my.id/cal${year}/${month}.jpg`;
       const media = await MessageMedia.fromUrl(calUrl);
