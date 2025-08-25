@@ -111,16 +111,16 @@ client.on('message', async (message) => {
         if (sholatData && sholatData.data) {
           const jadwal = sholatData.data.jadwal;
           let replyMsg =
-              `🕌 *Jadwal Sholat ${sholatData.data.lokasi}*\n` +
-              `📅 Hari,Tgl: ${jadwal.tanggal}\n\n` +
-              `🌅 Imsak     : ${jadwal.imsak} WIB\n` +
-              `🌄 Subuh     : ${jadwal.subuh} WIB\n` +
-              `🌤️ Terbit    : ${jadwal.terbit} WIB\n` +
-              `🌞 Dhuha     : ${jadwal.dhuha} WIB\n` +
-              `☀️ Dzuhur    : ${jadwal.dzuhur} WIB\n` +
-              `🌇 Ashar     : ${jadwal.ashar} WIB\n` +
-              `🌆 Maghrib   : ${jadwal.maghrib} WIB\n` +
-              `🌙 Isya      : ${jadwal.isya} WIB`;
+            `🕌 *Jadwal Sholat ${sholatData.data.lokasi}*\n` +
+            `📅 Hari,Tgl: ${jadwal.tanggal}\n\n` +
+            `🌅 Imsak     : ${jadwal.imsak} WIB\n` +
+            `🌄 Subuh     : ${jadwal.subuh} WIB\n` +
+            `🌤️ Terbit    : ${jadwal.terbit} WIB\n` +
+            `🌞 Dhuha     : ${jadwal.dhuha} WIB\n` +
+            `☀️ Dzuhur    : ${jadwal.dzuhur} WIB\n` +
+            `🌇 Ashar     : ${jadwal.ashar} WIB\n` +
+            `🌆 Maghrib   : ${jadwal.maghrib} WIB\n` +
+            `🌙 Isya      : ${jadwal.isya} WIB`;
           
           await chat.sendMessage(replyMsg);
         } else {
@@ -170,78 +170,72 @@ client.on('message', async (message) => {
         await chat.sendMessage(replyMsg);
         console.log(`✅ Sent weather info to group: ${chat.name}`);
       }
-    }else if (message.body.toLowerCase() === "hasil club lari") {
+    } else if (message.body.toLowerCase() === "hasil club lari") {
       
-    const clubInfo = await getClubInfo(CLUB_ID);
-    const activities = await getClubActivities(CLUB_ID);
+      const clubInfo = await getClubInfo(CLUB_ID);
+      const activities = await getClubActivities(CLUB_ID);
 
-    if (!clubInfo) {
+      if (!clubInfo) {
         message.reply("❌ Gagal ambil info club.");
         return;
-    }
+      }
 
-    // Send cover image first
-    if (clubInfo.cover_photo_small) {
+      // Send cover image first
+      if (clubInfo.cover_photo_small) {
         try {
-            const media = await MessageMedia.fromUrl(clubInfo.cover_photo_small);
-            await client.sendMessage(message.from, media, { caption: `🏃 *${clubInfo.name}*` });
+          const media = await MessageMedia.fromUrl(clubInfo.cover_photo_small);
+          await client.sendMessage(message.from, media, { caption: `🏃 *${clubInfo.name}*` });
         } catch (err) {
-            console.error("❌ Error sending cover photo:", err.message);
+          console.error("❌ Error sending cover photo:", err.message);
         }
-    }
+      }
 
-    // Build text reply
-    let reply = `🌍 Lokasi: ${clubInfo.city}, ${clubInfo.state}, ${clubInfo.country}\n` +
-                `👥 Member: ${clubInfo.member_count}\n\n` +
-                `ℹ️ ${clubInfo.description || "No description"}\n\n` +
-      `=== 15 Aktivitas Terbaru ===\n\n`;
+      // Build text reply
+      let reply = `🌍 Lokasi: ${clubInfo.city}, ${clubInfo.state}, ${clubInfo.country}\n` +
+        `👥 Member: ${clubInfo.member_count}\n\n` +
+        `ℹ️ ${clubInfo.description || "No description"}\n\n` +
+        `=== 15 Aktivitas Terbaru ===\n\n`;
 
       
 
       activities.forEach((act, i) => {
-      const distanceKm = act.distance / 1000;
-    const movingMinutes = (act.moving_time / 60).toFixed(0);
+        const distanceKm = act.distance / 1000;
+        const movingMinutes = (act.moving_time / 60).toFixed(0);
 
-    // pace in seconds/km
-    const paceSecPerKm = act.moving_time / distanceKm;
-    const paceMin = Math.floor(paceSecPerKm / 60);
-    const paceSec = Math.round(paceSecPerKm % 60);
-    const paceFormatted = `${paceMin}:${paceSec.toString().padStart(2, "0")} /km`;
+        // pace in seconds/km
+        const paceSecPerKm = act.moving_time / distanceKm;
+        const paceMin = Math.floor(paceSecPerKm / 60);
+        const paceSec = Math.round(paceSecPerKm % 60);
+        const paceFormatted = `${paceMin}:${paceSec.toString().padStart(2, "0")} /km`;
         reply += `${i + 1}. ${act.athlete.firstname} ${act.athlete.lastname}\n` +
-             `📌 ${act.name}\n` +
-             `📏 ${distanceKm.toFixed(2)} km\n` +
-             `⏱️ ${movingMinutes} menit\n` +
-             `🏃 Pace: ${paceFormatted}\n` +
-             `⛰️ Elevasi: ${act.total_elevation_gain} m\n\n`;
+          `📌 ${act.name}\n` +
+          `📏 ${distanceKm.toFixed(2)} km\n` +
+          `⏱️ ${movingMinutes} menit\n` +
+          `🏃 Pace: ${paceFormatted}\n` +
+          `⛰️ Elevasi: ${act.total_elevation_gain} m\n\n`;
       });
       
-        const chat = await message.getChat();
-        await chat.sendMessage(reply);
-    //  message.reply(reply);
+      const chat = await message.getChat();
+      await chat.sendMessage(reply);
+      //  message.reply(reply);
       
-    } else if (message.body.toLowerCase() === "hasil leader lari") {
-     
-       // const data = await getLeaderboard(CLUB_ID);
+    } else if (message.body.toLowerCase().startsWith("kalendar")) {
+      const parts = message.body.split(" ");
+      const year = parts[1];
+      const month = parts[2];
 
-      //   for (let i = 0; i < data.length; i++) {
-      //     const athlete = data[i];
-      //     const pace = ((athlete.moving_time / 60) / (athlete.distance / 1000)).toFixed(2);
+      if (!year || !month) {
+        await message.reply("⚠️ Format salah.\nContoh: *kalendar 2025 9*");
+        return;
+      }
 
-      //   const caption = 
-      // `🏅 Rank ${i + 1}
-      // 👤 ${athlete.athlete_firstname} ${athlete.athlete_lastname}
-      // 📏 ${(athlete.distance / 1000).toFixed(2)} km
-      // ⏱️ ${(athlete.moving_time / 60).toFixed(0)} min
-      // 🏃 Pace: ${pace} min/km
-      // ⛰️ Elev: ${athlete.elev_gain} m`;
+      const data = await getCalendar(year, month);
+      const reply = formatCalendar(data, year, month);
 
-      //     // ambil gambar profil
-      //     const media = await MessageMedia.fromUrl(athlete.athlete_profile);
-      //     const chat = await message.getChat();
-      //     await chat.sendMessage(media, { caption });
-       //   await client.sendMessage(chatId, media, { caption });      
-     // }
+     const chat = await message.getChat();
+    await chat.sendMessage(reply);
     }
+  
   } else {
     if (message.body === 'ping') {
       await message.reply('pong Yudhistira Sulaeman hari selasa Bandung Jabar Indonesia Banget...');
@@ -360,17 +354,6 @@ async function getAccessToken() {
     }
 }
 
-async function getLeaderboard(CLUB_ID) {
-  if (!accessToken) await getAccessToken();
-  const res = await axios.get(
-    `https://www.strava.com/api/v3/clubs/${CLUB_ID}/leaderboard`,
-    { headers: { Authorization: `Bearer ${accessToken}` } }
-  );
-    console.log("📊 leaderboard:", JSON.stringify(res.data, null, 2));
-  return res.data;
-}
-
-
 
 async function getClubInfo(CLUB_ID) {
     try {
@@ -412,6 +395,26 @@ async function getClubActivities(CLUB_ID) {
         return "Gagal ambil data Club Strava.";
     }
 }
+
+async function getCalendar(year, month) {
+  const url = `https://libur.deno.dev/api?year=${year}&month=${month}`;
+  const res = await axios.get(url);
+  return res.data;
+}
+
+// Format pesan kalender
+function formatCalendar(data, year, month) {
+  if (!data || data.length === 0) {
+    return `❌ Tidak ada data kalender untuk ${month}/${year}`;
+  }
+  let reply = `📅 Kalender ${month}/${year}\n\n`;
+  data.forEach(day => {
+    reply += `${day.date} (${day.day}) - ${
+      day.is_national_holiday ? "🚩 Libur" : "✅ Kerja"
+    } ${day.event ? `→ ${day.event}` : ""}\n`;
+  });
+  return reply;
+
 
 
 async function getWeather(lat, lon) {
