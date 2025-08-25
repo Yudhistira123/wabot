@@ -136,11 +136,34 @@ client.on('message', async (message) => {
 
       console.log(`📍 Lokasi diterima: ${latitude}, ${longitude} (${description || "tanpa deskripsi"})`);
 
-  
-      const weather = await getWeather(latitude, longitude);
+      const apiKey = "44747099862079d031d937f5cd84a57e"; // <- pakai key kamu
+       const data = await getAirQuality(latitude, latitude, apiKey);
+      const aqi = data.list[0].main.aqi;
+      const desc = interpretAQI(aqi);
+
+      const comp = data.list[0].components;
+
+      const replyMsg1 = `🌍 *Air Quality Info*\n` +
+        `📍 Koordinat: ${lat}, ${lon}\n` +
+        `🌫️ AQI: ${aqi} → ${desc}\n\n` +
+        `💨 Komponen:\n` +
+        `- CO: ${comp.co} μg/m³\n` +
+        `- NO: ${comp.no} μg/m³\n` +
+        `- NO₂: ${comp.no2} μg/m³\n` +
+        `- O₃: ${comp.o3} μg/m³\n` +
+        `- SO₂: ${comp.so2} μg/m³\n` +
+        `- PM2.5: ${comp.pm2_5} μg/m³\n` +
+        `- PM10: ${comp.pm10} μg/m³\n` +
+        `- NH₃: ${comp.nh3} μg/m³`;
+
+    //  await message.reply(replyMsg);
+
+
+      const weather = await getWeather(apiKey,latitude, latitude);   
+     
 
       if (weather) {
-        const replyMsg =
+        const replyMsg2 =
           `🌍 *Informasi Cuaca Lengkap*\n\n` +
           `📍 Lokasi: ${weather.name}, ${weather.sys.country}\n` +
           `🌐 Koordinat: ${weather.coord.lat}, ${weather.coord.lon}\n\n` +
@@ -168,7 +191,7 @@ client.on('message', async (message) => {
           `⏱️ Data Timestamp: ${new Date(weather.dt * 1000).toLocaleString("id-ID")}`;
 
         const chat = await message.getChat();
-        await chat.sendMessage(replyMsg);
+        await chat.sendMessage(replyMsg1+"\n\n"+replyMsg2);
         console.log(`✅ Sent weather info to group: ${chat.name}`);
       }
     } else if (message.body.toLowerCase() === "hasil club lari") {
@@ -293,58 +316,34 @@ client.on('message', async (message) => {
         console.error('Error calling API:', error.message);
         await message.reply('❌ Failed to fetch data from API');
       }
-     // }else{
-      //  } else if (message.body.toLowerCase().includes("cuaca bandung")) {
-      // }else if (message.type === "location") {
-      // const chat = await message.getChat();
-      // const { latitude, longitude, description } = message.location; // ✅ lowercase 'location'
-
-      // console.log(`📍 Lokasi diterima: ${latitude}, ${longitude} (${description || "tanpa deskripsi"})`);
-
-  
-      // const weather = await getWeather(latitude, longitude);
-
-      // if (weather) {
-      //   const replyMsg =
-      //     `🌍 *Informasi Cuaca Lengkap*\n\n` +
-      //     `📍 Lokasi: ${weather.name}, ${weather.sys.country}\n` +
-      //     `🌐 Koordinat: ${weather.coord.lat}, ${weather.coord.lon}\n\n` +
-
-      //     `🌤️ Cuaca: ${weather.weather[0].main} - ${weather.weather[0].description}\n` +
-      //     `🌡️ Suhu: ${weather.main.temp}°C\n` +
-      //     `🤒 Terasa: ${weather.main.feels_like}°C\n` +
-      //     `🌡️ Suhu Min: ${weather.main.temp_min}°C\n` +
-      //     `🌡️ Suhu Max: ${weather.main.temp_max}°C\n` +
-      //     `💧 Kelembapan: ${weather.main.humidity}%\n` +
-      //     `🌬️ Tekanan: ${weather.main.pressure} hPa\n` +
-      //     `🌊 Tekanan Laut: ${weather.main.sea_level ?? "-"} hPa\n` +
-      //     `🏞️ Tekanan Darat: ${weather.main.grnd_level ?? "-"} hPa\n\n` +
-
-      //     `👀 Jarak Pandang: ${weather.visibility} m\n` +
-      //     `💨 Angin: ${weather.wind.speed} m/s, Arah ${weather.wind.deg}°, Gust ${weather.wind.gust ?? "-"} m/s\n` +
-      //     `☁️ Awan: ${weather.clouds.all}%\n\n` +
-
-      //     `🌅 Sunrise: ${new Date(weather.sys.sunrise * 1000).toLocaleTimeString("id-ID")}\n` +
-      //     `🌇 Sunset: ${new Date(weather.sys.sunset * 1000).toLocaleTimeString("id-ID")}\n\n` +
-
-      //     `🕒 Zona Waktu: UTC${weather.timezone / 3600}\n` +
-      //     `🆔 City ID: ${weather.id}\n` +
-      //     `📡 Source: ${weather.base}\n` +
-      //     `⏱️ Data Timestamp: ${new Date(weather.dt * 1000).toLocaleString("id-ID")}`;
-
-      //   const chat = await message.getChat();
-      //   await chat.sendMessage(replyMsg);
-      //   console.log(`✅ Sent weather info to group: ${chat.name}`);
-      // } else {
-    
-    //   await message.reply("⚠️ Gagal mengambil data cuaca.");
-    // }
+     
   } else {
           await message.reply('I am not sure how to respond to that.');
         }
       }
 });
     
+
+
+// fungsi untuk ambil data polusi udara
+async function getAirQuality(lat, lon, apiKey) {
+  const url = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+  const response = await axios.get(url);
+  return response.data;
+}
+
+// mapping indeks AQI ke deskripsi
+function interpretAQI(aqi) {
+  switch (aqi) {
+    case 1: return "🟢 *Baik* (Good)";
+    case 2: return "🟡 *Cukup* (Fair)";
+    case 3: return "🟠 *Sedang* (Moderate)";
+    case 4: return "🔴 *Buruk* (Poor)";
+    case 5: return "🟣 *Sangat Buruk* (Very Poor)";
+    default: return "Tidak diketahui";
+  }
+}
+
 
 // getdetilInfogroup
 // Function: download avatar and send to target number
@@ -434,8 +433,8 @@ function formatCalendar(data, year, month) {
 }
 
 
-async function getWeather(lat, lon) {
-  const apiKey = "44747099862079d031d937f5cd84a57e"; // <- pakai key kamu
+async function getWeather(apiKey,lat, lon) {
+  
   const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=ID`;
 
   try {
