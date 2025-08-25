@@ -231,10 +231,11 @@ client.on('message', async (message) => {
       }
       const currentYear = new Date().getFullYear();
       console.log('Current Year:', currentYear);
-       if (year > (currentYear+1)) {
-  await message.reply(`⚠️ Maximum year is *${currentYear}*`);
-  return;
-}
+      if (year > (currentYear + 1)) {
+         console.log('Year exceeds limit:', year);
+        await message.reply(`⚠️ Maximum year is *${currentYear}*`);
+        return;
+      }
 
       const data = await getCalendar(year, month);
       const caption = formatCalendar(data, year, month);
