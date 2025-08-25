@@ -232,8 +232,8 @@ client.on('message', async (message) => {
       const data = await getCalendar(year, month);
       const reply = formatCalendar(data, year, month);
 
-     const chat = await message.getChat();
-    await chat.sendMessage(reply);
+      const chat = await message.getChat();
+      await chat.sendMessage(reply);
     }
   
   } else {
@@ -409,12 +409,11 @@ function formatCalendar(data, year, month) {
   }
   let reply = `📅 Kalender ${month}/${year}\n\n`;
   data.forEach(day => {
-    reply += `${day.date} (${day.day}) - ${
-      day.is_national_holiday ? "🚩 Libur" : "✅ Kerja"
-    } ${day.event ? `→ ${day.event}` : ""}\n`;
+    reply += `${day.date} (${day.day}) - ${day.is_national_holiday ? "🚩 Libur" : "✅ Kerja"
+      } ${day.event ? `→ ${day.event}` : ""}\n`;
   });
   return reply;
-
+}
 
 
 async function getWeather(lat, lon) {
