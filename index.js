@@ -229,11 +229,11 @@ client.on('message', async (message) => {
         await message.reply("⚠️ Format salah.\nContoh: *kalendar 2025 9*");
         return;
       }
-
-       if (year>2026) {
-        await message.reply("⚠️ Maximum year is *2026*");
-        return;
-      }
+const currentYear = new Date().getFullYear();
+       if (year < currentYear) {
+  await message.reply(`⚠️ Minimum year is *${currentYear}*`);
+  return;
+}
 
       const data = await getCalendar(year, month);
       const caption = formatCalendar(data, year, month);
