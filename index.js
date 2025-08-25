@@ -408,9 +408,8 @@ function formatCalendar(data, year, month) {
     return `❌ Tidak ada data kalender untuk ${month}/${year}`;
   }
   let reply = `📅 Kalender ${month}/${year}\n\n`;
-  data.forEach(day => {
-    reply += `${day.date} (${day.day}) - ${day.is_national_holiday ? "🚩 Libur" : "✅ Kerja"
-      } ${day.event ? `→ ${day.event}` : ""}\n`;
+   data.forEach(day => {
+    reply += `📌 ${day.date} → ${day.name}\n`;
   });
   return reply;
 }
