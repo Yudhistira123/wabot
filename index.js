@@ -231,7 +231,7 @@ client.on('message', async (message) => {
       }
 
       const data = await getCalendar(year, month);
-     // const caption = formatCalendar(data, year, month);
+      const caption = formatCalendar(data, year, month);
       // --- Kirim gambar kalender + caption libur ---
       const calUrl = `https://amdktirta.my.id/cal${year}/${month}.jpg`;
       const media = await MessageMedia.fromUrl(calUrl);
