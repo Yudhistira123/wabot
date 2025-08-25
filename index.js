@@ -230,6 +230,11 @@ client.on('message', async (message) => {
         return;
       }
 
+       if (year>2026) {
+        await message.reply("⚠️ Maximum year is *2026*");
+        return;
+      }
+
       const data = await getCalendar(year, month);
       const caption = formatCalendar(data, year, month);
       // --- Kirim gambar kalender + caption libur ---
@@ -411,7 +416,7 @@ async function getCalendar(year, month) {
 // Format pesan kalender
 function formatCalendar(data, year, month) {
   if (!data || data.length === 0) {
-    return `❌ Tidak ada data kalender untuk ${month}/${year}`;
+    return `❌ Tidak ada data LIBUR untuk ${month}/${year}`;
   }
   let reply = `📅 Kalender ${month}/${year}\n\n`;
    data.forEach(day => {
