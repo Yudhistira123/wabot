@@ -219,7 +219,7 @@ client.on('message', async (message) => {
       await chat.sendMessage(reply);
       //  message.reply(reply);
       
-    } else if (message.body.toLowerCase().startsWith("kalendar")) {
+    } else if (message.body.toLowerCase().startsWith("kal")) {
       const parts = message.body.split(" ");
       const year = parts[1];
       const month = parts[2];
@@ -229,11 +229,14 @@ client.on('message', async (message) => {
         return;
       }
 
-      const data = await getCalendar(year, month);
-      const reply = formatCalendar(data, year, month);
+      const data = await getHoliday(year, month);
+      const caption = formatHoliday(data, year, month);
 
+      // --- Kirim gambar kalender + caption libur ---
+      const calUrl = `https://amdktirta.my.id/cal${year}/${month}.jpg`;
+      const media = await MessageMedia.fromUrl(calUrl);
       const chat = await message.getChat();
-      await chat.sendMessage(reply);
+      await chat.sendMessage(media, { caption });
     }
   
   } else {
