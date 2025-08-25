@@ -232,7 +232,7 @@ client.on('message', async (message) => {
       const yearNum = parseInt(year, 10);
       const currentYear = new Date().getFullYear();
       console.log('Current Year:', currentYear);
-      if (yearNum > (currentYear + 1)) {
+      if (yearNum >= (currentYear + 1)) {
          console.log('Year exceeds limit:', year);
         await message.reply(`⚠️ Maximum year is *${currentYear}*`);
         return;
