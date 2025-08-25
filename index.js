@@ -339,17 +339,12 @@ async function getResizedCalendar(year, month) {
   const response = await axios.get(calUrl, { responseType: "arraybuffer" });
   const buffer = Buffer.from(response.data);
 
-  // 2. Ambil metadata (ukuran asli)
-  const metadata = await sharp(buffer).metadata();
-  const newWidth = Math.round(metadata.width * 0.1);   // 50% width
-  const newHeight = Math.round(metadata.height * 0.1); // 50% height
-
-  // 3. Resize sesuai ukuran baru
+  // 2. Resize gambar jadi 50%
   const resizedBuffer = await sharp(buffer)
-    .resize({ width: newWidth, height: newHeight })
+    .resize({ width: Math.round(1000 * 0.2) }) // contoh fixed base width 1000px
     .toBuffer();
 
-  // 4. Convert ke format MessageMedia
+  // 3. Convert ke format MessageMedia
   const base64 = resizedBuffer.toString("base64");
   return new MessageMedia("image/jpeg", base64, `calendar_${year}_${month}.jpg`);
 }
