@@ -230,8 +230,8 @@ client.on('message', async (message) => {
         return;
       }
 const currentYear = new Date().getFullYear();
-       if (year < currentYear) {
-  await message.reply(`⚠️ Minimum year is *${currentYear}*`);
+       if (year > (currentYear+1)) {
+  await message.reply(`⚠️ Maximum year is *${currentYear}*`);
   return;
 }
 
