@@ -23,4 +23,4 @@ async function getWeather(apiKey, lat, lon) {
   return res.data;
 }
 
-module.exports = { getAirQuality, interpretAQI };
+module.exports = { getAirQuality, interpretAQI,getWeather };
