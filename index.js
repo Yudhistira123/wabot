@@ -6,6 +6,7 @@ const mqtt = require('mqtt');
 const sharp = require("sharp");
 const port = process.env.PORT || 3000;
 const { LocalAuth, Client, MessageMedia } = require('whatsapp-web.js');
+const { getAirQuality, interpretAQI,getWeather } = require("./airQualityService");
 const puppeteer = require("puppeteer");
 
 // =============== MQTT SETUP =================
@@ -324,23 +325,23 @@ client.on('message', async (message) => {
 
 
 // fungsi untuk ambil data polusi udara
-async function getAirQuality(lat, lon, apiKey) {
-  const url = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`;
-  const response = await axios.get(url);
-  return response.data;
-}
+// async function getAirQuality(lat, lon, apiKey) {
+//   const url = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+//   const response = await axios.get(url);
+//   return response.data;
+// }
 
 // mapping indeks AQI ke deskripsi
-function interpretAQI(aqi) {
-  switch (aqi) {
-    case 1: return "🟢 *Baik* (Good)";
-    case 2: return "🟡 *Cukup* (Fair)";
-    case 3: return "🟠 *Sedang* (Moderate)";
-    case 4: return "🔴 *Buruk* (Poor)";
-    case 5: return "🟣 *Sangat Buruk* (Very Poor)";
-    default: return "Tidak diketahui";
-  }
-}
+// function interpretAQI(aqi) {
+//   switch (aqi) {
+//     case 1: return "🟢 *Baik* (Good)";
+//     case 2: return "🟡 *Cukup* (Fair)";
+//     case 3: return "🟠 *Sedang* (Moderate)";
+//     case 4: return "🔴 *Buruk* (Poor)";
+//     case 5: return "🟣 *Sangat Buruk* (Very Poor)";
+//     default: return "Tidak diketahui";
+//   }
+// }
 
 
 // getdetilInfogroup
@@ -431,18 +432,18 @@ function formatCalendar(data, year, month) {
 }
 
 
-async function getWeather(apiKey,lat, lon) {
+// async function getWeather(apiKey,lat, lon) {
   
-  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=ID`;
-  console.log("Fetching weather from:", url);
-  try {
-    const response = await axios.get(url);
-    return response.data;
-  } catch (err) {
-    console.error("❌ Error getWeather:", err.message);
-    return null;
-  }
-}
+//   const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=ID`;
+//   console.log("Fetching weather from:", url);
+//   try {
+//     const response = await axios.get(url);
+//     return response.data;
+//   } catch (err) {
+//     console.error("❌ Error getWeather:", err.message);
+//     return null;
+//   }
+// }
 
 
 async function sendAvatar(participant,toNumber, name, avatarUrl) {
@@ -468,31 +469,6 @@ async function sendAvatar(participant,toNumber, name, avatarUrl) {
   }
 }
 
-// client.on("message", async (message) => {
-//   // Trigger command in a group
-//   if (message.body.toLowerCase() === "!getavatars" && message.from.endsWith("@g.us")) {
-//     const chat = await message.getChat();
-
-//     console.log(`👥 Group: ${chat.name}`);
-
-//     // Change to your admin number
-//     const adminNumber = "6281312188272";
-
-//     for (const participant of chat.participants) {
-//       const contact = await client.getContactById(participant.id._serialized);
-//       const name = contact.pushname || contact.number;
-//       const avatarUrl = await contact.getProfilePicUrl();
-
-//       await sendAvatar(adminNumber, name, avatarUrl);
-//     }
-
-//     await message.reply("✅ All avatars are being sent to admin.");
-//   }
-// });
-
-
-
-// endGetDetailInfoGroup
 
 async function getSholatByLocation(kodeLokasi) {
   try {
@@ -585,14 +561,7 @@ app.get("/send", async (req, res) => {
       console.error('Error calling API:', error.message);
       await message.reply('❌ Failed to fetch data from API');
     }
-  // try {
-
-
-  //   await client.sendMessage(`${number}@c.us`, text);
-  //   res.json({ status: "ok", sent: text });
-  // } catch (e) {
-  //   res.json({ status: "error", message: e.message });
-  // }
+  
 });
 app.get("/", (req, res) => {
   res.send("WhatsApp Bot is running...");
