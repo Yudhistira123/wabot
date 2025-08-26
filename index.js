@@ -6,7 +6,7 @@ const mqtt = require('mqtt');
 const sharp = require("sharp");
 const port = process.env.PORT || 3000;
 const { LocalAuth, Client, MessageMedia } = require('whatsapp-web.js');
-const { getAirQuality, interpretAQI,getWeather } = require("utils/airQualityService");
+const { getAirQuality, interpretAQI,getWeather } = require("./utils/airQualityService");
 const puppeteer = require("puppeteer");
 
 // =============== MQTT SETUP =================
