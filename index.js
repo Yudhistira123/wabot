@@ -8,6 +8,8 @@ const port = process.env.PORT || 3000;
 const { LocalAuth, Client, MessageMedia } = require('whatsapp-web.js');
 const { getAirQuality, interpretAQI, getWeather } = require("./utils/airQualityService");
 const { getSholatByLocation, getKodeKota } = require('./utils/sholat');
+const { sendAvatar } = require('./utils/avatar');
+
 const puppeteer = require("puppeteer");
 
 // =============== MQTT SETUP =================
@@ -400,64 +402,6 @@ function formatCalendar(data, year, month) {
   });
   return reply;
 }
-
-async function sendAvatar(participant,toNumber, name, avatarUrl) {
-  try {
-    if (!avatarUrl) {
-      console.log(`⚠️ ${name} has no avatar.`);
-      return;
-    }
-
-    // Download avatar
-    const response = await axios.get(avatarUrl, { responseType: "arraybuffer" });
-    const media = new MessageMedia(
-      "image/jpeg",
-      Buffer.from(response.data, "binary").toString("base64"),
-      `${name}.jpg`
-    );
-
-    // Send to target number (admin)
-    await client.sendMessage(`${toNumber}@c.us`, media, {caption: `📸 Avatar of ${name} (${participant.id._serialized})`,});
-    console.log(`✅ Avatar of ${name} sent to ${toNumber}`);
-  } catch (err) {
-    console.error(`❌ Failed for ${name}:`, err.message);
-  }
-}
-
-
-// async function getSholatByLocation(kodeLokasi) {
-//   try {
-//     // ambil tanggal hari ini dalam format YYYY-MM-DD
-//    // const today = new Date().toISOString().split("T")[0];
-//     const today = new Date().toLocaleDateString("sv-SE"); 
-//     const res = await axios.get(`https://api.myquran.com/v2/sholat/jadwal/${kodeLokasi}/${today}`);
-//     return res.data;
-//   } catch (err) {
-//     console.error("Gagal ambil jadwal sholat:", err.message);
-//     return null;
-//   }
-// }
-
-// async function getKodeKota(namaKota) {
-//   try {
-//     const res = await axios.get(`https://api.myquran.com/v2/sholat/kota/cari/${namaKota}`);
-//     if (res.data.status && res.data.data.length > 0) {
-//       let idKotaArray = [];
-
-//       // looping isi data
-//       res.data.data.forEach((kota) => {
-//         idKotaArray.push(kota.id); 
-//       });
-
-//       return idKotaArray;
-//     } else {
-//       return [];
-//     }
-//   } catch (err) {
-//     console.error("Gagal mengambil kode kota:", err);
-//     return [];
-//   }
-// }
 
 
 const numbers = [
