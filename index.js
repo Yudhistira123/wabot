@@ -143,8 +143,8 @@ client.on('message', async (message) => {
 
       const comp = data.list[0].components;
 
-      const replyMsg1 = `🌍 *Air Quality Info*\n` +
-        `📍 Koordinat: ${latitude}, ${longitude}\n` +
+      const replyMsg1 = `📍 Koordinat: ${latitude}, ${longitude}\n` +
+        `🌍 *Air Quality Info*\n` +   
         `🌫️ AQI: ${aqi} → ${desc}\n\n` +
         `💨 Komponen:\n` +
         `- CO: ${comp.co} μg/m³\n` +
@@ -165,9 +165,6 @@ client.on('message', async (message) => {
       if (weather) {
         const replyMsg2 =
           `🌍 *Informasi Cuaca Lengkap*\n\n` +
-          `📍 Lokasi: ${description}\n` +
-          `🌐 Koordinat: ${weather.coord.lat}, ${weather.coord.lon}\n\n` +
-
           `🌤️ Cuaca: ${weather.weather[0].main} - ${weather.weather[0].description}\n` +
           `🌡️ Suhu: ${weather.main.temp}°C\n` +
           `🤒 Terasa: ${weather.main.feels_like}°C\n` +
