@@ -165,7 +165,7 @@ client.on('message', async (message) => {
       if (weather) {
         const replyMsg2 =
           `🌍 *Informasi Cuaca Lengkap*\n\n` +
-          `📍 Lokasi: ${weather.name}, ${weather.sys.country}\n` +
+          `📍 Lokasi: ${description}\n` +
           `🌐 Koordinat: ${weather.coord.lat}, ${weather.coord.lon}\n\n` +
 
           `🌤️ Cuaca: ${weather.weather[0].main} - ${weather.weather[0].description}\n` +
