@@ -137,7 +137,7 @@ client.on('message', async (message) => {
       console.log(`📍 Lokasi diterima: ${latitude}, ${longitude} (${description || "tanpa deskripsi"})`);
 
       const apiKey = "44747099862079d031d937f5cd84a57e"; // <- pakai key kamu
-      const data = await getAirQuality(latitude, latitude, apiKey);
+      const data = await getAirQuality(latitude, longitude, apiKey);
       //console.log("🌫️ Air Quality Data:", JSON.stringify(data, null, 2));
       const aqi = data.list[0].main.aqi;
       const desc = interpretAQI(aqi);
@@ -160,7 +160,7 @@ client.on('message', async (message) => {
     //  await message.reply(replyMsg);
 
 
-      const weather = await getWeather(apiKey,latitude, latitude);   
+      const weather = await getWeather(apiKey,latitude, longitude);   
      
 
       if (weather) {
