@@ -34,21 +34,6 @@ const client = new Client({
   }
 });
 initMQTT(client);
-// mqttClient.on("connect", () => {
-//   console.log("✅ Connected to MQTT broker");
-//   mqttClient.subscribe(mqttTopics, (err) => {
-//     if (!err) {
-//       console.log(`📡 Subscribed to topics: ${mqttTopics.join(", ")}`);
-//     } else {
-//       console.error("❌ MQTT subscribe error:", err);
-//     }
-//   });
-// });
-// mqttClient.on("message", (topic, message) => {
-//   console.log(`📩 MQTT message from [${topic}]: ${message.toString()}`);
-//   sendMessages(client,topic, message);
-// });
-
 
 client.on('qr', (qr) => {
   console.log('QR RECEIVED', qr);
