@@ -3,7 +3,6 @@ const qrcode = require('qrcode-terminal');
 const axios = require('axios');
 const app = express();
 const mqtt = require('mqtt');
-const sharp = require("sharp");
 const port = process.env.PORT || 3000;
 const { LocalAuth, Client, MessageMedia } = require('whatsapp-web.js');
 const { getAirQuality, interpretAQI, getWeather } = require("./utils/airQualityService");
@@ -11,7 +10,7 @@ const { getSholatByLocation, getKodeKota } = require('./utils/sholat');
 const { sendAvatar } = require('./utils/avatar');
 const { getClubInfo, getClubActivities } = require("./utils/stravaService");
 const { getCalendar, formatCalendar } = require("./utils/calendarService");
-
+const { sendMessages } = require("./utils/mqttService");
 const puppeteer = require("puppeteer");
 
 // =============== MQTT SETUP =================
@@ -66,13 +65,6 @@ client.on('ready',async () => {
   groups.forEach((group, index) => {
     console.log(`${index + 1}. ${group.name} => ${group.id._serialized}`);
   });
-
-  // // Kirim pesan ke grup berdasarkan ID langsung
-  // const groupId = "120363043622833009@g.us"; // ganti sesuai hasil console
-  // await client.sendMessage(groupId, "Hello 👋 ini pesan otomatis dari bot!");
-
-  // // Kirim pesan ke grup berdasarkan nama
-  // sendToGroupByName("Family Group", "Halo semua! 😎");
 
 });
 client.on('message', async (message) => {
@@ -143,7 +135,6 @@ client.on('message', async (message) => {
       const desc = interpretAQI(aqi);
 
       const comp = data.list[0].components;
-
       const replyMsg1 = `📍 Lokasi: ${description}\n\n` +
         `🌍 *Air Quality Info*\n` +   
         `🌫️ AQI: ${aqi} → ${desc}\n` +
@@ -156,13 +147,7 @@ client.on('message', async (message) => {
         `- PM2.5: ${comp.pm2_5} μg/m³\n` +
         `- PM10: ${comp.pm10} μg/m³\n` +
         `- NH₃: ${comp.nh3} μg/m³`;
-
-    //  await message.reply(replyMsg);
-
-
       const weather = await getWeather(apiKey,latitude, longitude);   
-     
-
       if (weather) {
         const replyMsg2 =
           `🌍 *Informasi Cuaca Lengkap*\n\n` +
@@ -196,13 +181,10 @@ client.on('message', async (message) => {
       const CLUB_ID = "728531"; // ID Club Laris
       const clubInfo = await getClubInfo(CLUB_ID);
       const activities = await getClubActivities(CLUB_ID);
-
       if (!clubInfo) {
         message.reply("❌ Gagal ambil info club.");
         return;
       }
-
-      // Send cover image first
       if (clubInfo.cover_photo_small) {
         try {
           const media = await MessageMedia.fromUrl(clubInfo.cover_photo_small);
@@ -215,10 +197,7 @@ client.on('message', async (message) => {
       // Build text reply
       let reply = `🌍 Lokasi: ${clubInfo.city}, ${clubInfo.state}, ${clubInfo.country}\n` +
         `👥 Member: ${clubInfo.member_count}\n\n` +
-        `ℹ️ ${clubInfo.description || "No description"}\n\n` +
-        `=== 15 Aktivitas Terbaru ===\n\n`;
-
-      
+        `ℹ️ ${clubInfo.description || "No description"}\n\n` +`=== 10 Aktivitas Terbaru ===\n\n`;
 
       activities.forEach((act, i) => {
         const distanceKm = act.distance / 1000;
@@ -276,12 +255,7 @@ client.on('message', async (message) => {
     }
   
   } else {
-    if (message.body === 'ping') {
-      await message.reply('pong Yudhistira Sulaeman hari selasa Bandung Jabar Indonesia Banget...');
-    } else if (message.body === 'hello') {
-      await message.reply('Hello! How can I help you?');
-    } else if (message.body.startsWith("ambil ")) {
-   
+    if (message.body.startsWith("ambil ")) { 
       //console.log('Fetching data for noPasien:', noPasien);
       try {
         const noPasien = message.body.split(" ")[1].trim();
@@ -303,65 +277,22 @@ client.on('message', async (message) => {
         await client.sendMessage("628122132341@c.us", media, {
           caption:
             `🧾 Data pasien ${noPasien}
-👤 Nama: ${nama}
-🚻 JK: ${jekel}
-🏠 Alamat: ${alamat}
-📞 Tlp: ${tlp}
-🎂 Tgl Lahir: ${dlahir}
-⚠️ Alergi: ${alergi}`
-        });
+              👤 Nama: ${nama}
+              🚻 JK: ${jekel}
+              🏠 Alamat: ${alamat}
+              📞 Tlp: ${tlp}
+              🎂 Tgl Lahir: ${dlahir}
+              ⚠️ Alergi: ${alergi}` });
       } catch (error) {
         console.error('Error calling API:', error.message);
         await message.reply('❌ Failed to fetch data from API');
-      }
-     
+      }   
   } else {
           await message.reply('I am not sure how to respond to that.');
         }
       }
 });
  
-
-// async function getCalendar(year, month) {
-//   const url = `https://libur.deno.dev/api?year=${year}&month=${month}`;
-//   const res = await axios.get(url);
-//   return res.data;
-// }
-
-// // Format pesan kalender
-// function formatCalendar(data, year, month) {
-//   if (!data || data.length === 0) {
-//     return `❌ Tidak ada data LIBUR untuk ${month}/${year}`;
-//   }
-//    data.forEach(day => {
-//     reply += `📌 ${day.date} → ${day.name}\n`;
-//   });
-//   return reply;
-// }
-
-
-const numbers = [
-  "628122132341@c.us",
-  "6285220757725@c.us",
-  "628122233610@c.us",
-  "6285975386345@c.us",
-  "628121462983@c.us"
-];
-
-async function sendMessages(topic, message) {
-  for (const number of numbers) {
-    try {
-      await client.sendMessage(number, ` Lampu ${topic} : ${message.toString()}`);
-      console.log(`✅ Message sent to ${number}`);
-
-
-      
-    } catch (err) {
-      console.error(`❌ Failed to send to ${number}:`, err);
-    }
-  }
-}
-
 app.get("/send", async (req, res) => {
   const number = req.query.number;  // ex: ?number=628122132341
   const noPasien = req.query.text;      // ex: ?text=Hello
@@ -384,28 +315,18 @@ app.get("/send", async (req, res) => {
       //await client.sendMessage("628122132341@c.us", media,{caption: `🧾 Data pasien ${noPasien}\nNama: ${nama}\nJK: ${jekel}\nAlamat: ${alamat}\nTlp: ${tlp}\nTgl Lahir: ${dlahir}\nAlergi: ${alergi}`});
    await client.sendMessage(`${number}@c.us`, media, {
   caption: 
-`🧾 Data pasien ${noPasien}
-👤 Nama: ${nama}
-🚻 JK: ${jekel}
-🏠 Alamat: ${alamat}
-📞 Tlp: ${tlp}
-🎂 Tgl Lahir: ${dlahir}
-⚠️ Alergi: ${alergi}`
-});
+      `🧾 Data pasien ${noPasien}
+      👤 Nama: ${nama}
+      🚻 JK: ${jekel}
+      🏠 Alamat: ${alamat}
+      📞 Tlp: ${tlp}
+      🎂 Tgl Lahir: ${dlahir}
+      ⚠️ Alergi: ${alergi}`
+      });
     } catch (error) {
       console.error('Error calling API:', error.message);
       await message.reply('❌ Failed to fetch data from API');
     }
-  
-});
-app.get("/", (req, res) => {
-  res.send("WhatsApp Bot is running...");
-});
-app.get("/status", (req, res) => {
-  res.json({ status: "ok", message: "WhatsApp Bot is running..." });
-});
-app.get("/ping", (req, res) => {
-  res.send("pong");
 });
 
 app.listen(port, () => {
