@@ -6,7 +6,8 @@ const mqtt = require('mqtt');
 const sharp = require("sharp");
 const port = process.env.PORT || 3000;
 const { LocalAuth, Client, MessageMedia } = require('whatsapp-web.js');
-const { getAirQuality, interpretAQI,getWeather } = require("./utils/airQualityService");
+const { getAirQuality, interpretAQI, getWeather } = require("./utils/airQualityService");
+const { getSholatByLocation, getKodeKota } = require('./utils/sholat');
 const puppeteer = require("puppeteer");
 
 // =============== MQTT SETUP =================
@@ -91,12 +92,6 @@ client.on('message', async (message) => {
         await sendAvatar(participant, adminNumber, name, avatarUrl);
         //   await message.reply("✅ All avatars are being sent to admin.");
       }
-    } else if (message.body.toLowerCase().includes("naon")) {
-      await chat.sendMessage("🤖 aya naon");
-      console.log(`🤖 Reply ke ${sender}: aya naon`);
-    } else if (message.body.toLowerCase().includes("halo")) {
-      await chat.sendMessage("🤖 halo juga!");
-      console.log(`🤖 Reply ke ${sender}: halo juga!`);
     } else if (message.body.toLowerCase().includes("jadwal sholat")) {
       const namaKota = message.body.toLowerCase().replace("jadwal sholat", "").trim();
       if (!namaKota) {
@@ -323,30 +318,6 @@ client.on('message', async (message) => {
 });
     
 
-
-// fungsi untuk ambil data polusi udara
-// async function getAirQuality(lat, lon, apiKey) {
-//   const url = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`;
-//   const response = await axios.get(url);
-//   return response.data;
-// }
-
-// mapping indeks AQI ke deskripsi
-// function interpretAQI(aqi) {
-//   switch (aqi) {
-//     case 1: return "🟢 *Baik* (Good)";
-//     case 2: return "🟡 *Cukup* (Fair)";
-//     case 3: return "🟠 *Sedang* (Moderate)";
-//     case 4: return "🔴 *Buruk* (Poor)";
-//     case 5: return "🟣 *Sangat Buruk* (Very Poor)";
-//     default: return "Tidak diketahui";
-//   }
-// }
-
-
-// getdetilInfogroup
-// Function: download avatar and send to target number
-
 // Strava API Credentials
 const CLIENT_ID = "54707";
 const CLIENT_SECRET = "24def89a80ad1fe7586f0303af693787576075b3";
@@ -430,21 +401,6 @@ function formatCalendar(data, year, month) {
   return reply;
 }
 
-
-// async function getWeather(apiKey,lat, lon) {
-  
-//   const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=ID`;
-//   console.log("Fetching weather from:", url);
-//   try {
-//     const response = await axios.get(url);
-//     return response.data;
-//   } catch (err) {
-//     console.error("❌ Error getWeather:", err.message);
-//     return null;
-//   }
-// }
-
-
 async function sendAvatar(participant,toNumber, name, avatarUrl) {
   try {
     if (!avatarUrl) {
@@ -469,39 +425,39 @@ async function sendAvatar(participant,toNumber, name, avatarUrl) {
 }
 
 
-async function getSholatByLocation(kodeLokasi) {
-  try {
-    // ambil tanggal hari ini dalam format YYYY-MM-DD
-   // const today = new Date().toISOString().split("T")[0];
-    const today = new Date().toLocaleDateString("sv-SE"); 
-    const res = await axios.get(`https://api.myquran.com/v2/sholat/jadwal/${kodeLokasi}/${today}`);
-    return res.data;
-  } catch (err) {
-    console.error("Gagal ambil jadwal sholat:", err.message);
-    return null;
-  }
-}
+// async function getSholatByLocation(kodeLokasi) {
+//   try {
+//     // ambil tanggal hari ini dalam format YYYY-MM-DD
+//    // const today = new Date().toISOString().split("T")[0];
+//     const today = new Date().toLocaleDateString("sv-SE"); 
+//     const res = await axios.get(`https://api.myquran.com/v2/sholat/jadwal/${kodeLokasi}/${today}`);
+//     return res.data;
+//   } catch (err) {
+//     console.error("Gagal ambil jadwal sholat:", err.message);
+//     return null;
+//   }
+// }
 
-async function getKodeKota(namaKota) {
-  try {
-    const res = await axios.get(`https://api.myquran.com/v2/sholat/kota/cari/${namaKota}`);
-    if (res.data.status && res.data.data.length > 0) {
-      let idKotaArray = [];
+// async function getKodeKota(namaKota) {
+//   try {
+//     const res = await axios.get(`https://api.myquran.com/v2/sholat/kota/cari/${namaKota}`);
+//     if (res.data.status && res.data.data.length > 0) {
+//       let idKotaArray = [];
 
-      // looping isi data
-      res.data.data.forEach((kota) => {
-        idKotaArray.push(kota.id); 
-      });
+//       // looping isi data
+//       res.data.data.forEach((kota) => {
+//         idKotaArray.push(kota.id); 
+//       });
 
-      return idKotaArray;
-    } else {
-      return [];
-    }
-  } catch (err) {
-    console.error("Gagal mengambil kode kota:", err);
-    return [];
-  }
-}
+//       return idKotaArray;
+//     } else {
+//       return [];
+//     }
+//   } catch (err) {
+//     console.error("Gagal mengambil kode kota:", err);
+//     return [];
+//   }
+// }
 
 
 const numbers = [
