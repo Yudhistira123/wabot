@@ -91,7 +91,7 @@ client.on('message', async (message) => {
         const contact = await client.getContactById(participant.id._serialized);
         const name = contact.pushname || contact.number;
         const avatarUrl = await contact.getProfilePicUrl();
-        await sendAvatar(participant, adminNumber, name, avatarUrl);
+        await sendAvatar(client,participant, adminNumber, name, avatarUrl);
         //   await message.reply("✅ All avatars are being sent to admin.");
       }
     } else if (message.body.toLowerCase().includes("jadwal sholat")) {
