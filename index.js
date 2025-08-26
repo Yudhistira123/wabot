@@ -6,7 +6,7 @@ const mqtt = require('mqtt');
 const sharp = require("sharp");
 const port = process.env.PORT || 3000;
 const { LocalAuth, Client, MessageMedia } = require('whatsapp-web.js');
-const { getAirQuality, interpretAQI,getWeather } = require("./airQualityService");
+const { getAirQuality, interpretAQI,getWeather } = require("utils/airQualityService");
 const puppeteer = require("puppeteer");
 
 // =============== MQTT SETUP =================
@@ -424,7 +424,6 @@ function formatCalendar(data, year, month) {
   if (!data || data.length === 0) {
     return `❌ Tidak ada data LIBUR untuk ${month}/${year}`;
   }
-  let reply = `📅 Kalender ${month}/${year}\n\n`;
    data.forEach(day => {
     reply += `📌 ${day.date} → ${day.name}\n`;
   });
