@@ -56,7 +56,7 @@ async function getClubActivities(CLUB_ID) {
             `https://www.strava.com/api/v3/clubs/${CLUB_ID}/activities`,
             {
                 headers: { Authorization: `Bearer ${accessToken}` },
-                params: { per_page: 15 } // ambil 5 aktivitas terbaru
+                params: { per_page: 10 } // ambil 5 aktivitas terbaru
             }
         );
         return res.data ;
