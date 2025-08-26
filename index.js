@@ -138,7 +138,7 @@ client.on('message', async (message) => {
 
       const apiKey = "44747099862079d031d937f5cd84a57e"; // <- pakai key kamu
       const data = await getAirQuality(latitude, latitude, apiKey);
-      console.log("🌫️ Air Quality Data:", JSON.stringify(data, null, 2));
+      //console.log("🌫️ Air Quality Data:", JSON.stringify(data, null, 2));
       const aqi = data.list[0].main.aqi;
       const desc = interpretAQI(aqi);
 
