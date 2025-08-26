@@ -436,7 +436,7 @@ function formatCalendar(data, year, month) {
 async function getWeather(apiKey,lat, lon) {
   
   const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=ID`;
-
+  console.log("Fetching weather from:", url);
   try {
     const response = await axios.get(url);
     return response.data;
