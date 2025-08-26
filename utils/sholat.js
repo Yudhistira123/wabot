@@ -2,7 +2,8 @@ const axios = require("axios");
 
 async function getSholatByLocation(kodeLokasi) {
   try {
-    const today = new Date().toISOString().split("T")[0];
+   // const today = new Date().toISOString().split("T")[0];
+    const today = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Jakarta" });
     const res = await axios.get(`https://api.myquran.com/v2/sholat/jadwal/${kodeLokasi}/${today}`);
    // console.log(res.data);
     return res.data;
