@@ -293,41 +293,41 @@ client.on('message', async (message) => {
       }
 });
  
-app.get("/send", async (req, res) => {
-  const number = req.query.number;  // ex: ?number=628122132341
-  const noPasien = req.query.text;      // ex: ?text=Hello
-   try {
-     //  const noPasien = message.body.split(" ")[1].trim(); 
-      // 🔹 Call your webservice
-      const response = await axios.get(`https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}`); 
-      let base64String = response.data.gambar; 
-      let nama = response.data.nama; 
-      let dlahir = response.data.dlahir; 
-      let jekel = response.data.jekel; 
-      let alamat = response.data.alamat; 
-      let tlp = response.data.tlp; 
-      let alergi = response.data.alergi; 
-      console.log(`https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}`);
-      // 🔹 Clean base64 if it has prefix
-      base64String = base64String.replace(/^data:image\/\w+;base64,/, "");
+// app.get("/send", async (req, res) => {
+//   const number = req.query.number;  // ex: ?number=628122132341
+//   const noPasien = req.query.text;      // ex: ?text=Hello
+//    try {
+//      //  const noPasien = message.body.split(" ")[1].trim(); 
+//       // 🔹 Call your webservice
+//       const response = await axios.get(`https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}`); 
+//       let base64String = response.data.gambar; 
+//       let nama = response.data.nama; 
+//       let dlahir = response.data.dlahir; 
+//       let jekel = response.data.jekel; 
+//       let alamat = response.data.alamat; 
+//       let tlp = response.data.tlp; 
+//       let alergi = response.data.alergi; 
+//       console.log(`https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}`);
+//       // 🔹 Clean base64 if it has prefix
+//       base64String = base64String.replace(/^data:image\/\w+;base64,/, "");
       
-      const media = new MessageMedia("image/png", base64String, "myImage.png");
-      //await client.sendMessage("628122132341@c.us", media,{caption: `🧾 Data pasien ${noPasien}\nNama: ${nama}\nJK: ${jekel}\nAlamat: ${alamat}\nTlp: ${tlp}\nTgl Lahir: ${dlahir}\nAlergi: ${alergi}`});
-   await client.sendMessage(`${number}@c.us`, media, {
-  caption: 
-      `🧾 Data pasien ${noPasien}
-      👤 Nama: ${nama}
-      🚻 JK: ${jekel}
-      🏠 Alamat: ${alamat}
-      📞 Tlp: ${tlp}
-      🎂 Tgl Lahir: ${dlahir}
-      ⚠️ Alergi: ${alergi}`
-      });
-    } catch (error) {
-      console.error('Error calling API:', error.message);
-      await message.reply('❌ Failed to fetch data from API');
-    }
-});
+//       const media = new MessageMedia("image/png", base64String, "myImage.png");
+//       //await client.sendMessage("628122132341@c.us", media,{caption: `🧾 Data pasien ${noPasien}\nNama: ${nama}\nJK: ${jekel}\nAlamat: ${alamat}\nTlp: ${tlp}\nTgl Lahir: ${dlahir}\nAlergi: ${alergi}`});
+//    await client.sendMessage(`${number}@c.us`, media, {
+//   caption: 
+//       `🧾 Data pasien ${noPasien}
+//       👤 Nama: ${nama}
+//       🚻 JK: ${jekel}
+//       🏠 Alamat: ${alamat}
+//       📞 Tlp: ${tlp}
+//       🎂 Tgl Lahir: ${dlahir}
+//       ⚠️ Alergi: ${alergi}`
+//       });
+//     } catch (error) {
+//       console.error('Error calling API:', error.message);
+//       await message.reply('❌ Failed to fetch data from API');
+//     }
+// });
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
