@@ -7,7 +7,7 @@ const numbers = [
 //   "628121462983@c.us"
 ];
 
-async function sendMessages(topic, message) {
+async function sendMessages(client,topic, message) {
   for (const number of numbers) {
     try {
       await client.sendMessage(number, ` Lampu ${topic} : ${message.toString()}`);

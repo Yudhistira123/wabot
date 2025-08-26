@@ -46,7 +46,7 @@ mqttClient.on("connect", () => {
 });
 mqttClient.on("message", (topic, message) => {
   console.log(`📩 MQTT message from [${topic}]: ${message.toString()}`);
-  sendMessages(topic, message);
+  sendMessages(client,topic, message);
 });
 client.on('qr', (qr) => {
   console.log('QR RECEIVED', qr);
