@@ -7,6 +7,11 @@ async function sendAvatar(client, participant, toNumber, name, avatarUrl) {
       console.log(`⚠️ ${name} has no avatar.`);
       return;
     }
+    // 🔹 Ambil nomor WA dari JID
+    let phone = participant.id._serialized.replace("@c.us", "");
+    if (phone.startsWith("62")) {
+      phone = "0" + phone.substring(2);
+    }
     const response = await axios.get(avatarUrl, { responseType: "arraybuffer" });
     const media = new MessageMedia(
       "image/jpeg",
@@ -14,7 +19,7 @@ async function sendAvatar(client, participant, toNumber, name, avatarUrl) {
       `${name}.jpg`
     );
     await client.sendMessage(`${toNumber}@c.us`, media, {
-      caption: `📸 Avatar of ${name} (${participant.id._serialized})`
+      caption: `📸 ${name} (📞 ${phone})`
     });
     console.log(`✅ Avatar of ${name} sent to ${toNumber}`);
   } catch (err) {
