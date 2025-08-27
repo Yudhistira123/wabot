@@ -3,7 +3,7 @@ const axios = require("axios");
 async function getSholatByLocation(kodeLokasi) {
   const today = new Date();
   try {
-    //const today = new Date().toISOString().split("T")[0];
+    // const today = new Date().toISOString().split("T")[0];
     const jakarta = new Date(
       today.toLocaleString("en-US", { timeZone: "Asia/Jakarta" })
     );
@@ -11,7 +11,7 @@ async function getSholatByLocation(kodeLokasi) {
     const res = await axios.get(
       `https://api.myquran.com/v2/sholat/jadwal/${kodeLokasi}/${jakarta}`
     );
-    // console.log(res.data);
+    console.log(res.data);
     return res.data;
   } catch (err) {
     console.error("❌ Gagal ambil jadwal sholat:", err.message);
