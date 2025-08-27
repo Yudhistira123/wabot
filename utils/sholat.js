@@ -20,8 +20,17 @@ async function getSholatByLocation(kodeLokasi) {
 async function getKodeKota(namaKota) {
   console.log(`🔍 Mencari kode kota untuk: ${namaKota}`);
   try {
+    // const res = await axios.get(
+    //   `https://api.myquran.com/v2/sholat/kota/cari/${namaKota}`
+    // );
+
     const res = await axios.get(
-      `https://api.myquran.com/v2/sholat/kota/cari/${namaKota}`
+      "https://api.myquran.com/v2/sholat/kota/cari/bandung",
+      {
+        headers: {
+          "Accept-Encoding": "gzip, deflate", // jangan pakai br
+        },
+      }
     );
     console.log(JSON.stringify(res.data, null, 2));
     if (res.data.status && res.data.data.length > 0) {
