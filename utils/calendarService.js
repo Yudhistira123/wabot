@@ -9,15 +9,14 @@ async function getCalendar(year, month) {
 
 // Format pesan kalender
 function formatCalendar(data, year, month) {
-  let reply="";
+  let reply = "";
   if (!data || data.length === 0) {
     return `❌ Tidak ada data LIBUR untuk ${month}/${year}`;
   }
-   data.forEach(day => {
+  data.forEach((day) => {
     reply += `📌 ${day.date} → ${day.name}\n`;
   });
   return reply;
 }
-
 
 module.exports = { getCalendar, formatCalendar };

@@ -1,16 +1,20 @@
-const qrcode = require('qrcode-terminal');
-const axios = require('axios');
-const mqtt = require('mqtt');
+const qrcode = require("qrcode-terminal");
+const axios = require("axios");
+const mqtt = require("mqtt");
 const port = process.env.PORT || 3000;
-const { LocalAuth, Client, MessageMedia } = require('whatsapp-web.js');
-const { getAirQuality, interpretAQI, getWeather } = require("./utils/airQualityService");
-const { getSholatByLocation, getKodeKota } = require('./utils/sholat');
-const { sendAvatar } = require('./utils/avatar');
+const { LocalAuth, Client, MessageMedia } = require("whatsapp-web.js");
+const {
+  getAirQuality,
+  interpretAQI,
+  getWeather,
+} = require("./utils/airQualityService");
+const { getSholatByLocation, getKodeKota } = require("./utils/sholat");
+const { sendAvatar } = require("./utils/avatar");
 const { getClubInfo, getClubActivities } = require("./utils/stravaService");
 const { getCalendar, formatCalendar } = require("./utils/calendarService");
 const { sendMessages } = require("./utils/mqttService");
 const puppeteer = require("puppeteer");
-const { initMQTT } = require('./services/mqttServices');
+const { initMQTT } = require("./services/mqttServices");
 
 // =============== MQTT SETUP =================
 // const mqttBroker = "mqtt://103.27.206.14:1883";  // or your own broker
@@ -22,41 +26,41 @@ const client = new Client({
   puppeteer: {
     headless: true,
     args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-accelerated-2d-canvas',
-      '--no-first-run',
-      '--no-zygote',
-      '--single-process',
-      '--disable-gpu'
-    ]
-  }
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-accelerated-2d-canvas",
+      "--no-first-run",
+      "--no-zygote",
+      "--single-process",
+      "--disable-gpu",
+    ],
+  },
 });
 initMQTT(client);
 
-client.on('qr', (qr) => {
-  console.log('QR RECEIVED', qr);
+client.on("qr", (qr) => {
+  console.log("QR RECEIVED", qr);
   qrcode.generate(qr, { small: true });
 });
-client.on('authenticated', () => {
-  console.log('Client is authenticated');
+client.on("authenticated", () => {
+  console.log("Client is authenticated");
 });
-client.on('ready',async () => {
-  console.log('Client is ready!');
+client.on("ready", async () => {
+  console.log("Client is ready!");
   // Ambil semua chat
   const chats = await client.getChats();
-  const groups = chats.filter(chat => chat.isGroup);
+  const groups = chats.filter((chat) => chat.isGroup);
 
   console.log("\n=== LIST GROUP ===");
   groups.forEach((group, index) => {
     console.log(`${index + 1}. ${group.name} => ${group.id._serialized}`);
   });
-
 });
-client.on('message', async (message) => {
+client.on("message", async (message) => {
   // message group
-  if (message.from.endsWith('@g.us')) {  // <- cek kalau pengirim dari grup
+  if (message.from.endsWith("@g.us")) {
+    // <- cek kalau pengirim dari grup
     console.log(`📩 Pesan dari Grup: ${message.body}`);
     // Ambil info group
     const chat = await message.getChat();
@@ -64,7 +68,7 @@ client.on('message', async (message) => {
     // Ambil info pengirim
     const sender = message._data.notifyName || message.from;
     console.log(`👤 Pengirim: ${sender}`);
-    
+
     if (message.body.toLowerCase().includes("sg4")) {
       // Change to your admin number
       const adminNumber = "628122132341";
@@ -72,18 +76,25 @@ client.on('message', async (message) => {
         const contact = await client.getContactById(participant.id._serialized);
         const name = contact.pushname || contact.number;
         const avatarUrl = await contact.getProfilePicUrl();
-        await sendAvatar(client,participant, adminNumber, name, avatarUrl);
+        await sendAvatar(client, participant, adminNumber, name, avatarUrl);
         //   await message.reply("✅ All avatars are being sent to admin.");
       }
     } else if (message.body.toLowerCase().includes("jadwal sholat")) {
-      const namaKota = message.body.toLowerCase().replace("jadwal sholat", "").trim();
+      const namaKota = message.body
+        .toLowerCase()
+        .replace("jadwal sholat", "")
+        .trim();
       if (!namaKota) {
-        await chat.sendMessage("⚠️ Tolong sebutkan nama kota. Contoh: *jadwal sholat bandung*");
+        await chat.sendMessage(
+          "⚠️ Tolong sebutkan nama kota. Contoh: *jadwal sholat bandung*"
+        );
         return;
       }
       const idKotaArray = await getKodeKota(namaKota);
       if (idKotaArray.length === 0) {
-        await chat.sendMessage(`⚠️ Tidak ditemukan kota dengan nama ${namaKota}.`);
+        await chat.sendMessage(
+          `⚠️ Tidak ditemukan kota dengan nama ${namaKota}.`
+        );
         return;
       }
       for (const idKota of idKotaArray) {
@@ -101,19 +112,21 @@ client.on('message', async (message) => {
             `🌇 Ashar     : ${jadwal.ashar} WIB\n` +
             `🌆 Maghrib   : ${jadwal.maghrib} WIB\n` +
             `🌙 Isya      : ${jadwal.isya} WIB`;
-          
+
           await chat.sendMessage(replyMsg);
         } else {
           await chat.sendMessage("⚠️ Gagal mengambil jadwal sholat.");
         }
       }
-
-       
     } else if (message.type === "location") {
       //const chat = await message.getChat();
       const { latitude, longitude, description } = message.location; // ✅ lowercase 'location'
 
-      console.log(`📍 Lokasi diterima: ${latitude}, ${longitude} (${description || "tanpa deskripsi"})`);
+      console.log(
+        `📍 Lokasi diterima: ${latitude}, ${longitude} (${
+          description || "tanpa deskripsi"
+        })`
+      );
 
       const apiKey = "44747099862079d031d937f5cd84a57e"; // <- pakai key kamu
       const data = await getAirQuality(latitude, longitude, apiKey);
@@ -122,8 +135,9 @@ client.on('message', async (message) => {
       const desc = interpretAQI(aqi);
 
       const comp = data.list[0].components;
-      const replyMsg1 = `📍 Lokasi: ${description}\n\n` +
-        `🌍 *Air Quality Info*\n` +   
+      const replyMsg1 =
+        `📍 Lokasi: ${description}\n\n` +
+        `🌍 *Air Quality Info*\n` +
         `🌫️ AQI: ${aqi} → ${desc}\n` +
         `💨 Komponen:\n` +
         `- CO: ${comp.co} μg/m³\n` +
@@ -134,7 +148,7 @@ client.on('message', async (message) => {
         `- PM2.5: ${comp.pm2_5} μg/m³\n` +
         `- PM10: ${comp.pm10} μg/m³\n` +
         `- NH₃: ${comp.nh3} μg/m³`;
-      const weather = await getWeather(apiKey,latitude, longitude);   
+      const weather = await getWeather(apiKey, latitude, longitude);
       if (weather) {
         const replyMsg2 =
           `🌍 *Informasi Cuaca Lengkap*\n\n` +
@@ -147,21 +161,26 @@ client.on('message', async (message) => {
           `🌬️ Tekanan: ${weather.main.pressure} hPa\n` +
           `🌊 Tekanan Laut: ${weather.main.sea_level ?? "-"} hPa\n` +
           `🏞️ Tekanan Darat: ${weather.main.grnd_level ?? "-"} hPa\n\n` +
-
           `👀 Jarak Pandang: ${weather.visibility} m\n` +
-          `💨 Angin: ${weather.wind.speed} m/s, Arah ${weather.wind.deg}°, Gust ${weather.wind.gust ?? "-"} m/s\n` +
+          `💨 Angin: ${weather.wind.speed} m/s, Arah ${
+            weather.wind.deg
+          }°, Gust ${weather.wind.gust ?? "-"} m/s\n` +
           `☁️ Awan: ${weather.clouds.all}%\n\n` +
-
-          `🌅 Sunrise: ${new Date(weather.sys.sunrise * 1000).toLocaleTimeString("id-ID")}\n` +
-          `🌇 Sunset: ${new Date(weather.sys.sunset * 1000).toLocaleTimeString("id-ID")}\n\n` +
-
+          `🌅 Sunrise: ${new Date(
+            weather.sys.sunrise * 1000
+          ).toLocaleTimeString("id-ID")}\n` +
+          `🌇 Sunset: ${new Date(weather.sys.sunset * 1000).toLocaleTimeString(
+            "id-ID"
+          )}\n\n` +
           `🕒 Zona Waktu: UTC${weather.timezone / 3600}\n` +
           `🆔 City ID: ${weather.id}\n` +
           `📡 Source: ${weather.base}\n` +
-          `⏱️ Data Timestamp: ${new Date(weather.dt * 1000).toLocaleString("id-ID")}`;
+          `⏱️ Data Timestamp: ${new Date(weather.dt * 1000).toLocaleString(
+            "id-ID"
+          )}`;
 
         const chat = await message.getChat();
-        await chat.sendMessage(replyMsg1+"\n\n"+replyMsg2);
+        await chat.sendMessage(replyMsg1 + "\n\n" + replyMsg2);
         console.log(`✅ Sent weather info to group: ${chat.name}`);
       }
     } else if (message.body.toLowerCase() === "hasil club lari") {
@@ -175,16 +194,20 @@ client.on('message', async (message) => {
       if (clubInfo.cover_photo_small) {
         try {
           const media = await MessageMedia.fromUrl(clubInfo.cover_photo_small);
-          await client.sendMessage(message.from, media, { caption: `🏃 *${clubInfo.name}*` });
+          await client.sendMessage(message.from, media, {
+            caption: `🏃 *${clubInfo.name}*`,
+          });
         } catch (err) {
           console.error("❌ Error sending cover photo:", err.message);
         }
       }
 
       // Build text reply
-      let reply = `🌍 Lokasi: ${clubInfo.city}, ${clubInfo.state}, ${clubInfo.country}\n` +
+      let reply =
+        `🌍 Lokasi: ${clubInfo.city}, ${clubInfo.state}, ${clubInfo.country}\n` +
         `👥 Member: ${clubInfo.member_count}\n\n` +
-        `ℹ️ ${clubInfo.description || "No description"}\n\n` +`=== 10 Aktivitas Terbaru ===\n\n`;
+        `ℹ️ ${clubInfo.description || "No description"}\n\n` +
+        `=== 10 Aktivitas Terbaru ===\n\n`;
 
       activities.forEach((act, i) => {
         const distanceKm = act.distance / 1000;
@@ -194,19 +217,21 @@ client.on('message', async (message) => {
         const paceSecPerKm = act.moving_time / distanceKm;
         const paceMin = Math.floor(paceSecPerKm / 60);
         const paceSec = Math.round(paceSecPerKm % 60);
-        const paceFormatted = `${paceMin}:${paceSec.toString().padStart(2, "0")} /km`;
-        reply += `${i + 1}. ${act.athlete.firstname} ${act.athlete.lastname}\n` +
+        const paceFormatted = `${paceMin}:${paceSec
+          .toString()
+          .padStart(2, "0")} /km`;
+        reply +=
+          `${i + 1}. ${act.athlete.firstname} ${act.athlete.lastname}\n` +
           `📌 ${act.name}\n` +
           `📏 ${distanceKm.toFixed(2)} km\n` +
           `⏱️ ${movingMinutes} menit\n` +
           `🏃 Pace: ${paceFormatted}\n` +
           `⛰️ Elevasi: ${act.total_elevation_gain} m\n\n`;
       });
-      
+
       const chat = await message.getChat();
       await chat.sendMessage(reply);
       //  message.reply(reply);
-      
     } else if (message.body.toLowerCase().startsWith("kal")) {
       const parts = message.body.split(" ");
       const year = parts[1];
@@ -218,8 +243,8 @@ client.on('message', async (message) => {
       }
       const yearNum = parseInt(year, 10);
       const currentYear = new Date().getFullYear();
-      console.log('Current Year:', currentYear);
-      if (yearNum >currentYear) {
+      console.log("Current Year:", currentYear);
+      if (yearNum > currentYear) {
         await message.reply(`⚠️ Maximum year is *${currentYear}*`);
         return;
       }
@@ -236,18 +261,19 @@ client.on('message', async (message) => {
       const calUrl = `https://amdktirta.my.id/cal${year}/${month}.jpg`;
       const media = await MessageMedia.fromUrl(calUrl);
 
-     //s const media = await getResizedCalendar(year, month);
+      //s const media = await getResizedCalendar(year, month);
       const chat = await message.getChat();
       await chat.sendMessage(media, { caption });
     }
-  
   } else {
-    if (message.body.startsWith("ambil ")) { 
+    if (message.body.startsWith("ambil ")) {
       //console.log('Fetching data for noPasien:', noPasien);
       try {
         const noPasien = message.body.split(" ")[1].trim();
         // 🔹 Call your webservice
-        const response = await axios.get(`https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}`);
+        const response = await axios.get(
+          `https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}`
+        );
         let base64String = response.data.gambar;
         let nama = response.data.nama;
         let dlahir = response.data.dlahir;
@@ -255,30 +281,35 @@ client.on('message', async (message) => {
         let alamat = response.data.alamat;
         let tlp = response.data.tlp;
         let alergi = response.data.alergi;
-        console.log(`https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}`);
+        console.log(
+          `https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}`
+        );
         // 🔹 Clean base64 if it has prefix
         base64String = base64String.replace(/^data:image\/\w+;base64,/, "");
-      
-        const media = new MessageMedia("image/png", base64String, "myImage.png");
+
+        const media = new MessageMedia(
+          "image/png",
+          base64String,
+          "myImage.png"
+        );
         //await client.sendMessage("628122132341@c.us", media,{caption: `🧾 Data pasien ${noPasien}\nNama: ${nama}\nJK: ${jekel}\nAlamat: ${alamat}\nTlp: ${tlp}\nTgl Lahir: ${dlahir}\nAlergi: ${alergi}`});
         await client.sendMessage("628122132341@c.us", media, {
-          caption:
-            `🧾 Data pasien ${noPasien}
+          caption: `🧾 Data pasien ${noPasien}
               👤 Nama: ${nama}
               🚻 JK: ${jekel}
               🏠 Alamat: ${alamat}
               📞 Tlp: ${tlp}
               🎂 Tgl Lahir: ${dlahir}
-              ⚠️ Alergi: ${alergi}` });
+              ⚠️ Alergi: ${alergi}`,
+        });
       } catch (error) {
-        console.error('Error calling API:', error.message);
-        await message.reply('❌ Failed to fetch data from API');
-      }   
-  } else {
-          await message.reply('I am not sure how to respond to that.');
-        }
+        console.error("Error calling API:", error.message);
+        await message.reply("❌ Failed to fetch data from API");
       }
+    } else {
+      await message.reply("I am not sure how to respond to that.");
+    }
+  }
 });
-
 
 client.initialize();
