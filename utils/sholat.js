@@ -4,7 +4,7 @@ async function getSholatByLocation(kodeLokasi) {
   const today = new Date();
   try {
     // const today = new Date().toISOString().split("T")[0];
-    const hariInijakarta = new Date(
+    const jakarta = new Date(
       today.toLocaleString("en-US", { timeZone: "Asia/Jakarta" })
     );
     const year = jakarta.getFullYear();
