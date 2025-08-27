@@ -9,6 +9,7 @@ async function getCalendar(year, month) {
 
 // Format pesan kalender
 function formatCalendar(data, year, month) {
+  let reply="";
   if (!data || data.length === 0) {
     return `❌ Tidak ada data LIBUR untuk ${month}/${year}`;
   }
