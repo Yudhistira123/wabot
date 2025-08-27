@@ -18,6 +18,7 @@ async function getSholatByLocation(kodeLokasi) {
 }
 
 async function getKodeKota(namaKota) {
+  console.log(`🔍 Mencari kode kota untuk: ${namaKota}`);
   try {
     const res = await axios.get(
       `https://api.myquran.com/v2/sholat/kota/cari/${namaKota}`
