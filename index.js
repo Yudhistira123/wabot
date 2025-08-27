@@ -90,6 +90,7 @@ client.on("message", async (message) => {
         );
         return;
       }
+      console.log(`🔍 Mencari kode kota untuk: ${namaKota}`);
       const idKotaArray = await getKodeKota(namaKota);
       if (idKotaArray.length === 0) {
         await chat.sendMessage(
