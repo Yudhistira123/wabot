@@ -4,12 +4,17 @@ async function getSholatByLocation(kodeLokasi) {
   const today = new Date();
   try {
     // const today = new Date().toISOString().split("T")[0];
-    const jakarta = new Date(
+    const hariInijakarta = new Date(
       today.toLocaleString("en-US", { timeZone: "Asia/Jakarta" })
     );
+    const year = jakarta.getFullYear();
+    const month = String(jakarta.getMonth() + 1).padStart(2, "0");
+    const day = String(jakarta.getDate()).padStart(2, "0");
+
+    const hariIni = `${year}/${month}/${day}`;
 
     const res = await axios.get(
-      `https://api.myquran.com/v2/sholat/jadwal/${kodeLokasi}/${jakarta}`
+      `https://api.myquran.com/v2/sholat/jadwal/${kodeLokasi}/${hariIni}`
     );
     console.log(res.data);
     return res.data;
