@@ -30,7 +30,17 @@ async function getKodeKota(namaKota) {
       return [];
     }
   } catch (err) {
-    console.error("❌ Gagal mengambil kode kota:", err.message);
+    if (err.response) {
+      console.error(
+        "❌ API responded with error:",
+        err.response.status,
+        err.response.data
+      );
+    } else if (err.request) {
+      console.error("❌ No response received:", err.request);
+    } else {
+      console.error("❌ Error:", err.message);
+    }
     return [];
   }
 }
