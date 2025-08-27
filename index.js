@@ -84,6 +84,7 @@ client.on("message", async (message) => {
         .toLowerCase()
         .replace("jadwal sholat", "")
         .trim();
+      console.log(`🔍 Mencari kode kota untuk: ${namaKota}`);
       if (!namaKota) {
         await chat.sendMessage(
           "⚠️ Tolong sebutkan nama kota. Contoh: *jadwal sholat bandung*"
