@@ -75,10 +75,26 @@ async function sendNewsMessage(client, newsUrl) {
       $("meta[property='og:title']").attr("content") || $("title").text();
 
     // 5. Ambil deskripsi / paragraf pertama
+    // let description =
+    //   $("meta[name='description']").attr("content") ||
+    //   $("article p").first().text() ||
+    //   $("p").first().text();
+
     let description =
       $("meta[name='description']").attr("content") ||
-      $("article p").first().text() ||
-      $("p").first().text();
+      $("article p")
+        .slice(0, 3)
+        .map((i, el) => $(el).text())
+        .get()
+        .join(" ") ||
+      $("p")
+        .slice(0, 3)
+        .map((i, el) => $(el).text())
+        .get()
+        .join(" ");
+
+    console.log("Deskripsi lebih panjang:", description);
+
     console.log("Deskripsi asli:", description);
     if (description.length > 500) {
       description = description.substring(0, 447) + "...";
