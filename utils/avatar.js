@@ -44,7 +44,8 @@ const chatId = number + "@c.us";
 
 function sanitizeUrl(url) {
   // ganti underscore jadi dash
-  return url.replace(/_/g, "-");
+  url = url.replace(/_/g, "-");
+  return url.replace(/,/g, "-");
 }
 
 async function sendNewsMessage(client, newsUrl) {
