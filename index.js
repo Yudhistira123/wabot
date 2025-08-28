@@ -14,7 +14,7 @@ const {
   getDoaAcak,
   formatDoa,
 } = require("./utils/sholat");
-const { sendAvatar } = require("./utils/avatar");
+const { sendAvatar, sendNewsMessage } = require("./utils/avatar");
 const { getClubInfo, getClubActivities } = require("./utils/stravaService");
 const { getCalendar, formatCalendar } = require("./utils/calendarService");
 const { sendMessages } = require("./utils/mqttService");
@@ -320,14 +320,19 @@ client.on("message", async (message) => {
     } else if (message.body.startsWith("test url")) {
       const number = "628122132341"; // ganti ke nomor tujuan
       const chatId = number + "@c.us";
+      const newsUrl =
+        "https://jurnalisproperti.com/news-1590-warisi_pesan_bung_hatta,_pemerintah_perkuat_komitmen.html";
+      // });"
       // ambil gambar thumbnail (bisa URL / base64)
-      const media = await MessageMedia.fromUrl(
-        "https://jurnalisproperti.com/img_news/news_124156955.jpg"
-      );
-      // kirim dengan caption
-      await client.sendMessage(chatId, media, {
-        caption: `📰 *Warisi Pesan Bung Hatta*\n\nBaca selengkapnya:\nhttps://jurnalisproperti.com/news-1590-warisi_pesan_bung_hatta,_pemerintah_perkuat_komitmen.html`,
-      });
+      // const media = await MessageMedia.fromUrl(
+      //   "https://jurnalisproperti.com/img_news/news_124156955.jpg"
+      // );
+      // // kirim dengan caption
+      // await client.sendMessage(chatId, media, {
+      //   caption: `📰 *Warisi Pesan Bung Hatta*\n\nBaca selengkapnya:\nhttps://jurnalisproperti.com/news-1590-warisi_pesan_bung_hatta,_pemerintah_perkuat_komitmen.html`,
+      // });
+
+      await sendNewsMessage(client, chatId, newsUrl);
     } else {
       await message.reply("I am not sure how to respond to that.");
     }
