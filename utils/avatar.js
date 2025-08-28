@@ -75,7 +75,7 @@ async function sendNewsMessage(client, newsUrl) {
       $("p").first().text();
 
     if (description.length > 500) {
-      description = description.substring(0, 347) + "...";
+      description = description.substring(0, 447) + "...";
     }
 
     // 6. Buat media WhatsApp
