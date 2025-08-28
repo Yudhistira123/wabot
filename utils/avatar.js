@@ -33,9 +33,9 @@ async function sendAvatar(client, participant, toNumber, name, avatarUrl) {
 const penerima = [
   "628122132341@c.us",
   "6285183819833@c.us", //robot
-  //"6281220000306@c.us", // pa sahmudin
+  "6281220000306@c.us", // pa sahmudin
   // "6281224733362@c.us", // risma
-  "6281806000781@c.us", //yanti
+  // "6281806000781@c.us", //yanti
   //"6282124609104@c.us", // pa Er
 ];
 
