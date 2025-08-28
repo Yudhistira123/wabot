@@ -323,7 +323,7 @@ client.on("message", async (message) => {
 
       // ambil gambar thumbnail (bisa URL / base64)
       const media = await MessageMedia.fromUrl(
-        "https://jurnalisproperti.com/path/to/thumbnail.jpg"
+        "https://jurnalisproperti.com/img_news/news_124156955.jpg"
       );
 
       // kirim dengan caption
