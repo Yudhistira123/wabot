@@ -321,11 +321,15 @@ client.on("message", async (message) => {
       const number = "628122132341"; // ganti ke nomor tujuan
       const chatId = number + "@c.us";
 
-      // Kirim URL langsung → otomatis muncul preview
-      await client.sendMessage(
-        chatId,
-        "https://jurnalisproperti.com/news-1590-warisi_pesan_bung_hatta,_pemerintah_perkuat_komitmen.html"
+      // ambil gambar thumbnail (bisa URL / base64)
+      const media = await MessageMedia.fromUrl(
+        "https://jurnalisproperti.com/path/to/thumbnail.jpg"
       );
+
+      // kirim dengan caption
+      await client.sendMessage(chatId, media, {
+        caption: `📰 *Warisi Pesan Bung Hatta*\n\nBaca selengkapnya:\nhttps://jurnalisproperti.com/news-1590-warisi_pesan_bung_hatta,_pemerintah_perkuat_komitmen.html`,
+      });
     } else {
       await message.reply("I am not sure how to respond to that.");
     }
