@@ -34,8 +34,8 @@ const penerima = [
   "628122132341@c.us",
   "6285183819833@c.us", //robot
   //  "6281220000306@c.us", // pa sahmudin
-  // "6281224733362@c.us", // risma
-  // "6281806000781@c.us", //yanti
+  "6281224733362@c.us", // risma
+  "6281806000781@c.us", //yanti
   "6282124609104@c.us", // pa Er
 ];
 
@@ -74,7 +74,7 @@ async function sendNewsMessage(client, newsUrl) {
       $("article p").first().text() ||
       $("p").first().text();
 
-    if (description.length > 250) {
+    if (description.length > 500) {
       description = description.substring(0, 247) + "...";
     }
 
