@@ -318,18 +318,16 @@ client.on("message", async (message) => {
         await message.reply("❌ Failed to fetch data from API");
       }
     } else if (message.body.startsWith("test url")) {
-      const number = "628122132341"; // ganti ke nomor tujuan
-      const chatId = number + "@c.us";
-
-      // ambil gambar thumbnail (bisa URL / base64)
-      const media = await MessageMedia.fromUrl(
-        "https://jurnalisproperti.com/img_news/news_124156955.jpg"
-      );
-
-      // kirim dengan caption
-      await client.sendMessage(chatId, media, {
-        caption: `📰 *Warisi Pesan Bung Hatta*\n\nBaca selengkapnya:\nhttps://jurnalisproperti.com/news-1590-warisi_pesan_bung_hatta,_pemerintah_perkuat_komitmen.html`,
-      });
+      // const number = "628122132341"; // ganti ke nomor tujuan
+      // const chatId = number + "@c.us";
+      // // ambil gambar thumbnail (bisa URL / base64)
+      // const media = await MessageMedia.fromUrl(
+      //   "https://jurnalisproperti.com/img_news/news_124156955.jpg"
+      // );
+      // // kirim dengan caption
+      // await client.sendMessage(chatId, media, {
+      //   caption: `📰 *Warisi Pesan Bung Hatta*\n\nBaca selengkapnya:\nhttps://jurnalisproperti.com/news-1590-warisi_pesan_bung_hatta,_pemerintah_perkuat_komitmen.html`,
+      // });
     } else {
       await message.reply("I am not sure how to respond to that.");
     }
