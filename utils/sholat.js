@@ -59,7 +59,7 @@ function formatDoa(doa) {
   return (
     `📖 *${doa.judul}*\n\n` +
     `🕌 Arab:\n ${doa.arab}\n\n` +
-    `🇮🇩 Latin:\n  ${doa.indo}` +
+    `🇮🇩 Latin:\n  ${doa.indo}\n\n` +
     `📩 Sumber:\n  ${doa.source}`
   );
 }
