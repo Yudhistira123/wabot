@@ -33,10 +33,10 @@ async function sendAvatar(client, participant, toNumber, name, avatarUrl) {
 const penerima = [
   "628122132341@c.us",
   "6285183819833@c.us", //robot
-  "6281220000306@c.us", // pa sahmudin
+  //  "6281220000306@c.us", // pa sahmudin
   // "6281224733362@c.us", // risma
   // "6281806000781@c.us", //yanti
-  //"6282124609104@c.us", // pa Er
+  "6282124609104@c.us", // pa Er
 ];
 
 const number = "628122132341"; // ganti ke nomor tujuan
@@ -95,11 +95,16 @@ async function sendNewsMessage(client, newsUrl) {
     // 7. Kirim dengan caption
     for (const number of penerima) {
       try {
+        // await client.sendMessage(number, media, {
+        //   //  caption: `📰 *${title}*\n\n${description}....\n\nselengkapnya:\n${newsUrl}`
+        //   caption: `📰 *${title}*\n\n${description}\n\n🔗 Baca selengkapnya:\n\n${newsUrl}`,
+        // });
+        //console.log(`✅ Message sent to ${number}`);
         await client.sendMessage(number, media, {
-          //  caption: `📰 *${title}*\n\n${description}....\n\nselengkapnya:\n${newsUrl}`
-          caption: `📰 *${title}*\n\n${description}\n\n🔗 Baca selengkapnya:\n\n${newsUrl}`,
+          caption: `📰 *${title}*\n\n${description}`,
         });
-        console.log(`✅ Message sent to ${number}`);
+        await new Promise((r) => setTimeout(r, 1500));
+        await client.sendMessage(number, newsUrl, { linkPreview: true });
       } catch (err) {
         console.error(`❌ Failed to send to ${number}:`, err);
       }
