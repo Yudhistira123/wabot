@@ -76,7 +76,7 @@ async function sendNewsMessage(client, chatId, newsUrl) {
 
     // 7. Kirim dengan caption
     await client.sendMessage(chatId, media, {
-      caption: `📰 *${title}*\n\n${description}\n\nBaca selengkapnya:\n${newsUrl}`,
+      caption: `📰 *${title}*\n\n${description}....\nselengkapnya:\n${newsUrl}`,
     });
 
     console.log("✅ Berita terkirim dengan gambar:", imageUrl);
