@@ -71,8 +71,8 @@ async function sendNewsMessage(client, newsUrl) {
     }
 
     // 4. Ambil judul berita
-    let title =
-      $("meta[property='og:title']").attr("content") || $("title").text();
+    // let title =
+    //   $("meta[property='og:title']").attr("content") || $("title").text();
 
     // 5. Ambil deskripsi / paragraf pertama
     // let description =
@@ -80,18 +80,12 @@ async function sendNewsMessage(client, newsUrl) {
     //   $("article p").first().text() ||
     //   $("p").first().text();
 
-    let description =
-      $("meta[name='description']").attr("content") ||
-      $("article p")
-        .slice(0, 3)
-        .map((i, el) => $(el).text())
-        .get()
-        .join(" ") ||
-      $("p")
-        .slice(0, 3)
-        .map((i, el) => $(el).text())
-        .get()
-        .join(" ");
+    let description = $("meta[name='description']").attr("content");
+    description = $("article p")
+      .slice(0, 3) // ambil 3 paragraf pertama (bisa diperbesar jadi 5–10)
+      .map((i, el) => $(el).text().trim())
+      .get()
+      .join("\n\n"); // pisahkan antar paragraf dengan newline
 
     console.log("Deskripsi lebih panjang:", description);
 
