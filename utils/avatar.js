@@ -111,7 +111,7 @@ async function sendNewsMessage(client, newsUrl) {
           caption: `📰 *${title}*\n\n${description}`,
         });
         await new Promise((r) => setTimeout(r, 1500));
-        await client.sendMessage(number, newsUrl, { linkPreview: true });
+        await client.sendMessage(number, safeUrl, { linkPreview: true });
       } catch (err) {
         console.error(`❌ Failed to send to ${number}:`, err);
       }
