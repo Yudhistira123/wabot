@@ -1,6 +1,7 @@
 const qrcode = require("qrcode-terminal");
 const axios = require("axios");
 const mqtt = require("mqtt");
+const https = require("https");
 const port = process.env.PORT || 3000;
 const { LocalAuth, Client, MessageMedia } = require("whatsapp-web.js");
 const {
