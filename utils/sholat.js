@@ -56,7 +56,7 @@ async function getDoaAcak() {
 // Format pesan WhatsApp
 function formatDoa(doa) {
   if (!doa) return "⚠️ Gagal mengambil doa.";
-  return `📖 *${doa.judul}*\n` + `🇸🇦  ${doa.arab}\n` + `🇮🇩  ${doa.indo}`;
+  return `📖 *${doa.judul}*\n\n` + `🕌 ${doa.arab}\n\n` + `🇮🇩  ${doa.indo}`;
 }
 
 module.exports = { getSholatByLocation, getKodeKota, getDoaAcak, formatDoa };
