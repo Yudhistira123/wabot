@@ -33,9 +33,9 @@ async function sendAvatar(client, participant, toNumber, name, avatarUrl) {
 const penerima = [
   "628122132341@c.us",
   "6285183819833@c.us", //robot
-  "6281224733362@c.us", // risma
-  "6281806000781@c.us", //yanti
-  "6282124609104@c.us", // pa Er
+  // "6281224733362@c.us", // risma
+  // "6281806000781@c.us", //yanti
+  // "6282124609104@c.us", // pa Er
 ];
 
 const number = "628122132341"; // ganti ke nomor tujuan
@@ -84,6 +84,12 @@ async function sendNewsMessage(client, newsUrl) {
     // await client.sendMessage(chatId, media, {
     //   caption: `📰 *${title}*\n\nBaca selengkapnya:\n${newsUrl}`,
     // });
+
+    // 6. Bersihkan URL (trim & pastikan ada http)
+    newsUrl = newsUrl.trim();
+    if (!newsUrl.startsWith("http")) {
+      newsUrl = "https://" + newsUrl;
+    }
 
     // 7. Kirim dengan caption
     for (const number of penerima) {
