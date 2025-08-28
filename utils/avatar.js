@@ -71,8 +71,8 @@ async function sendNewsMessage(client, newsUrl) {
     }
 
     // 4. Ambil judul berita
-    // let title =
-    //   $("meta[property='og:title']").attr("content") || $("title").text();
+    let title =
+      $("meta[property='og:title']").attr("content") || $("title").text();
 
     // 5. Ambil deskripsi / paragraf pertama
     // let description =
