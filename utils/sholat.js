@@ -41,4 +41,27 @@ async function getKodeKota(namaKota) {
   }
 }
 
-module.exports = { getSholatByLocation, getKodeKota };
+// Ambil doa acak dari MyQuran API
+async function getDoaAcak() {
+  try {
+    const url = "https://api.myquran.com/v2/doa/acak";
+    const res = await axios.get(url);
+    return res.data.data; // ambil bagian data doa
+  } catch (err) {
+    console.error("❌ Error getDoaAcak:", err.message);
+    return null;
+  }
+}
+
+// Format pesan WhatsApp
+function formatDoa(doa) {
+  if (!doa) return "⚠️ Gagal mengambil doa.";
+  return (
+    `📖 *${doa.judul}*\n\n` +
+    `🕌 Arab:\n${doa.arab}\n\n` +
+    `🔊 Latin:\n_${doa.latin}_\n\n` +
+    `💡 Arti:\n${doa.arti}`
+  );
+}
+
+module.exports = { getSholatByLocation, getKodeKota, getDoaAcak, formatDoa };

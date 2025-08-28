@@ -120,6 +120,11 @@ client.on("message", async (message) => {
           await chat.sendMessage("⚠️ Gagal mengambil jadwal sholat.");
         }
       }
+    } else if (message.body.toLowerCase().includes("doa hari ini")) {
+        const doa = await getDoaAcak();
+        const text = formatDoa(doa);
+        await chat.sendMessage(text);
+      }
     } else if (message.type === "location") {
       //const chat = await message.getChat();
       const { latitude, longitude, description } = message.location; // ✅ lowercase 'location'
