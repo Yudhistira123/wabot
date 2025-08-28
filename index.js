@@ -21,6 +21,8 @@ const { sendMessages } = require("./utils/mqttService");
 const puppeteer = require("puppeteer");
 const { initMQTT } = require("./services/mqttServices");
 
+axios.defaults.httpsAgent = new https.Agent({ family: 4 });
+
 // =============== MQTT SETUP =================
 // const mqttBroker = "mqtt://103.27.206.14:1883";  // or your own broker
 // const mqttTopics = ["R1.JC.05", "R1.JC.06"];
