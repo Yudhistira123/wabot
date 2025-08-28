@@ -320,8 +320,10 @@ client.on("message", async (message) => {
     } else if (message.body.startsWith("test url")) {
       const number = "628122132341"; // ganti ke nomor tujuan
       const chatId = number + "@c.us";
-      const newsUrl =
-        "https://jurnalisproperti.com/news-1590-warisi_pesan_bung_hatta,_pemerintah_perkuat_komitmen.html";
+      // const newsUrl =
+      //   "https://jurnalisproperti.com/news-1590-warisi_pesan_bung_hatta,_pemerintah_perkuat_komitmen.html";
+
+      const newsUrl = message.body.replace("test url", "").trim();
       // });"
       // ambil gambar thumbnail (bisa URL / base64)
       // const media = await MessageMedia.fromUrl(
