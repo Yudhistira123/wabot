@@ -82,12 +82,12 @@ async function sendNewsMessage(client, newsUrl) {
 
     let description = $("meta[name='description']").attr("content");
     description = $("article p")
-      .slice(0, 3) // ambil 3 paragraf pertama (bisa diperbesar jadi 5–10)
+      .slice(0, 1) // ambil 3 paragraf pertama (bisa diperbesar jadi 5–10)
       .map((i, el) => $(el).text().trim())
       .get()
       .join("\n\n"); // pisahkan antar paragraf dengan newline
 
-    console.log("Deskripsi lebih panjang:", description);
+    //console.log("Deskripsi lebih panjang:", description);
 
     console.log("Deskripsi asli:", description);
     if (description.length > 500) {
