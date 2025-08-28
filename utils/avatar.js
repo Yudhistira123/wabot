@@ -33,14 +33,19 @@ async function sendAvatar(client, participant, toNumber, name, avatarUrl) {
 const penerima = [
   "628122132341@c.us",
   "6285183819833@c.us", //robot
-  "6281220000306@c.us", // pa sahmudin
+  // "6281220000306@c.us", // pa sahmudin
   //"6281224733362@c.us", // risma
-  "6281806000781@c.us", //yanti
+  // "6281806000781@c.us", //yanti
   // "6282124609104@c.us", // pa Er
 ];
 
 const number = "628122132341"; // ganti ke nomor tujuan
 const chatId = number + "@c.us";
+
+function sanitizeUrl(url) {
+  // ganti underscore jadi dash
+  return url.replace(/_/g, "-");
+}
 
 async function sendNewsMessage(client, newsUrl) {
   try {
@@ -92,6 +97,8 @@ async function sendNewsMessage(client, newsUrl) {
       newsUrl = "https://" + newsUrl;
     }
 
+    const safeUrl = sanitizeUrl(newsUrl);
+
     // 7. Kirim dengan caption
     for (const number of penerima) {
       try {
@@ -112,7 +119,7 @@ async function sendNewsMessage(client, newsUrl) {
   } catch (err) {
     console.error("❌ Gagal ambil berita:", err.message);
     // fallback: kirim link saja
-    await client.sendMessage(chatId, `📰 Berita selengkapnya:\n${newsUrl}`);
+    await client.sendMessage(chatId, `📰 Berita selengkapnya:\n${safeUrl}`);
   }
 }
 
