@@ -317,6 +317,15 @@ client.on("message", async (message) => {
         console.error("Error calling API:", error.message);
         await message.reply("❌ Failed to fetch data from API");
       }
+    } else if (message.body.startsWith("test url")) {
+      const number = "628122132341"; // ganti ke nomor tujuan
+      const chatId = number + "@c.us";
+
+      // Kirim URL langsung → otomatis muncul preview
+      await client.sendMessage(
+        chatId,
+        "https://jurnalisproperti.com/news-1590-warisi_pesan_bung_hatta,_pemerintah_perkuat_komitmen.html"
+      );
     } else {
       await message.reply("I am not sure how to respond to that.");
     }
