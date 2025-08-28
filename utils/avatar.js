@@ -30,7 +30,18 @@ async function sendAvatar(client, participant, toNumber, name, avatarUrl) {
   }
 }
 
-async function sendNewsMessage(client, chatId, newsUrl) {
+const penerima = [
+  "628122132341@c.us",
+  "6285183819833@c.us",
+  // "628122233610@c.us",
+  // "6285975386345@c.us",
+  // "628121462983@c.us",
+];
+
+const number = "628122132341"; // ganti ke nomor tujuan
+const chatId = number + "@c.us";
+
+async function sendNewsMessage(client, newsUrl) {
   try {
     // 1. Fetch HTML
     const { data } = await axios.get(newsUrl);
@@ -75,11 +86,16 @@ async function sendNewsMessage(client, chatId, newsUrl) {
     // });
 
     // 7. Kirim dengan caption
-    await client.sendMessage(chatId, media, {
-      caption: `📰 *${title}*\n\n${description}....\n\nselengkapnya:\n${newsUrl}`,
-    });
-
-    console.log("✅ Berita terkirim dengan gambar:", imageUrl);
+    for (const number of penerima) {
+      try {
+        await client.sendMessage(number, media, {
+          caption: `📰 *${title}*\n\n${description}....\n\nselengkapnya:\n${newsUrl}`,
+        });
+        console.log(`✅ Message sent to ${number}`);
+      } catch (err) {
+        console.error(`❌ Failed to send to ${number}:`, err);
+      }
+    }
   } catch (err) {
     console.error("❌ Gagal ambil berita:", err.message);
     // fallback: kirim link saja

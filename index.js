@@ -334,7 +334,7 @@ client.on("message", async (message) => {
       //   caption: `📰 *Warisi Pesan Bung Hatta*\n\nBaca selengkapnya:\nhttps://jurnalisproperti.com/news-1590-warisi_pesan_bung_hatta,_pemerintah_perkuat_komitmen.html`,
       // });
 
-      await sendNewsMessage(client, chatId, newsUrl);
+      await sendNewsMessage(client, newsUrl);
     } else {
       await message.reply("I am not sure how to respond to that.");
     }
