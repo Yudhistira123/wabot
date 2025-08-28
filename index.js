@@ -8,7 +8,12 @@ const {
   interpretAQI,
   getWeather,
 } = require("./utils/airQualityService");
-const { getSholatByLocation, getKodeKota } = require("./utils/sholat");
+const {
+  getSholatByLocation,
+  getKodeKota,
+  getDoaAcak,
+  formatDoa,
+} = require("./utils/sholat");
 const { sendAvatar } = require("./utils/avatar");
 const { getClubInfo, getClubActivities } = require("./utils/stravaService");
 const { getCalendar, formatCalendar } = require("./utils/calendarService");
