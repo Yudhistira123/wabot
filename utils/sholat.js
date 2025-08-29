@@ -56,11 +56,18 @@ async function getDoaAcak() {
 // Format pesan WhatsApp
 function formatDoa(doa) {
   if (!doa) return "⚠️ Gagal mengambil doa.";
+
+  const header =
+    "وَقَالَ رَبُّكُمُ ٱدْعُونِيٓ أَسْتَجِبْ لَكُمْ ۚ\n" +
+    "“Dan Tuhanmu berfirman: Berdoalah kepada-Ku, niscaya akan Kuperkenankan bagimu…”\n" +
+    "📖 QS Ghafir (40):60\n\n";
+
   return (
+    header +
     `📖 *${doa.judul}*\n\n` +
     `🕌 Arab:\n ${doa.arab}\n\n` +
-    `🇮🇩 Latin:\n  ${doa.indo}\n\n` +
-    `📩 Sumber:\n  ${doa.source}`
+    `🇮🇩 Latin:\n ${doa.indo}\n\n` +
+    `📩 Sumber:\n ${doa.source}`
   );
 }
 
