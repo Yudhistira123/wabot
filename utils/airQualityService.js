@@ -24,11 +24,11 @@ function interpretAQI(aqi) {
   }
 }
 
-async function getWeather(apiKey, lat, lon) {
-  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=id`;
-  const res = await axios.get(url);
-  return res.data;
-}
+// async function getWeather(apiKey, lat, lon) {
+//   const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=id`;
+//   const res = await axios.get(url);
+//   return res.data;
+// }
 
 // Fungsi format output AQI
 export function formatAirQuality(description, data) {
@@ -55,6 +55,5 @@ export function formatAirQuality(description, data) {
 module.exports = {
   getAirQuality,
   interpretAQI,
-  getWeather,
   formatAirQuality,
 };

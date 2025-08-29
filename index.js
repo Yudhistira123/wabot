@@ -13,7 +13,6 @@ const { LocalAuth, Client, MessageMedia } = require("whatsapp-web.js");
 const {
   getAirQuality,
   formatAirQuality,
-  getWeather,
 } = require("./utils/airQualityService");
 
 const {
