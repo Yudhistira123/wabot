@@ -353,7 +353,7 @@ loadKnowledgeBase("template_chatbot.csv").then((kb) => {
         const results = fuse.search(text);
         if (results.length > 0) {
           const found = results[0].item;
-          await message.reply(client, found.answer);
+          await message.reply(found.answer);
         } else {
           await message.reply(
             "⚠️ Maaf, saya belum punya jawaban untuk pertanyaan itu."
