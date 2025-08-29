@@ -70,7 +70,7 @@ function formatDoa(doa) {
     `📖 *${doa.judul}*\n\n` +
     `🕌 Arab:\n ${doa.arab}\n\n` +
     `🇮🇩 Latin:\n ${doa.indo}\n\n` +
-    `📩 Sumber:\n ${doa.source}`
+    `📩 Sumber:\n ${source}`
   );
 }
 
