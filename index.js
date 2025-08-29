@@ -22,6 +22,7 @@ const { sendMessages } = require("./utils/mqttService");
 const puppeteer = require("puppeteer");
 const { initMQTT } = require("./services/mqttServices");
 const { loadKnowledgeBase } = require("./utils/knowledgeBase");
+const Fuse = require("fuse.js");
 
 axios.defaults.httpsAgent = new https.Agent({ family: 4 });
 
@@ -339,18 +340,34 @@ loadKnowledgeBase("template_chatbot.csv").then((kb) => {
         console.log("Received for chatbot:", text);
         console.log("Knowledge Base:", knowledgeBase);
         console.log("Searching for:", text);
-        const found = knowledgeBase.find((item) =>
-          text.includes(item.question)
-        );
 
-        if (found) {
-          await sendNewsMessage(client, newsUrl);
-          // await msg.reply(found.answer);
+        // const found = knowledgeBase.find((item) =>
+        //   text.includes(item.question)
+        // );
+
+        const fuse = new Fuse(knowledgeBase, {
+          keys: ["question"],
+          threshold: 0.4,
+        });
+
+        const results = fuse.search(text);
+        if (results.length > 0) {
+          const found = results[0].item;
+          await sendNewsMessage(client, found.answer);
         } else {
-          await message.reply(
+          await sendNewsMessage(
             "⚠️ Maaf, saya belum punya jawaban untuk pertanyaan itu."
           );
         }
+
+        // if (found) {
+        //   await sendNewsMessage(client, newsUrl);
+        //   // await msg.reply(found.answer);
+        // } else {
+        //   await message.reply(
+        //     "⚠️ Maaf, saya belum punya jawaban untuk pertanyaan itu."
+        //   );
+        // }
       } else {
         await message.reply("I am not sure how to respond to that.");
       }
