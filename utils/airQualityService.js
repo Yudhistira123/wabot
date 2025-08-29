@@ -24,12 +24,6 @@ function interpretAQI(aqi) {
   }
 }
 
-// async function getWeather(apiKey, lat, lon) {
-//   const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=id`;
-//   const res = await axios.get(url);
-//   return res.data;
-// }
-
 // Fungsi format output AQI
 function formatAirQuality(description, data) {
   const aqi = data.list[0].main.aqi;
