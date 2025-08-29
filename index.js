@@ -10,10 +10,10 @@ const { LocalAuth, Client, MessageMedia } = require("whatsapp-web.js");
 //   formatAirQuality,
 // } from "./utils/airQualityService.js";
 
-const {
-  getAirQuality,
-  formatAirQuality,
-} = require("./utils/airQualityService");
+// const {
+//   getAirQuality,
+//   formatAirQuality,
+// } = require("./utils/airQualityService");
 
 const {
   getSholatByLocation,
@@ -29,7 +29,14 @@ const puppeteer = require("puppeteer");
 const { initMQTT } = require("./services/mqttServices");
 const { loadKnowledgeBase } = require("./utils/knowledgeBase");
 const Fuse = require("fuse.js");
-const { getWeather, formatWeather } = require("./utils/weather");
+// const { getWeather, formatWeather } = require("./utils/weather");
+
+const { getWeather, formatWeather } = require("./utils/weather.cjs");
+const {
+  getAirQuality,
+  interpretAQI,
+  formatAirQuality,
+} = require("./utils/airQualityService.cjs");
 
 axios.defaults.httpsAgent = new https.Agent({ family: 4 });
 
