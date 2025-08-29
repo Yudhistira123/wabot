@@ -14,7 +14,7 @@ async function getWeather(lat, lon) {
 }
 
 // Fungsi format output cuaca
-export function formatWeather(weather) {
+function formatWeather(weather) {
   return (
     `🌍 *Informasi Cuaca Lengkap*\n\n` +
     `🌤️ Cuaca: ${weather.weather[0].main} - ${weather.weather[0].description}\n` +
