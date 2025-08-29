@@ -8,7 +8,7 @@ import {
   getAirQuality,
   interpretAQI,
   formatAirQuality,
-} from ("./utils/airQualityService");
+} from "./utils/airQualityService";
 const {
   getSholatByLocation,
   getKodeKota,
