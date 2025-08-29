@@ -95,7 +95,7 @@ loadKnowledgeBase("template_chatbot.csv").then((kb) => {
           await sendAvatar(client, participant, adminNumber, name, avatarUrl);
           //   await message.reply("✅ All avatars are being sent to admin.");
         }
-      } else if (message.body.toLowerCase().includes("jadwal sholat")) {
+      } else if (message.body.toLowerCase().startsWith("jadwal sholat")) {
         const namaKota = message.body
           .toLowerCase()
           .replace("jadwal sholat", "")
@@ -136,7 +136,7 @@ loadKnowledgeBase("template_chatbot.csv").then((kb) => {
             await chat.sendMessage("⚠️ Gagal mengambil jadwal sholat.");
           }
         }
-      } else if (message.body.toLowerCase().includes("doa hari ini")) {
+      } else if (message.body.toLowerCase().startsWith("doa hari ini")) {
         const doa = await getDoaAcak();
         const text = formatDoa(doa);
         await chat.sendMessage(text);
