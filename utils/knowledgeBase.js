@@ -9,8 +9,8 @@ function loadKnowledgeBase(filePath) {
       .pipe(csv())
       .on("data", (row) => {
         knowledgeBase.push({
-          question: row["Pertanyaan"].toLowerCase().trim(),
-          answer: row["Jawaban"],
+          question: row["pertanyaan"].toLowerCase().trim(),
+          answer: row["jawaban"],
         });
       })
       .on("end", () => {
