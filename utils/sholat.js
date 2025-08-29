@@ -68,8 +68,8 @@ function formatDoa(doa) {
   return (
     header +
     `📖 *${doa.judul}*\n\n` +
-    // `🕌 Arab:\n ${doa.arab}\n\n` +
-    `🕌 Arab:\n${emphasizeArabic(doa.arab)}\n\n` +
+    `🕌 Arab:\n ${doa.arab}\n\n` +
+    // `🕌 Arab:\n${emphasizeArabic(doa.arab)}\n\n` +
     `🇮🇩 Latin:\n ${doa.indo}\n\n` +
     `📩 Sumber:\n ${source}`
   );
