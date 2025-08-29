@@ -8,12 +8,18 @@ async function getAirQuality(lat, lon, apiKey) {
 
 function interpretAQI(aqi) {
   switch (aqi) {
-    case 1: return "🟢 Baik";
-    case 2: return "🟡 Cukup";
-    case 3: return "🟠 Sedang";
-    case 4: return "🔴 Buruk";
-    case 5: return "🟣 Sangat Buruk";
-    default: return "❓ Tidak diketahui";
+    case 1:
+      return "🟢 Baik";
+    case 2:
+      return "🟡 Cukup";
+    case 3:
+      return "🟠 Sedang";
+    case 4:
+      return "🔴 Buruk";
+    case 5:
+      return "🟣 Sangat Buruk";
+    default:
+      return "❓ Tidak diketahui";
   }
 }
 
@@ -23,4 +29,29 @@ async function getWeather(apiKey, lat, lon) {
   return res.data;
 }
 
-module.exports = { getAirQuality, interpretAQI,getWeather };
+// Fungsi format output AQI
+export function formatAirQuality(description, data) {
+  const aqi = data.list[0].main.aqi;
+  const comp = data.list[0].components;
+  return (
+    `📍 Lokasi: ${description}\n\n` +
+    `🌍 *Air Quality Info*\n` +
+    `🌫️ AQI: ${aqi} → ${interpretAQI(aqi)}\n` +
+    `💨 Komponen:\n` +
+    `- CO: ${comp.co} μg/m³\n` +
+    `- NO: ${comp.no} μg/m³\n` +
+    `- NO₂: ${comp.no2} μg/m³\n` +
+    `- O₃: ${comp.o3} μg/m³\n` +
+    `- SO₂: ${comp.so2} μg/m³\n` +
+    `- PM2.5: ${comp.pm2_5} μg/m³\n` +
+    `- PM10: ${comp.pm10} μg/m³\n` +
+    `- NH₃: ${comp.nh3} μg/m³`
+  );
+}
+
+module.exports = {
+  getAirQuality,
+  interpretAQI,
+  getWeather,
+  formatAirQuality,
+};

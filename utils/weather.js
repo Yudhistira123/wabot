@@ -13,10 +13,10 @@ async function getWeather(lat, lon) {
   }
 }
 
-function formatWeatherMessage(weather) {
-  return `🌍 *Informasi Cuaca Lengkap*\n\n` +
-    `📍 Lokasi: ${weather.name}, ${weather.sys.country}\n` +
-    `🌐 Koordinat: ${weather.coord.lat}, ${weather.coord.lon}\n\n` +
+// Fungsi format output cuaca
+export function formatWeather(weather) {
+  return (
+    `🌍 *Informasi Cuaca Lengkap*\n\n` +
     `🌤️ Cuaca: ${weather.weather[0].main} - ${weather.weather[0].description}\n` +
     `🌡️ Suhu: ${weather.main.temp}°C\n` +
     `🤒 Terasa: ${weather.main.feels_like}°C\n` +
@@ -27,14 +27,21 @@ function formatWeatherMessage(weather) {
     `🌊 Tekanan Laut: ${weather.main.sea_level ?? "-"} hPa\n` +
     `🏞️ Tekanan Darat: ${weather.main.grnd_level ?? "-"} hPa\n\n` +
     `👀 Jarak Pandang: ${weather.visibility} m\n` +
-    `💨 Angin: ${weather.wind.speed} m/s, Arah ${weather.wind.deg}°, Gust ${weather.wind.gust ?? "-"} m/s\n` +
+    `💨 Angin: ${weather.wind.speed} m/s, Arah ${weather.wind.deg}°, Gust ${
+      weather.wind.gust ?? "-"
+    } m/s\n` +
     `☁️ Awan: ${weather.clouds.all}%\n\n` +
-    `🌅 Sunrise: ${new Date(weather.sys.sunrise * 1000).toLocaleTimeString("id-ID")}\n` +
-    `🌇 Sunset: ${new Date(weather.sys.sunset * 1000).toLocaleTimeString("id-ID")}\n\n` +
+    `🌅 Sunrise: ${new Date(weather.sys.sunrise * 1000).toLocaleTimeString(
+      "id-ID"
+    )}\n` +
+    `🌇 Sunset: ${new Date(weather.sys.sunset * 1000).toLocaleTimeString(
+      "id-ID"
+    )}\n\n` +
     `🕒 Zona Waktu: UTC${weather.timezone / 3600}\n` +
     `🆔 City ID: ${weather.id}\n` +
     `📡 Source: ${weather.base}\n` +
-    `⏱️ Data Timestamp: ${new Date(weather.dt * 1000).toLocaleString("id-ID")}`;
+    `⏱️ Data Timestamp: ${new Date(weather.dt * 1000).toLocaleString("id-ID")}`
+  );
 }
 
-module.exports = { getWeather, formatWeatherMessage };
+module.exports = { getWeather, formatWeather };

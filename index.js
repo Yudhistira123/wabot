@@ -7,7 +7,7 @@ const { LocalAuth, Client, MessageMedia } = require("whatsapp-web.js");
 const {
   getAirQuality,
   interpretAQI,
-  getWeather,
+  formatAirQuality,
 } = require("./utils/airQualityService");
 const {
   getSholatByLocation,
@@ -23,6 +23,7 @@ const puppeteer = require("puppeteer");
 const { initMQTT } = require("./services/mqttServices");
 const { loadKnowledgeBase } = require("./utils/knowledgeBase");
 const Fuse = require("fuse.js");
+const { getWeather, formatWeather } = require("./utils/weather");
 
 axios.defaults.httpsAgent = new https.Agent({ family: 4 });
 
@@ -152,59 +153,12 @@ loadKnowledgeBase("template_chatbot.csv").then((kb) => {
 
         const apiKey = "44747099862079d031d937f5cd84a57e"; // <- pakai key kamu
         const data = await getAirQuality(latitude, longitude, apiKey);
-        //console.log("🌫️ Air Quality Data:", JSON.stringify(data, null, 2));
-        const aqi = data.list[0].main.aqi;
-        const desc = interpretAQI(aqi);
-
-        const comp = data.list[0].components;
-        const replyMsg1 =
-          `📍 Lokasi: ${description}\n\n` +
-          `🌍 *Air Quality Info*\n` +
-          `🌫️ AQI: ${aqi} → ${desc}\n` +
-          `💨 Komponen:\n` +
-          `- CO: ${comp.co} μg/m³\n` +
-          `- NO: ${comp.no} μg/m³\n` +
-          `- NO₂: ${comp.no2} μg/m³\n` +
-          `- O₃: ${comp.o3} μg/m³\n` +
-          `- SO₂: ${comp.so2} μg/m³\n` +
-          `- PM2.5: ${comp.pm2_5} μg/m³\n` +
-          `- PM10: ${comp.pm10} μg/m³\n` +
-          `- NH₃: ${comp.nh3} μg/m³`;
+        const replyMsg1 = formatAirQuality(description, data);
         const weather = await getWeather(apiKey, latitude, longitude);
-        if (weather) {
-          const replyMsg2 =
-            `🌍 *Informasi Cuaca Lengkap*\n\n` +
-            `🌤️ Cuaca: ${weather.weather[0].main} - ${weather.weather[0].description}\n` +
-            `🌡️ Suhu: ${weather.main.temp}°C\n` +
-            `🤒 Terasa: ${weather.main.feels_like}°C\n` +
-            `🌡️ Suhu Min: ${weather.main.temp_min}°C\n` +
-            `🌡️ Suhu Max: ${weather.main.temp_max}°C\n` +
-            `💧 Kelembapan: ${weather.main.humidity}%\n` +
-            `🌬️ Tekanan: ${weather.main.pressure} hPa\n` +
-            `🌊 Tekanan Laut: ${weather.main.sea_level ?? "-"} hPa\n` +
-            `🏞️ Tekanan Darat: ${weather.main.grnd_level ?? "-"} hPa\n\n` +
-            `👀 Jarak Pandang: ${weather.visibility} m\n` +
-            `💨 Angin: ${weather.wind.speed} m/s, Arah ${
-              weather.wind.deg
-            }°, Gust ${weather.wind.gust ?? "-"} m/s\n` +
-            `☁️ Awan: ${weather.clouds.all}%\n\n` +
-            `🌅 Sunrise: ${new Date(
-              weather.sys.sunrise * 1000
-            ).toLocaleTimeString("id-ID")}\n` +
-            `🌇 Sunset: ${new Date(
-              weather.sys.sunset * 1000
-            ).toLocaleTimeString("id-ID")}\n\n` +
-            `🕒 Zona Waktu: UTC${weather.timezone / 3600}\n` +
-            `🆔 City ID: ${weather.id}\n` +
-            `📡 Source: ${weather.base}\n` +
-            `⏱️ Data Timestamp: ${new Date(weather.dt * 1000).toLocaleString(
-              "id-ID"
-            )}`;
-
-          const chat = await message.getChat();
-          await chat.sendMessage(replyMsg1 + "\n\n" + replyMsg2);
-          console.log(`✅ Sent weather info to group: ${chat.name}`);
-        }
+        const replyMsg2 = formatWeather(weather);
+        const chat = await message.getChat();
+        await chat.sendMessage(replyMsg1 + "\n\n" + replyMsg2);
+        console.log(`✅ Sent weather info to group: ${chat.name}`);
       } else if (message.body.toLowerCase() === "hasil club lari") {
         const CLUB_ID = "728531"; // ID Club Laris
         const clubInfo = await getClubInfo(CLUB_ID);
