@@ -331,8 +331,8 @@ loadKnowledgeBase("template_chatbot.csv").then((kb) => {
           await message.reply("❌ Failed to fetch data from API");
         }
       } else if (message.body.startsWith("test url")) {
-        const number = "628122132341"; // ganti ke nomor tujuan
-        const chatId = number + "@c.us";
+        // const number = "628122132341"; // ganti ke nomor tujuan
+        // const chatId = number + "@c.us";
         const newsUrl = message.body.replace("test url", "").trim();
         await sendNewsMessage(client, newsUrl);
       } else if (message.body.startsWith("ekyd:")) {
@@ -353,9 +353,9 @@ loadKnowledgeBase("template_chatbot.csv").then((kb) => {
         const results = fuse.search(text);
         if (results.length > 0) {
           const found = results[0].item;
-          await sendNewsMessage(client, found.answer);
+          await message.reply(client, found.answer);
         } else {
-          await sendNewsMessage(
+          await message.reply(
             "⚠️ Maaf, saya belum punya jawaban untuk pertanyaan itu."
           );
         }
