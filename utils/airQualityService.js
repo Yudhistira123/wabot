@@ -31,7 +31,7 @@ function interpretAQI(aqi) {
 // }
 
 // Fungsi format output AQI
-export function formatAirQuality(description, data) {
+function formatAirQuality(description, data) {
   const aqi = data.list[0].main.aqi;
   const comp = data.list[0].components;
   return (
