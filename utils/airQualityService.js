@@ -1,5 +1,5 @@
-//const axios = require("axios");
-import axios from "axios";
+const axios = require("axios");
+//import axios from "axios";
 
 async function getAirQuality(lat, lon, apiKey) {
   const url = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`;
@@ -50,4 +50,11 @@ export function formatAirQuality(description, data) {
   );
 }
 
-export { getAirQuality, interpretAQI, getWeather, formatAirQuality };
+//export { getAirQuality, interpretAQI, getWeather, formatAirQuality };
+
+module.exports = {
+  getAirQuality,
+  interpretAQI,
+  getWeather,
+  formatAirQuality,
+};
