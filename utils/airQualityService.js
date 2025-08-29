@@ -50,7 +50,7 @@ export function formatAirQuality(description, data) {
   );
 }
 
-module.exports = {
+exports = {
   getAirQuality,
   interpretAQI,
   getWeather,
