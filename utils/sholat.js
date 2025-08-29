@@ -61,6 +61,7 @@ function formatDoa(doa) {
     "📖 QS Ghafir (40):60\n" +
     "وَقَالَ رَبُّكُمُ ٱدْعُونِيٓ أَسْتَجِبْ لَكُمْ ۚ\n" +
     "“Dan Tuhanmu berfirman: Berdoalah kepada-Ku, niscaya akan Kuperkenankan bagimu…”\n\n";
+  const source = doa.source.charAt(0).toUpperCase() + doa.source.slice(1);
 
   return (
     header +
