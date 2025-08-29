@@ -337,6 +337,8 @@ loadKnowledgeBase("template_chatbot.csv").then((kb) => {
       } else if (message.body.startsWith("ekyd:")) {
         const text = message.body.replace("ekyd:", "").trim();
         console.log("Received for chatbot:", text);
+        console.log("Knowledge Base:", knowledgeBase);
+        console.log("Searching for:", text);
         const found = knowledgeBase.find((item) =>
           text.includes(item.question)
         );
