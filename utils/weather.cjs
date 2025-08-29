@@ -1,8 +1,8 @@
 const axios = require("axios");
 
-const apiKey = "44747099862079d031d937f5cd84a57e"; // API Key OWM
+//const apiKey = "44747099862079d031d937f5cd84a57e"; // API Key OWM
 
-async function getWeather(lat, lon) {
+async function getWeather(lat, lon, apiKey) {
   const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=ID`;
   console.log("Fetching weather from:", url);
   try {

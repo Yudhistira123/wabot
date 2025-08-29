@@ -167,7 +167,7 @@ loadKnowledgeBase("template_chatbot.csv").then((kb) => {
         const apiKey = "44747099862079d031d937f5cd84a57e"; // <- pakai key kamu
         const data = await getAirQuality(latitude, longitude, apiKey);
         const replyMsg1 = formatAirQuality(description, data);
-        const weather = await getWeather(apiKey, latitude, longitude);
+        const weather = await getWeather(latitude, longitude, apiKey);
         const replyMsg2 = formatWeather(weather);
         const chat = await message.getChat();
         await chat.sendMessage(replyMsg1 + "\n\n" + replyMsg2);
