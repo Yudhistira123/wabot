@@ -68,10 +68,56 @@ function formatDoa(doa) {
   return (
     header +
     `📖 *${doa.judul}*\n\n` +
-    `🕌 Arab:\n ${doa.arab}\n\n` +
+    // `🕌 Arab:\n ${doa.arab}\n\n` +
+    `🕌 Arab:\n${emphasizeArabic(doa.arab)}\n\n` +
     `🇮🇩 Latin:\n ${doa.indo}\n\n` +
     `📩 Sumber:\n ${source}`
   );
+}
+
+function emphasizeArabic(text) {
+  const mapping = {
+    ا: "ﺍ",
+    أ: "ﺃ",
+    إ: "ﺇ",
+    آ: "ﺁ",
+    ب: "ﺏ",
+    ت: "ﺕ",
+    ث: "ﺙ",
+    ج: "ﺝ",
+    ح: "ﺡ",
+    خ: "ﺥ",
+    د: "ﺩ",
+    ذ: "ﺫ",
+    ر: "ﺭ",
+    ز: "ﺯ",
+    س: "ﺱ",
+    ش: "ﺵ",
+    ص: "ﺹ",
+    ض: "ﺽ",
+    ط: "ﻁ",
+    ظ: "ﻅ",
+    ع: "ﻉ",
+    غ: "ﻍ",
+    ف: "ﻑ",
+    ق: "ﻕ",
+    ك: "ﻙ",
+    ل: "ﻟ",
+    م: "ﻡ",
+    ن: "ﻥ",
+    ه: "ﻫ",
+    و: "ﻭ",
+    ي: "ﻱ",
+    ى: "ﻯ",
+    ء: "ء", // tetap
+    ؤ: "ﺅ",
+    ئ: "ﺉ",
+  };
+
+  return text
+    .split("")
+    .map((ch) => mapping[ch] || ch)
+    .join("");
 }
 
 module.exports = { getSholatByLocation, getKodeKota, getDoaAcak, formatDoa };
