@@ -50,9 +50,4 @@ export function formatAirQuality(description, data) {
   );
 }
 
-exports = {
-  getAirQuality,
-  interpretAQI,
-  getWeather,
-  formatAirQuality,
-};
+export { getAirQuality, interpretAQI, getWeather, formatAirQuality };

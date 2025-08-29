@@ -4,11 +4,11 @@ const mqtt = require("mqtt");
 const https = require("https");
 const port = process.env.PORT || 3000;
 const { LocalAuth, Client, MessageMedia } = require("whatsapp-web.js");
-const {
+import {
   getAirQuality,
   interpretAQI,
   formatAirQuality,
-} = require("./utils/airQualityService");
+} from require("./utils/airQualityService");
 const {
   getSholatByLocation,
   getKodeKota,
