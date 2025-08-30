@@ -59,7 +59,15 @@ const client = new Client({
     //   "--single-process",
     //   "--disable-gpu",
     // ],
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    //args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-extensions",
+      "--disable-gpu",
+      "--disable-software-rasterizer",
+    ],
   },
 });
 //initMQTT(client);
