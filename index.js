@@ -42,12 +42,19 @@ async function startBot() {
       qrcode.generate(qr, { small: true });
     }
 
+    // if (connection === "close") {
+    //   const shouldReconnect =
+    //     lastDisconnect?.error?.output?.statusCode !==
+    //     DisconnectReason.loggedOut;
+    //   console.log("⚠️ Connection closed. Reconnect:", shouldReconnect);
+    //   if (shouldReconnect) startBot();
     if (connection === "close") {
-      const shouldReconnect =
-        lastDisconnect?.error?.output?.statusCode !==
-        DisconnectReason.loggedOut;
-      console.log("⚠️ Connection closed. Reconnect:", shouldReconnect);
-      if (shouldReconnect) startBot();
+      const statusCode = lastDisconnect?.error?.output?.statusCode;
+      const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
+      if (shouldReconnect) {
+        console.log("⚠️ Reconnecting in 5s...");
+        setTimeout(startBot, 5000);
+      }
     } else if (connection === "open") {
       console.log("✅ WhatsApp connected & ready!");
     }
