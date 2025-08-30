@@ -103,6 +103,10 @@ async function startBot() {
             });
           }
         }
+      } else if (text.toLowerCase().startsWith("doa hari ini")) {
+        const doa = await getDoaAcak();
+        const tesxdoa = formatDoa(doa);
+        await sock.sendMessage(from, { text: tesxdoa });
       }
       // !jadwalsholat <kota>
     } else {
