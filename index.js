@@ -69,9 +69,14 @@ async function startBot() {
         console.log(`🔍 Mencari kode kota untuk: ${namaKota}`);
         const idKotaArray = await getKodeKota(namaKota);
         if (idKotaArray.length === 0) {
-          await sock.sendMessage(
-            `⚠️ Tidak ditemukan kota dengan nama ${namaKota}.`
-          );
+          // await sock.sendMessage(
+          //   `⚠️ Tidak ditemukan kota dengan nama ${namaKota}.`
+          // );
+
+          await sock.sendMessage(from, {
+            text: "⚠️ Tolong sebutkan nama kota. Contoh: *jadwal sholat bandung*",
+          });
+
           return;
         }
         for (const idKota of idKotaArray) {
@@ -90,7 +95,8 @@ async function startBot() {
               `🌆 Maghrib   : ${jadwal.maghrib} WIB\n` +
               `🌙 Isya      : ${jadwal.isya} WIB`;
 
-            await sock.sendMessage(replyMsg);
+            // await sock.sendMessage(from, replyMsg);
+            await sock.sendMessage(from, { text: replyMsg });
           } else {
             await sock.sendMessage("⚠️ Gagal mengambil jadwal sholat.");
           }
