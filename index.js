@@ -67,10 +67,11 @@ async function startBot() {
       console.log("Pesan dari grup:", msg.message.conversation);
       if (text.toLowerCase() === "!ping") {
         await sock.sendMessage(from, { text: "pong grup 🏓" });
+        // 1. Jadwal sholat
       } else if (text.toLowerCase().startsWith("jadwal sholat")) {
         // jadwal sholat
         const namaKota = text.toLowerCase().replace("jadwal sholat", "").trim();
-        // console.log(`🔍 Mencari kode kota untuk: ${namaKota}`);
+        console.log(`🔍 Mencari kode kota untuk: ${namaKota}`);
         if (!namaKota) {
           await sock.sendMessage(from, {
             text: "⚠️ Tolong sebutkan nama kota. Contoh: *jadwal sholat bandung*",
@@ -109,10 +110,12 @@ async function startBot() {
             });
           }
         }
+        // 2. Doa Hari Ini
       } else if (text.toLowerCase().startsWith("doa hari ini")) {
         const doa = await getDoaAcak();
         const tesxdoa = formatDoa(doa);
         await sock.sendMessage(from, { text: tesxdoa });
+        // 3. Cek kualitas udara dan cuaca berdasarkan lokasi
       } else if (msg.message.locationMessage) {
         const loc = msg.message.locationMessage;
         const latitude = loc.degreesLatitude;
@@ -131,6 +134,7 @@ async function startBot() {
         const weather = await getWeather(latitude, longitude, apiKey);
         const replyMsg2 = formatWeather(weather);
         await sock.sendMessage(from, { text: replyMsg1 + "\n\n" + replyMsg2 });
+        // 4. Hasil Club Lari (Strava)
       } else if (text.toLowerCase() === "hasil club lari") {
         const CLUB_ID = "728531"; // ID Club Laris
         const clubInfo = await getClubInfo(CLUB_ID);
@@ -181,9 +185,10 @@ async function startBot() {
             `⛰️ Elevasi: ${act.total_elevation_gain} m\n\n`;
         });
         await sock.sendMessage(from, { text: reply });
+        //  5. Kalendar
       } else if (text.toLowerCase().startsWith("kal")) {
         const parts = text.split(" ");
-        const year = parts[1];
+       cla const year = parts[1];
         const month = parts[2];
 
         if (!year || !month) {
@@ -206,13 +211,10 @@ async function startBot() {
         const caption = formatCalendar(data, year, month);
 
         if (yearNum < currentYear) {
-          // 🔹 Tahun lampau → hanya caption tanpa media
           await sock.sendMessage(from, { text: caption });
           return;
         }
-        // --- Kirim gambar kalender + caption libur ---
         const calUrl = `https://amdktirta.my.id/cal${year}/${month}.jpg`;
-        //const media = await MessageMedia.fromUrl(calUrl);
 
         if (calUrl) {
           try {
