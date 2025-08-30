@@ -80,15 +80,15 @@ client.on("disconnected", (reason) => {
 client.on("ready", async () => {
   console.log("Client is ready!");
   // Ambil semua chat
-  const chats = await client.getChats();
-  console.log(`You have ${chats.length} chats open.`);
-  const groups = chats.filter((chat) => chat.isGroup);
-  console.log(`You have ${groups.length} group chats open.`);
+  // const chats = await client.getChats();
+  // console.log(`You have ${chats.length} chats open.`);
+  // const groups = chats.filter((chat) => chat.isGroup);
+  // console.log(`You have ${groups.length} group chats open.`);
 
   console.log("\n=== LIST GROUP ===");
-  groups.forEach((group, index) => {
-    console.log(`${index + 1}. ${group.name} => ${group.id._serialized}`);
-  });
+  // groups.forEach((group, index) => {
+  //   console.log(`${index + 1}. ${group.name} => ${group.id._serialized}`);
+  // });
 });
 // let knowledgeBase = [];
 // loadKnowledgeBase("template_chatbot.csv").then((kb) => {
