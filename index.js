@@ -15,6 +15,7 @@ const {
   interpretAQI,
   formatAirQuality,
 } = require("./utils/airQualityService.cjs");
+const { getWeather, formatWeather } = require("./utils/weather.cjs");
 
 async function startBot() {
   const { state, saveCreds } = await useMultiFileAuthState("baileys_auth");
