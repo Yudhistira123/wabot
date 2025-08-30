@@ -142,7 +142,9 @@ async function startBot() {
         if (clubInfo.cover_photo_small) {
           try {
             const res = await fetch(clubInfo.cover_photo_small);
-            const buffer = await res.arrayBuffer();
+            //const buffer = await res.arrayBuffer();
+            const buffer = Buffer.from(await res.arrayBuffer());
+
             await sock.sendMessage(from, {
               image: buffer,
               caption: `🏃 *${clubInfo.name}*`,
@@ -215,7 +217,8 @@ async function startBot() {
         if (calUrl) {
           try {
             const res = await fetch(calUrl);
-            const buffer = await res.arrayBuffer();
+            // const buffer = await res.arrayBuffer();
+            const buffer = Buffer.from(await res.arrayBuffer());
             await sock.sendMessage(from, {
               image: buffer,
               caption: caption,
