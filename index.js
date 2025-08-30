@@ -41,21 +41,21 @@ async function startBot() {
     const msg = m.messages[0];
     if (!msg.message) return;
 
-    // Cek apakah pesan dari grup
-    if (msg.key.remoteJid.endsWith("@g.us")) {
-      console.log("Pesan dari grup:", msg.message.conversation);
-    } else {
-      console.log("Pesan dari personal:", msg.message.conversation);
-    }
-
     const from = msg.key.remoteJid;
     const text =
       msg.message.conversation || msg.message.extendedTextMessage?.text || "";
-
     console.log("📩 Message from", from, ":", text);
-
-    if (text.toLowerCase() === "!ping") {
-      await sock.sendMessage(from, { text: "pong 🏓" });
+    // Cek apakah pesan dari grup
+    if (from.endsWith("@g.us")) {
+      console.log("Pesan dari grup:", msg.message.conversation);
+      if (text.toLowerCase() === "!ping") {
+        await sock.sendMessage(from, { text: "pong grup 🏓" });
+      }
+    } else {
+      if (text.toLowerCase() === "!ping") {
+        await sock.sendMessage(from, { text: "pong personal 🏓" });
+      }
+      console.log("Pesan dari personal:", msg.message.conversation);
     }
   });
 }
