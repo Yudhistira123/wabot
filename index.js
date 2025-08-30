@@ -48,6 +48,10 @@ client.on("authenticated", () => {
   console.log("✅ Client is authenticated");
 });
 
+client.on("loading_screen", (percent, message) => {
+  console.log(`⏳ Loading ${percent}% - ${message}`);
+});
+
 client.on("auth_failure", (msg) => {
   console.error("❌ AUTHENTICATION FAILURE", msg);
 });
