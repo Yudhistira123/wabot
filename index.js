@@ -140,14 +140,6 @@ async function startBot() {
           try {
             const res = await fetch(clubInfo.cover_photo_small);
             const buffer = await res.arrayBuffer();
-
-            // const media = await MessageMedia.fromUrl(
-            //   clubInfo.cover_photo_small
-            // );
-            // await sock.sendMessage(from, media, {
-            //   caption: `🏃 *${clubInfo.name}*`,
-            // });
-
             await sock.sendMessage(from, {
               image: buffer,
               caption: `🏃 *${clubInfo.name}*`,
@@ -183,11 +175,48 @@ async function startBot() {
             `🏃 Pace: ${paceFormatted}\n` +
             `⛰️ Elevasi: ${act.total_elevation_gain} m\n\n`;
         });
-
-        //const chat = await message.getChat();
         await sock.sendMessage(from, { text: reply });
-        // await chat.sendMessage(reply);
-        //  message.reply(reply);
+      } else if (text.toLowerCase().startsWith("kal")) {
+        const parts = text.split(" ");
+        const year = parts[1];
+        const month = parts[2];
+
+        if (!year || !month) {
+          await message.reply("⚠️ Format salah.\nContoh: *kalendar 2025 9*");
+          return;
+        }
+        const yearNum = parseInt(year, 10);
+        const currentYear = new Date().getFullYear();
+        console.log("Current Year:", currentYear);
+        if (yearNum > currentYear) {
+          await sock.sendMessage(from, {
+            text: `⚠️ Maximum year is *${currentYear}*`,
+          });
+          return;
+        }
+
+        const data = await getCalendar(year, month);
+        const caption = formatCalendar(data, year, month);
+
+        if (yearNum < currentYear) {
+          // 🔹 Tahun lampau → hanya caption tanpa media
+          await message.reply(caption);
+          return;
+        }
+        // --- Kirim gambar kalender + caption libur ---
+        const calUrl = `https://amdktirta.my.id/cal${year}/${month}.jpg`;
+        //const media = await MessageMedia.fromUrl(calUrl);
+
+        const res = await fetch(calUrl);
+        const buffer = await res.arrayBuffer();
+        await sock.sendMessage(from, {
+          image: buffer,
+          caption: caption,
+        });
+
+        //s const media = await getResizedCalendar(year, month);
+        // const chat = await message.getChat();
+        // await sock.sendMessage(from, { text: media, { caption });
       }
       // !jadwalsholat <kota>
     } else {
