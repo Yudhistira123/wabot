@@ -208,12 +208,24 @@ async function startBot() {
         const calUrl = `https://amdktirta.my.id/cal${year}/${month}.jpg`;
         //const media = await MessageMedia.fromUrl(calUrl);
 
-        const res = await fetch(calUrl);
-        const buffer = await res.arrayBuffer();
-        await sock.sendMessage(from, {
-          image: buffer,
-          caption: caption,
-        });
+        if (calUrl) {
+          try {
+            const res = await fetch(calUrl);
+            const buffer = await res.arrayBuffer();
+            await sock.sendMessage(from, {
+              image: buffer,
+              caption: caption,
+            });
+          } catch (err) {
+            console.error("❌ Error sending cover photo:", err.message);
+          }
+        }
+        // const res = await fetch(calUrl);
+        // const buffer = await res.arrayBuffer();
+        // await sock.sendMessage(from, {
+        //   image: buffer,
+        //   caption: caption,
+        // });
 
         //s const media = await getResizedCalendar(year, month);
         // const chat = await message.getChat();
