@@ -44,6 +44,10 @@ const client = new Client({
   },
 });
 
+client.on("change_state", (state) => {
+  console.log("🔄 State changed:", state);
+});
+
 client.on("authenticated", () => {
   console.log("✅ Client is authenticated");
 });
