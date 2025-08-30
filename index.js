@@ -46,7 +46,7 @@ axios.defaults.httpsAgent = new https.Agent({ family: 4 });
 // const mqttClient = mqtt.connect(mqttBroker);
 
 const client = new Client({
-  authStrategy: new LocalAuth({ clientId: "session-yudhi-boot" }),
+  authStrategy: new LocalAuth({ clientId: "session-yudhi-boot-2025" }),
   puppeteer: {
     headless: true,
     // args: [
