@@ -5,6 +5,14 @@ const {
 } = require("@whiskeysockets/baileys");
 const qrcode = require("qrcode-terminal");
 
+// Buat store untuk simpan chat & kontak
+const store = makeInMemoryStore({});
+store.readFromFile("./baileys_store.json");
+// Simpan otomatis tiap 10 detik
+setInterval(() => {
+  store.writeToFile("./baileys_store.json");
+}, 10_000);
+
 async function startBot() {
   const { state, saveCreds } = await useMultiFileAuthState("baileys_auth");
 
@@ -12,6 +20,9 @@ async function startBot() {
     auth: state,
     // jangan pakai printQRInTerminal
   });
+
+  // Hubungkan store dengan sock
+  store.bind(sock.ev);
 
   // Save creds setiap ada update
   sock.ev.on("creds.update", saveCreds);
@@ -33,6 +44,7 @@ async function startBot() {
       if (shouldReconnect) startBot();
     } else if (connection === "open") {
       console.log("✅ WhatsApp connected & ready!");
+      listGroups(); // Panggil fungsi listGroups saat koneksi terbuka
     }
   });
 
@@ -50,6 +62,20 @@ async function startBot() {
     if (text.toLowerCase() === "!ping") {
       await sock.sendMessage(from, { text: "pong 🏓" });
     }
+  });
+}
+
+// Function untuk ambil semua group
+function listGroups() {
+  const chats = Object.values(store.chats);
+  console.log(`You have ${chats.length} chats open.`);
+
+  const groups = chats.filter((c) => c.id.endsWith("@g.us"));
+  console.log(`You have ${groups.length} group chats open.`);
+
+  console.log("\n=== LIST GROUP ===");
+  groups.forEach((g, i) => {
+    console.log(`${i + 1}. ${g.name || g.subject} => ${g.id}`);
   });
 }
 
