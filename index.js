@@ -188,7 +188,7 @@ async function startBot() {
         //  5. Kalendar
       } else if (text.toLowerCase().startsWith("kal")) {
         const parts = text.split(" ");
-       cla const year = parts[1];
+        const year = parts[1];
         const month = parts[2];
 
         if (!year || !month) {
