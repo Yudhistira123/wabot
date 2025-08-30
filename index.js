@@ -17,7 +17,9 @@ const {
 } = require("./utils/airQualityService.cjs");
 const { getWeather, formatWeather } = require("./utils/weather.cjs");
 const { getClubInfo, getClubActivities } = require("./utils/stravaService");
-const fetch = require("node-fetch");
+//const fetch = require("node-fetch");
+const fetch = (...args) =>
+  import("node-fetch").then(({ default: fetch }) => fetch(...args));
 const { getCalendar, formatCalendar } = require("./utils/calendarService");
 
 async function startBot() {
