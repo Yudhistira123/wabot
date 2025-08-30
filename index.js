@@ -107,9 +107,11 @@ async function startBot() {
         const doa = await getDoaAcak();
         const tesxdoa = formatDoa(doa);
         await sock.sendMessage(from, { text: tesxdoa });
-      } else if (text.type === "location") {
-        //const chat = await message.getChat();
-        const { latitude, longitude, description } = text.location; // ✅ lowercase 'location'
+      } else if (text.locationMessage) {
+        const loc = msg.message.locationMessage;
+        const latitude = loc.degreesLatitude;
+        const longitude = loc.degreesLongitude;
+        const description = loc.name || ""; // Deskripsi lokasi opsional
 
         console.log(
           `📍 Lokasi diterima: ${latitude}, ${longitude} (${
