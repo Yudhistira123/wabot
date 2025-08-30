@@ -16,7 +16,7 @@ async function getSholatByLocation(kodeLokasi) {
     const res = await axios.get(
       `https://api.myquran.com/v2/sholat/jadwal/${kodeLokasi}/${hariIni}`
     );
-    console.log(res.data);
+    // console.log(res.data);
     return res.data;
   } catch (err) {
     console.error("❌ Gagal ambil jadwal sholat:", err.message);
@@ -29,7 +29,7 @@ async function getKodeKota(namaKota) {
     const res = await axios.get(
       `https://api.myquran.com/v2/sholat/kota/cari/${namaKota}`
     );
-    console.log(res.data);
+    // console.log(res.data);
     if (res.data.status && res.data.data.length > 0) {
       return res.data.data.map((k) => k.id);
     } else {
