@@ -183,7 +183,7 @@ async function startBot() {
         const month = parts[2];
 
         if (!year || !month) {
-          await message.reply("⚠️ Format salah.\nContoh: *kalendar 2025 9*");
+          await sock.sendMessage(from, { "⚠️ Format salah.\nContoh: *kalendar 2025 9*"});
           return;
         }
         const yearNum = parseInt(year, 10);
@@ -201,7 +201,7 @@ async function startBot() {
 
         if (yearNum < currentYear) {
           // 🔹 Tahun lampau → hanya caption tanpa media
-          await message.reply(caption);
+          await sock.sendMessage(from, { text: caption });
           return;
         }
         // --- Kirim gambar kalender + caption libur ---
@@ -220,16 +220,6 @@ async function startBot() {
             console.error("❌ Error sending cover photo:", err.message);
           }
         }
-        // const res = await fetch(calUrl);
-        // const buffer = await res.arrayBuffer();
-        // await sock.sendMessage(from, {
-        //   image: buffer,
-        //   caption: caption,
-        // });
-
-        //s const media = await getResizedCalendar(year, month);
-        // const chat = await message.getChat();
-        // await sock.sendMessage(from, { text: media, { caption });
       }
       // !jadwalsholat <kota>
     } else {
