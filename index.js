@@ -41,6 +41,13 @@ async function startBot() {
     const msg = m.messages[0];
     if (!msg.message) return;
 
+    // Cek apakah pesan dari grup
+    if (msg.key.remoteJid.endsWith("@g.us")) {
+      console.log("Pesan dari grup:", msg.message.conversation);
+    } else {
+      console.log("Pesan dari personal:", msg.message.conversation);
+    }
+
     const from = msg.key.remoteJid;
     const text =
       msg.message.conversation || msg.message.extendedTextMessage?.text || "";
