@@ -2,6 +2,7 @@ const {
   makeWASocket,
   useMultiFileAuthState,
   DisconnectReason,
+  makeInMemoryStore,
 } = require("@whiskeysockets/baileys");
 const qrcode = require("qrcode-terminal");
 
