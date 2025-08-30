@@ -62,7 +62,7 @@ const client = new Client({
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   },
 });
-initMQTT(client);
+//initMQTT(client);
 
 client.on("qr", (qr) => {
   console.log("QR RECEIVED", qr);
