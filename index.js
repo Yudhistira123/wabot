@@ -16,6 +16,8 @@ const {
   formatAirQuality,
 } = require("./utils/airQualityService.cjs");
 const { getWeather, formatWeather } = require("./utils/weather.cjs");
+const { getClubInfo, getClubActivities } = require("./utils/stravaService");
+const fetch = require("node-fetch");
 
 async function startBot() {
   const { state, saveCreds } = await useMultiFileAuthState("baileys_auth");
@@ -75,10 +77,6 @@ async function startBot() {
         console.log(`🔍 Mencari kode kota untuk: ${namaKota}`);
         const idKotaArray = await getKodeKota(namaKota);
         if (idKotaArray.length === 0) {
-          // await sock.sendMessage(
-          //   `⚠️ Tidak ditemukan kota dengan nama ${namaKota}.`
-          // );
-
           await sock.sendMessage(from, {
             text: "⚠️ Tolong sebutkan nama kota. Contoh: *jadwal sholat bandung*",
           });
@@ -101,7 +99,6 @@ async function startBot() {
               `🌆 Maghrib   : ${jadwal.maghrib} WIB\n` +
               `🌙 Isya      : ${jadwal.isya} WIB`;
 
-            // await sock.sendMessage(from, replyMsg);
             await sock.sendMessage(from, { text: replyMsg });
           } else {
             await sock.sendMessage(from, {
@@ -130,10 +127,67 @@ async function startBot() {
         const replyMsg1 = formatAirQuality(description, data);
         const weather = await getWeather(latitude, longitude, apiKey);
         const replyMsg2 = formatWeather(weather);
-        // const chat = await message.getChat();
         await sock.sendMessage(from, { text: replyMsg1 + "\n\n" + replyMsg2 });
-        // await chat.sendMessage(replyMsg1 + "\n\n" + replyMsg2);
-        // console.log(`✅ Sent weather info to group: ${chat.name}`);
+      } else if (text.toLowerCase() === "hasil club lari") {
+        const CLUB_ID = "728531"; // ID Club Laris
+        const clubInfo = await getClubInfo(CLUB_ID);
+        const activities = await getClubActivities(CLUB_ID);
+        if (!clubInfo) {
+          await sock.sendMessage(from, { text: "❌ Gagal ambil info club." });
+          return;
+        }
+        if (clubInfo.cover_photo_small) {
+          try {
+            const res = await fetch(clubInfo.cover_photo_small);
+            const buffer = await res.arrayBuffer();
+
+            // const media = await MessageMedia.fromUrl(
+            //   clubInfo.cover_photo_small
+            // );
+            // await sock.sendMessage(from, media, {
+            //   caption: `🏃 *${clubInfo.name}*`,
+            // });
+
+            await sock.sendMessage(from, {
+              image: buffer,
+              caption: `🏃 *${clubInfo.name}*`,
+            });
+          } catch (err) {
+            console.error("❌ Error sending cover photo:", err.message);
+          }
+        }
+
+        // Build text reply
+        let reply =
+          `🌍 Lokasi: ${clubInfo.city}, ${clubInfo.state}, ${clubInfo.country}\n` +
+          `👥 Member: ${clubInfo.member_count}\n\n` +
+          `ℹ️ ${clubInfo.description || "No description"}\n\n` +
+          `=== 10 Aktivitas Terbaru ===\n\n`;
+
+        activities.forEach((act, i) => {
+          const distanceKm = act.distance / 1000;
+          const movingMinutes = (act.moving_time / 60).toFixed(0);
+
+          // pace in seconds/km
+          const paceSecPerKm = act.moving_time / distanceKm;
+          const paceMin = Math.floor(paceSecPerKm / 60);
+          const paceSec = Math.round(paceSecPerKm % 60);
+          const paceFormatted = `${paceMin}:${paceSec
+            .toString()
+            .padStart(2, "0")} /km`;
+          reply +=
+            `${i + 1}. ${act.athlete.firstname} ${act.athlete.lastname}\n` +
+            `📌 ${act.name}\n` +
+            `📏 ${distanceKm.toFixed(2)} km\n` +
+            `⏱️ ${movingMinutes} menit\n` +
+            `🏃 Pace: ${paceFormatted}\n` +
+            `⛰️ Elevasi: ${act.total_elevation_gain} m\n\n`;
+        });
+
+        //const chat = await message.getChat();
+        await sock.sendMessage(from, { text: reply });
+        // await chat.sendMessage(reply);
+        //  message.reply(reply);
       }
       // !jadwalsholat <kota>
     } else {
