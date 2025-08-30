@@ -82,7 +82,8 @@ client.on("ready", async () => {
   });
 });
 let knowledgeBase = [];
-loadKnowledgeBase("template_chatbot.csv").then((kb) => {
+//loadKnowledgeBase("template_chatbot.csv").then((kb) => {
+loadKnowledgeBase("rudalrn01ss.csv").then((kb) => {
   knowledgeBase = kb;
   //============
   client.on("message", async (message) => {
@@ -308,10 +309,6 @@ loadKnowledgeBase("template_chatbot.csv").then((kb) => {
         // console.log("Knowledge Base:", knowledgeBase);
         console.log("Searching for:", text);
 
-        // const found = knowledgeBase.find((item) =>
-        //   text.includes(item.question)
-        // );
-
         const fuse = new Fuse(knowledgeBase, {
           keys: ["question"],
           threshold: 0.4,
@@ -326,15 +323,6 @@ loadKnowledgeBase("template_chatbot.csv").then((kb) => {
             "⚠️ Maaf, saya belum punya jawaban untuk pertanyaan itu."
           );
         }
-
-        // if (found) {
-        //   await sendNewsMessage(client, newsUrl);
-        //   // await msg.reply(found.answer);
-        // } else {
-        //   await message.reply(
-        //     "⚠️ Maaf, saya belum punya jawaban untuk pertanyaan itu."
-        //   );
-        // }
       } else {
         await message.reply("I am not sure how to respond to that.");
       }
