@@ -107,6 +107,25 @@ async function startBot() {
         const doa = await getDoaAcak();
         const tesxdoa = formatDoa(doa);
         await sock.sendMessage(from, { text: tesxdoa });
+      } else if (text.type === "location") {
+        //const chat = await message.getChat();
+        const { latitude, longitude, description } = text.location; // ✅ lowercase 'location'
+
+        console.log(
+          `📍 Lokasi diterima: ${latitude}, ${longitude} (${
+            description || "tanpa deskripsi"
+          })`
+        );
+
+        const apiKey = "44747099862079d031d937f5cd84a57e"; // <- pakai key kamu
+        const data = await getAirQuality(latitude, longitude, apiKey);
+        const replyMsg1 = formatAirQuality(description, data);
+        const weather = await getWeather(latitude, longitude, apiKey);
+        const replyMsg2 = formatWeather(weather);
+        // const chat = await message.getChat();
+        await sock.sendMessage(from, { text: replyMsg1 + "\n\n" + replyMsg2 });
+        // await chat.sendMessage(replyMsg1 + "\n\n" + replyMsg2);
+        // console.log(`✅ Sent weather info to group: ${chat.name}`);
       }
       // !jadwalsholat <kota>
     } else {
