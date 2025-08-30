@@ -74,7 +74,9 @@ client.on("ready", async () => {
   console.log("Client is ready!");
   // Ambil semua chat
   const chats = await client.getChats();
+  console.log(`You have ${chats.length} chats open.`);
   const groups = chats.filter((chat) => chat.isGroup);
+  console.log(`You have ${groups.length} group chats open.`);
 
   console.log("\n=== LIST GROUP ===");
   groups.forEach((group, index) => {
