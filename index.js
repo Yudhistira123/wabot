@@ -10,6 +10,11 @@ const {
   getDoaAcak,
   formatDoa,
 } = require("./utils/sholat");
+const {
+  getAirQuality,
+  interpretAQI,
+  formatAirQuality,
+} = require("./utils/airQualityService.cjs");
 
 async function startBot() {
   const { state, saveCreds } = await useMultiFileAuthState("baileys_auth");
