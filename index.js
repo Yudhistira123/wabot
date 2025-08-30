@@ -183,7 +183,9 @@ async function startBot() {
         const month = parts[2];
 
         if (!year || !month) {
-          await sock.sendMessage(from, { "⚠️ Format salah.\nContoh: *kalendar 2025 9*"});
+          await sock.sendMessage(from, {
+            text: "⚠️ Format salah.\nContoh: *kalendar 2025 9*",
+          });
           return;
         }
         const yearNum = parseInt(year, 10);
