@@ -18,6 +18,7 @@ const {
 const { getWeather, formatWeather } = require("./utils/weather.cjs");
 const { getClubInfo, getClubActivities } = require("./utils/stravaService");
 const fetch = require("node-fetch");
+const { getCalendar, formatCalendar } = require("./utils/calendarService");
 
 async function startBot() {
   const { state, saveCreds } = await useMultiFileAuthState("baileys_auth");
