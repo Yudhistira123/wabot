@@ -70,6 +70,13 @@ client.on("qr", (qr) => {
 client.on("authenticated", () => {
   console.log("Client is authenticated");
 });
+client.on("auth_failure", (msg) => {
+  console.error("❌ AUTHENTICATION FAILURE", msg);
+});
+client.on("disconnected", (reason) => {
+  console.log("❌ Client was logged out:", reason);
+});
+
 client.on("ready", async () => {
   console.log("Client is ready!");
   // Ambil semua chat
