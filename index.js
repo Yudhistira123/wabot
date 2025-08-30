@@ -61,7 +61,7 @@ async function startBot() {
         const namaKota = text.toLowerCase().replace("jadwal sholat", "").trim();
         // console.log(`🔍 Mencari kode kota untuk: ${namaKota}`);
         if (!namaKota) {
-          await chat.sendMessage(
+          await sock.sendMessage(
             "⚠️ Tolong sebutkan nama kota. Contoh: *jadwal sholat bandung*"
           );
           return;
@@ -98,7 +98,9 @@ async function startBot() {
             // await sock.sendMessage(from, replyMsg);
             await sock.sendMessage(from, { text: replyMsg });
           } else {
-            await sock.sendMessage("⚠️ Gagal mengambil jadwal sholat.");
+            await sock.sendMessage(from, {
+              text: "⚠️ Gagal mengambil jadwal sholat.",
+            });
           }
         }
       }
