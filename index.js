@@ -49,7 +49,10 @@ async function startBot() {
 
     const from = msg.key.remoteJid;
     const text =
-      msg.message.conversation || msg.message.extendedTextMessage?.text || "";
+      msg.message.conversation ||
+      msg.message.locationMessage ||
+      msg.message.extendedTextMessage?.text ||
+      "";
     console.log("📩 Message from", from, ":", text);
     // Cek apakah pesan dari grup
     if (from.endsWith("@g.us")) {
@@ -107,11 +110,11 @@ async function startBot() {
         const doa = await getDoaAcak();
         const tesxdoa = formatDoa(doa);
         await sock.sendMessage(from, { text: tesxdoa });
-      } else if (text.locationMessage) {
-        const loc = msg.message.locationMessage;
+      } else if (text) {
+        const loc = text;
         const latitude = loc.degreesLatitude;
         const longitude = loc.degreesLongitude;
-        const description = loc.name || ""; // Deskripsi lokasi opsional
+        const description = loc.name; // Deskripsi lokasi opsional
 
         console.log(
           `📍 Lokasi diterima: ${latitude}, ${longitude} (${
