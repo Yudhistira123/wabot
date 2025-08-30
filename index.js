@@ -4,6 +4,12 @@ const {
   DisconnectReason,
 } = require("@whiskeysockets/baileys");
 const qrcode = require("qrcode-terminal");
+const {
+  getSholatByLocation,
+  getKodeKota,
+  getDoaAcak,
+  formatDoa,
+} = require("./utils/sholat");
 
 async function startBot() {
   const { state, saveCreds } = await useMultiFileAuthState("baileys_auth");
@@ -50,7 +56,47 @@ async function startBot() {
       console.log("Pesan dari grup:", msg.message.conversation);
       if (text.toLowerCase() === "!ping") {
         await sock.sendMessage(from, { text: "pong grup 🏓" });
+      } else if (text.toLowerCase().startsWith("jadwal sholat")) {
+        // jadwal sholat
+        const namaKota = text.toLowerCase().replace("jadwal sholat", "").trim();
+        // console.log(`🔍 Mencari kode kota untuk: ${namaKota}`);
+        if (!namaKota) {
+          await chat.sendMessage(
+            "⚠️ Tolong sebutkan nama kota. Contoh: *jadwal sholat bandung*"
+          );
+          return;
+        }
+        console.log(`🔍 Mencari kode kota untuk: ${namaKota}`);
+        const idKotaArray = await getKodeKota(namaKota);
+        if (idKotaArray.length === 0) {
+          await sock.sendMessage(
+            `⚠️ Tidak ditemukan kota dengan nama ${namaKota}.`
+          );
+          return;
+        }
+        for (const idKota of idKotaArray) {
+          const sholatData = await getSholatByLocation(idKota);
+          if (sholatData && sholatData.data) {
+            const jadwal = sholatData.data.jadwal;
+            let replyMsg =
+              `🕌 *Jadwal Sholat ${sholatData.data.lokasi}*\n` +
+              `📅 Hari,Tgl: ${jadwal.tanggal}\n\n` +
+              `🌅 Imsak     : ${jadwal.imsak} WIB\n` +
+              `🌄 Subuh     : ${jadwal.subuh} WIB\n` +
+              `🌤️ Terbit    : ${jadwal.terbit} WIB\n` +
+              `🌞 Dhuha     : ${jadwal.dhuha} WIB\n` +
+              `☀️ Dzuhur    : ${jadwal.dzuhur} WIB\n` +
+              `🌇 Ashar     : ${jadwal.ashar} WIB\n` +
+              `🌆 Maghrib   : ${jadwal.maghrib} WIB\n` +
+              `🌙 Isya      : ${jadwal.isya} WIB`;
+
+            await sock.sendMessage(replyMsg);
+          } else {
+            await sock.sendMessage("⚠️ Gagal mengambil jadwal sholat.");
+          }
+        }
       }
+      // !jadwalsholat <kota>
     } else {
       if (text.toLowerCase() === "!ping") {
         await sock.sendMessage(from, { text: "pong personal 🏓" });
