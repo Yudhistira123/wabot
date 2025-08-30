@@ -82,8 +82,8 @@ client.on("ready", async () => {
   });
 });
 let knowledgeBase = [];
-//loadKnowledgeBase("template_chatbot.csv").then((kb) => {
-loadKnowledgeBase("rudalrn01ss.csv").then((kb) => {
+loadKnowledgeBase("template_chatbot.csv").then((kb) => {
+  //loadKnowledgeBase("rudalrn01ss.csv").then((kb) => {
   knowledgeBase = kb;
   //============
   client.on("message", async (message) => {
