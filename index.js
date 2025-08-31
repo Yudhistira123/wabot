@@ -260,21 +260,21 @@ async function startBot() {
           let alamat = response.data.alamat;
           let tlp = response.data.tlp;
           let alergi = response.data.alergi;
-          console.log(
-            `https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}`
-          );
+
           // 🔹 Clean base64 if it has prefix
           base64String = base64String.replace(/^data:image\/\w+;base64,/, "");
 
-          const media = new MessageMedia(
-            "image/png",
-            base64String,
-            "myImage.png"
-          );
+          const buffer = Buffer.from(base64String, "base64");
+
+          // const media = new MessageMedia(
+          //   "image/png",
+          //   base64String,
+          //   "myImage.png"
+          // );
 
           // const res = await fetch(clubInfo.cover_photo_small);
           //const buffer = await res.arrayBuffer();
-          const buffer = Buffer.from(await media.arrayBuffer());
+          // const buffer = Buffer.from(await media.arrayBuffer());
           let info = `🧾 Data pasien ${noPasien}
                   👤 Nama: ${nama}
                   🚻 JK: ${jekel}
