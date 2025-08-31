@@ -256,7 +256,7 @@ async function startBot() {
       } else if (text.toLowerCase().includes("sg4")) {
         // Change to your admin number
         const groupId = from;
-
+        const contact = "";
         // Ambil metadata grup
         const metadata = await sock.groupMetadata(groupId);
 
@@ -267,7 +267,7 @@ async function startBot() {
           // Untuk ambil nama kontak, perlu query vCard
           let name = id.split("@")[0]; // default pakai nomor
           try {
-            const contact = await sock.onWhatsApp(id);
+            contact = await sock.onWhatsApp(id);
             // onWhatsApp memberi info apakah user aktif, tapi tidak pushname
           } catch (err) {
             console.error("Error fetching contact:", err);
