@@ -318,11 +318,12 @@ async function startBot() {
             text: "⚠️ Maaf, saya belum punya jawaban untuk pertanyaan itu.",
           });
         }
-      } else {
-        await sock.sendMessage(from, {
-          text: "I am not sure how to respond to that.",
-        });
       }
+      // } else {
+      //   await sock.sendMessage(from, {
+      //     text: "I am not sure how to respond to that.",
+      //   });
+      // }
       // personal
     }
   });
