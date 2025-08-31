@@ -275,7 +275,7 @@ async function startBot() {
 
           await sock.sendMessage("628122132341@c.us", {
             image: buffer,
-            caption: `🧾 Data pasien ${noPasien}
+            caption: `🧾 Data pasien1 ${noPasien}
           👤 Nama: ${nama}
           🚻 JK: ${jekel}
           🏠 Alamat: ${alamat}
