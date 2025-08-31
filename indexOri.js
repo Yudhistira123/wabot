@@ -106,11 +106,11 @@ client.on("ready", async () => {
   });
 });
 
-// let knowledgeBase = [];
 // loadKnowledgeBase("template_chatbot.csv").then((kb) => {
-//   //loadKnowledgeBase("rudalrn01ss.csv").then((kb) => {
-//   knowledgeBase = kb;
-//============
+let knowledgeBase = [];
+  loadKnowledgeBase("rudalrn01ss.csv").then((kb) => {
+  knowledgeBase = kb;
+
 client.on("message", async (message) => {
   // message group
   if (message.from.endsWith("@g.us")) {
@@ -324,6 +324,7 @@ client.on("message", async (message) => {
       // const chatId = number + "@c.us";
       const newsUrl = message.body.replace("test url", "").trim();
       await sendNewsMessage(client, newsUrl);
+
     } else if (message.body.startsWith("ekyd:")) {
       const text = message.body.replace("ekyd:", "").trim();
       console.log("Received for chatbot:", text);

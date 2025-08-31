@@ -25,8 +25,16 @@ const fetch = (...args) =>
 const { getCalendar, formatCalendar } = require("./utils/calendarService");
 const axios = require("axios");
 const { sendAvatar, sendNewsMessage } = require("./utils/avatar");
-
+const { loadKnowledgeBase } = require("./utils/knowledgeBase");
+const Fuse = require("fuse.js");
 // end of import
+
+let knowledgeBase = [];
+
+// Load knowledge base CSV
+loadKnowledgeBase("rudalrn01ss.csv").then((kb) => {
+  knowledgeBase = kb;
+});
 
 async function startBot() {
   const { state, saveCreds } = await useMultiFileAuthState("baileys_auth");
@@ -48,12 +56,6 @@ async function startBot() {
       qrcode.generate(qr, { small: true });
     }
 
-    // if (connection === "close") {
-    //   const shouldReconnect =
-    //     lastDisconnect?.error?.output?.statusCode !==
-    //     DisconnectReason.loggedOut;
-    //   console.log("⚠️ Connection closed. Reconnect:", shouldReconnect);
-    //   if (shouldReconnect) startBot();
     if (connection === "close") {
       const statusCode = lastDisconnect?.error?.output?.statusCode;
       const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
@@ -286,8 +288,6 @@ async function startBot() {
 🎂 Tgl Lahir: ${dlahir}
 ⚠️ Alergi: ${alergi}`,
           });
-
-          //await client.sendMessage("628122132341@c.us", media,{caption: `🧾 Data pasien ${noPasien}\nNama: ${nama}\nJK: ${jekel}\nAlamat: ${alamat}\nTlp: ${tlp}\nTgl Lahir: ${dlahir}\nAlergi: ${alergi}`});
         } catch (error) {
           console.error("Error calling API:", error.message);
           await sock.sendMessage(from, {
@@ -300,6 +300,28 @@ async function startBot() {
         const newsUrl = text.replace("test url", "").trim();
 
         await sendNewsMessage(sock, newsUrl);
+      } else if (text.startsWith("ekyd:")) {
+        const tanya = message.body.replace("ekyd:", "").trim();
+        console.log("Received for chatbot:", tanya);
+
+        const fuse = new Fuse(knowledgeBase, {
+          keys: ["question"],
+          threshold: 0.4,
+        });
+
+        const results = fuse.search(tanya);
+        if (results.length > 0) {
+          const found = results[0].item;
+          await sock.sendMessage(from, { text: found.answer });
+        } else {
+          await sock.sendMessage(from, {
+            text: "⚠️ Maaf, saya belum punya jawaban untuk pertanyaan itu.",
+          });
+        }
+      } else {
+        await sock.sendMessage(from, {
+          text: "I am not sure how to respond to that.",
+        });
       }
       // personal
     }
