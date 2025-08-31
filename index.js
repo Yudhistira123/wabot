@@ -282,6 +282,7 @@ async function startBot() {
           }
 
           console.log({
+            contact,
             id,
             name,
             avatarUrl,
