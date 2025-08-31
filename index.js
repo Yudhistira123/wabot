@@ -276,12 +276,12 @@ async function startBot() {
           //const buffer = await res.arrayBuffer();
           // const buffer = Buffer.from(await media.arrayBuffer());
           let info = `🧾 Data pasien ${noPasien}
-            👤 Nama     : ${nama}
-            🚻 JK       : ${jekel}
-            🏠 Alamat   : ${alamat}
-            📞 Tlp      : ${tlp}
-            🎂 Tgl Lahir: ${dlahir}
-            ⚠️ Alergi    : ${alergi}`;
+          👤 Nama     : ${nama}
+          🚻 JK       : ${jekel}
+          🏠 Alamat   : ${alamat}
+          📞 Tlp      : ${tlp}
+          🎂 Tgl Lahir: ${dlahir}
+          ⚠️ Alergi    : ${alergi}`;
 
           await sock.sendMessage("628122132341@c.us", {
             image: buffer,
