@@ -306,12 +306,13 @@ async function startBot() {
         const newsUrl = text.replace("test url", "").trim();
         await sendNewsMessage(sock, newsUrl);
       } else if (text.startsWith("ekyd:") || text.startsWith("rn:")) {
+        let tanya = "";
         if (text.startsWith("ekyd:")) {
           knowledgeBase = knowledgeBasePUB;
-          const tanya = text.replace("ekyd:", "").trim();
+          tanya = text.replace("ekyd:", "").trim();
         } else if (text.startsWith("rn:")) {
           knowledgeBase = knowledgeBaseRudal;
-          const tanya = text.replace("rn:", "").trim();
+          tanya = text.replace("rn:", "").trim();
         }
 
         console.log("Received for chatbot:", tanya);
