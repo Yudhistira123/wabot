@@ -239,10 +239,59 @@ async function startBot() {
       }
       // !jadwalsholat <kota>
     } else {
+      console.log("Pesan dari personal:", text);
       if (text.toLowerCase() === "!ping") {
         await sock.sendMessage(from, { text: "pong personal 🏓" });
+      } else if (text.startsWith("ambil ")) {
+        //console.log('Fetching data for noPasien:', noPasien);
+        try {
+          const noPasien = text.split(" ")[1].trim();
+          // 🔹 Call your webservice
+          const response = await axios.get(
+            `https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}`
+          );
+          let base64String = response.data.gambar;
+          let nama = response.data.nama;
+          let dlahir = response.data.dlahir;
+          let jekel = response.data.jekel;
+          let alamat = response.data.alamat;
+          let tlp = response.data.tlp;
+          let alergi = response.data.alergi;
+          console.log(
+            `https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}`
+          );
+          // 🔹 Clean base64 if it has prefix
+          base64String = base64String.replace(/^data:image\/\w+;base64,/, "");
+
+          const media = new MessageMedia(
+            "image/png",
+            base64String,
+            "myImage.png"
+          );
+
+          // const res = await fetch(clubInfo.cover_photo_small);
+          //const buffer = await res.arrayBuffer();
+          const buffer = Buffer.from(await media.arrayBuffer());
+          let info = `🧾 Data pasien ${noPasien}
+                  👤 Nama: ${nama}
+                  🚻 JK: ${jekel}
+                  🏠 Alamat: ${alamat}
+                  📞 Tlp: ${tlp}
+                  🎂 Tgl Lahir: ${dlahir}
+                  ⚠️ Alergi: ${alergi}`;
+
+          await sock.sendMessage("628122132341@c.us", {
+            image: buffer,
+            caption: info,
+          });
+
+          //await client.sendMessage("628122132341@c.us", media,{caption: `🧾 Data pasien ${noPasien}\nNama: ${nama}\nJK: ${jekel}\nAlamat: ${alamat}\nTlp: ${tlp}\nTgl Lahir: ${dlahir}\nAlergi: ${alergi}`});
+        } catch (error) {
+          console.error("Error calling API:", error.message);
+          await message.reply("❌ Failed to fetch data from API");
+        }
       }
-      console.log("Pesan dari personal:", msg.message.conversation);
+      // personal
     }
   });
 }
