@@ -71,7 +71,7 @@ async function startBot() {
     console.log("📩 Message from", from, ":", text);
     // Cek apakah pesan dari grup
     if (from.endsWith("@g.us")) {
-      console.log("Pesan dari grup:", msg.message.conversation);
+      console.log("Pesan dari grup:", text);
       if (text.toLowerCase() === "!ping") {
         await sock.sendMessage(from, { text: "pong grup 🏓" });
         // 1. Jadwal sholat
