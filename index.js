@@ -317,7 +317,7 @@ async function startBot() {
 
         console.log("Received for chatbot:", tanya);
 
-        const fuse = new Fuse(knowledgeBasePUB, {
+        const fuse = new Fuse(knowledgeBase, {
           keys: ["question"],
           threshold: 0.4,
         });
