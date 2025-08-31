@@ -252,6 +252,28 @@ async function startBot() {
             console.error("❌ Error sending cover photo:", err.message);
           }
         }
+        // 6. Kirim avatar anggota grup ke admin
+      } else if (text.toLowerCase().includes("sg4")) {
+        // Change to your admin number
+        const groupId = from;
+
+        const metadata = await sock.groupMetadata(groupId);
+
+        console.log("Nama grup:", metadata.subject);
+        console.log("Jumlah anggota:", metadata.participants.length);
+        metadata.participants.forEach((p) => {
+          console.log("Member:", p.id, "Admin?", p.admin || "member");
+        });
+
+        // const adminNumber = "628122132341";
+        // for (const participant of chat.participants) {
+        //   const contact = await client.getContactById(
+        //     participant.id._serialized
+        //   );
+        //   const name = contact.pushname || contact.number;
+        //   const avatarUrl = await contact.getProfilePicUrl();
+        //   await sendAvatar(client, participant, adminNumber, name, avatarUrl);
+        // }
       }
       // !jadwalsholat <kota>
     } else {
