@@ -276,12 +276,12 @@ async function startBot() {
           await sock.sendMessage("628122132341@c.us", {
             image: buffer,
             caption: `🧾 Data pasien ${noPasien}
-            👤 Nama: ${nama}
-          🚻 JK: ${jekel}
-          🏠 Alamat: ${alamat}
-          📞 Tlp: ${tlp}
-          🎂 Tgl Lahir: ${dlahir}
-          ⚠️ Alergi: ${alergi}`,
+👤 Nama: ${nama}
+🚻 JK: ${jekel}
+🏠 Alamat: ${alamat}
+📞 Tlp: ${tlp}
+🎂 Tgl Lahir: ${dlahir}
+⚠️ Alergi: ${alergi}`,
           });
 
           //await client.sendMessage("628122132341@c.us", media,{caption: `🧾 Data pasien ${noPasien}\nNama: ${nama}\nJK: ${jekel}\nAlamat: ${alamat}\nTlp: ${tlp}\nTgl Lahir: ${dlahir}\nAlergi: ${alergi}`});
