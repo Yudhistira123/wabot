@@ -250,9 +250,9 @@ async function startBot() {
         try {
           const noPasien = text.split(" ")[1].trim();
           // 🔹 Call your webservice
-          const response = await axios.get(
-            `https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}`
-          );
+          let url = `https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}`;
+          console.log("Fetching data from URL:", url);
+          const response = await axios.get(url);
           let base64String = response.data.gambar;
           let nama = response.data.nama;
           let dlahir = response.data.dlahir;
@@ -292,7 +292,7 @@ async function startBot() {
         } catch (error) {
           console.error("Error calling API:", error.message);
           await sock.sendMessage(from, {
-            text: "❌ ailed to fetch data from API",
+            text: "❌ Failed to fetch data from API",
           });
         }
       }
