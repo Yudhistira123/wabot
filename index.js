@@ -291,7 +291,9 @@ async function startBot() {
           //await client.sendMessage("628122132341@c.us", media,{caption: `🧾 Data pasien ${noPasien}\nNama: ${nama}\nJK: ${jekel}\nAlamat: ${alamat}\nTlp: ${tlp}\nTgl Lahir: ${dlahir}\nAlergi: ${alergi}`});
         } catch (error) {
           console.error("Error calling API:", error.message);
-          await message.reply("❌ Failed to fetch data from API");
+          await sock.sendMessage(from, {
+            text: "❌ ailed to fetch data from API",
+          });
         }
       }
       // personal
