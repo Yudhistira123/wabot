@@ -301,7 +301,7 @@ async function startBot() {
 
         await sendNewsMessage(sock, newsUrl);
       } else if (text.startsWith("ekyd:")) {
-        const tanya = message.body.replace("ekyd:", "").trim();
+        const tanya = text.replace("ekyd:", "").trim();
         console.log("Received for chatbot:", tanya);
 
         const fuse = new Fuse(knowledgeBase, {
