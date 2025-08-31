@@ -21,6 +21,9 @@ const { getClubInfo, getClubActivities } = require("./utils/stravaService");
 const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
 const { getCalendar, formatCalendar } = require("./utils/calendarService");
+const axios = require("axios");
+
+// end of import
 
 async function startBot() {
   const { state, saveCreds } = await useMultiFileAuthState("baileys_auth");
