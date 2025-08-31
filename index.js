@@ -30,10 +30,18 @@ const Fuse = require("fuse.js");
 // end of import
 
 let knowledgeBase = [];
+let knowledgeBaseRudal = [];
 
 // Load knowledge base CSV
 loadKnowledgeBase("rudalrn01ss.csv").then((kb) => {
-  knowledgeBase = kb;
+  knowledgeBaseRudal = kb;
+});
+
+let knowledgeBasePUB = [];
+
+// Load knowledge base CSV
+loadKnowledgeBase("template_chatbot.csv").then((kb) => {
+  knowledgeBasePUB = kb;
 });
 
 async function startBot() {
@@ -295,16 +303,20 @@ async function startBot() {
           });
         }
       } else if (text.startsWith("test url")) {
-        // const number = "628122132341"; // ganti ke nomor tujuan
-        // const chatId = number + "@c.us";
         const newsUrl = text.replace("test url", "").trim();
-
         await sendNewsMessage(sock, newsUrl);
-      } else if (text.startsWith("ekyd:")) {
-        const tanya = text.replace("ekyd:", "").trim();
+      } else if (text.startsWith("ekyd:") || text.startsWith("rn:")) {
+        if (text.startsWith("ekyd:")) {
+          knowledgeBase = knowledgeBasePUB;
+          const tanya = text.replace("ekyd:", "").trim();
+        } else if (text.startsWith("rn:")) {
+          knowledgeBase = knowledgeBaseRudal;
+          const tanya = text.replace("rn:", "").trim();
+        }
+
         console.log("Received for chatbot:", tanya);
 
-        const fuse = new Fuse(knowledgeBase, {
+        const fuse = new Fuse(knowledgeBasePUB, {
           keys: ["question"],
           threshold: 0.4,
         });
