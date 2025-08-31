@@ -297,7 +297,7 @@ async function startBot() {
       } else if (text.startsWith("test url")) {
         // const number = "628122132341"; // ganti ke nomor tujuan
         // const chatId = number + "@c.us";
-        const newsUrl = message.body.replace("test url", "").trim();
+        const newsUrl = text.replace("test url", "").trim();
 
         await sendNewsMessage(sock, newsUrl);
       }
