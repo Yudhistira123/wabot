@@ -257,13 +257,37 @@ async function startBot() {
         // Change to your admin number
         const groupId = from;
 
+        // Ambil metadata grup
         const metadata = await sock.groupMetadata(groupId);
 
-        console.log("Nama grup:", metadata.subject);
-        console.log("Jumlah anggota:", metadata.participants.length);
-        metadata.participants.forEach((p) => {
-          console.log("Member:", p.id, "Admin?", p.admin || "member");
-        });
+        for (const participant of metadata.participants) {
+          const id = participant.id; // misal "628123456789@s.whatsapp.net"
+
+          // Nama bisa dari pushname user, tapi kadang tidak tersedia, fallback ke nomor
+          // Untuk ambil nama kontak, perlu query vCard
+          let name = id.split("@")[0]; // default pakai nomor
+          try {
+            const contact = await sock.onWhatsApp(id);
+            // onWhatsApp memberi info apakah user aktif, tapi tidak pushname
+          } catch (err) {
+            console.error("Error fetching contact:", err);
+          }
+
+          // Ambil profile picture
+          let avatarUrl = null;
+          try {
+            avatarUrl = await sock.profilePictureUrl(id, "image"); // 'image' atau 'preview'
+          } catch (err) {
+            avatarUrl = null; // jika tidak punya foto
+          }
+
+          console.log({
+            id,
+            name,
+            avatarUrl,
+            admin: participant.admin || "member",
+          });
+        }
 
         // const adminNumber = "628122132341";
         // for (const participant of chat.participants) {
