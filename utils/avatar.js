@@ -2,6 +2,9 @@ const axios = require("axios");
 const { MessageMedia } = require("whatsapp-web.js");
 const cheerio = require("cheerio");
 
+const fetch = (...args) =>
+  import("node-fetch").then(({ default: fetch }) => fetch(...args));
+
 async function sendAvatar(client, participant, toNumber, name, avatarUrl) {
   try {
     if (!avatarUrl) {
@@ -34,9 +37,9 @@ const penerima = [
   "628122132341@c.us",
   "6285183819833@c.us", //robot
   // "6281220000306@c.us", // pa sahmudin
-  "6281224733362@c.us", // risma
-  "6281806000781@c.us", //yanti
-  "6282124609104@c.us", // pa Er
+  // "6281224733362@c.us", // risma
+  // "6281806000781@c.us", //yanti
+  // "6282124609104@c.us", // pa Er
 ];
 
 const number = "628122132341"; // ganti ke nomor tujuan
@@ -48,7 +51,7 @@ function sanitizeUrl(url) {
   return url.replace(/,/g, "-");
 }
 
-async function sendNewsMessage(client, newsUrl) {
+async function sendNewsMessage(sock, newsUrl) {
   try {
     // 1. Fetch HTML
     const { data } = await axios.get(newsUrl);
@@ -95,7 +98,17 @@ async function sendNewsMessage(client, newsUrl) {
     }
 
     // 6. Buat media WhatsApp
-    const media = await MessageMedia.fromUrl(imageUrl);
+
+    const res = await fetch(imageUrl);
+    //const buffer = await res.arrayBuffer();
+    const buffer = Buffer.from(await res.arrayBuffer());
+
+    // await sock.sendMessage(from, {
+    //   image: buffer,
+    //   caption: `🏃 *${clubInfo.name}*`,
+    // });
+
+    //const media = await MessageMedia.fromUrl(imageUrl);
 
     // // 6. Kirim dengan caption
     // await client.sendMessage(chatId, media, {
@@ -113,16 +126,15 @@ async function sendNewsMessage(client, newsUrl) {
     // 7. Kirim dengan caption
     for (const number of penerima) {
       try {
-        await client.sendMessage(number, media, {
-          //   //  caption: `📰 *${title}*\n\n${description}....\n\nselengkapnya:\n${newsUrl}`
+        // await client.sendMessage(number, media, {
+        //   //   //  caption: `📰 *${title}*\n\n${description}....\n\nselengkapnya:\n${newsUrl}`
+        //   caption: `📰 *${title}*\n\n${description}\n\n🔗 Baca selengkapnya:\n\n${safeUrl}`,
+        // });
+
+        await sock.sendMessage(number, {
+          image: buffer,
           caption: `📰 *${title}*\n\n${description}\n\n🔗 Baca selengkapnya:\n\n${safeUrl}`,
         });
-        //console.log(`✅ Message sent to ${number}`);
-        //  await client.sendMessage(number, media, {
-        //    caption: `📰 *${title}*\n\n${description}`,
-        //  });
-        // await new Promise((r) => setTimeout(r, 1500));
-        // await client.sendMessage(number, safeUrl, { linkPreview: true });
       } catch (err) {
         console.error(`❌ Failed to send to ${number}:`, err);
       }
@@ -130,7 +142,9 @@ async function sendNewsMessage(client, newsUrl) {
   } catch (err) {
     console.error("❌ Gagal ambil berita:", err.message);
     // fallback: kirim link saja
-    await client.sendMessage(chatId, `📰 Berita selengkapnya:\n${safeUrl}`);
+    await sock.sendMessage(chatId, {
+      text: `📰 Berita selengkapnya:\n${safeUrl}`,
+    });
   }
 }
 

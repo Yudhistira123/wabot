@@ -18,10 +18,13 @@ const {
 const { getWeather, formatWeather } = require("./utils/weather.cjs");
 const { getClubInfo, getClubActivities } = require("./utils/stravaService");
 //const fetch = require("node-fetch");
+
 const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
+
 const { getCalendar, formatCalendar } = require("./utils/calendarService");
 const axios = require("axios");
+const { sendAvatar, sendNewsMessage } = require("./utils/avatar");
 
 // end of import
 
@@ -291,6 +294,12 @@ async function startBot() {
             text: "❌ Failed to fetch data from API",
           });
         }
+      } else if (text.startsWith("test url")) {
+        // const number = "628122132341"; // ganti ke nomor tujuan
+        // const chatId = number + "@c.us";
+        const newsUrl = message.body.replace("test url", "").trim();
+
+        await sendNewsMessage(sock, newsUrl);
       }
       // personal
     }
