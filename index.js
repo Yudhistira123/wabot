@@ -27,6 +27,8 @@ const axios = require("axios");
 const { sendAvatar, sendNewsMessage } = require("./utils/avatar");
 const { loadKnowledgeBase } = require("./utils/knowledgeBase");
 const Fuse = require("fuse.js");
+
+const { searchWithTFIDF } = require("./utils/algoritma");
 // end of import
 
 let knowledgeBase = [];
@@ -353,25 +355,19 @@ async function startBot() {
         const newsUrl = text.replace("test url", "").trim();
         await sendNewsMessage(sock, newsUrl);
       } else if (text.startsWith("ekyd:") || text.startsWith("rn:")) {
-        let tanya = "";
         if (text.startsWith("ekyd:")) {
           knowledgeBase = knowledgeBasePUB;
-          tanya = text.replace("ekyd:", "").trim();
+          text = text.replace("ekyd:", "").trim();
         } else if (text.startsWith("rn:")) {
           knowledgeBase = knowledgeBaseRudal;
-          tanya = text.replace("rn:", "").trim();
+          text = text.replace("rn:", "").trim();
         }
 
-        console.log("Received for chatbot:", tanya);
+        console.log("Received for chatbot (TF-IDF):", text);
 
-        const fuse = new Fuse(knowledgeBase, {
-          keys: ["question"],
-          threshold: 0.4,
-        });
+        const found = await searchWithTFIDF(text, knowledgeBase);
 
-        const results = fuse.search(tanya);
-        if (results.length > 0) {
-          const found = results[0].item;
+        if (found) {
           await sock.sendMessage(from, { text: found.answer });
         } else {
           await sock.sendMessage(from, {
@@ -379,6 +375,41 @@ async function startBot() {
           });
         }
       }
+
+      // let tanya = "";
+
+      // Kalau mau test langsung (tanpa WA bot), jalankan ini:
+      // (async () => {
+      //   const query = "cara kerja radar militer";
+      // const result = await searchWithTFIDF(text, knowledgeBase);
+      //   console.log("Hasil TF-IDF:", result);
+      // })();
+
+      // if (text.startsWith("ekyd:")) {
+      //   knowledgeBase = knowledgeBasePUB;
+      //   tanya = text.replace("ekyd:", "").trim();
+      // } else if (text.startsWith("rn:")) {
+      //   knowledgeBase = knowledgeBaseRudal;
+      //   tanya = text.replace("rn:", "").trim();
+      // }
+
+      // console.log("Received for chatbot:", tanya);
+
+      // const fuse = new Fuse(knowledgeBase, {
+      //   keys: ["question"],
+      //   threshold: 0.4,
+      // });
+
+      // const results = fuse.search(tanya);
+      // if (results.length > 0) {
+      //   const found = results[0].item;
+      //   await sock.sendMessage(from, { text: found.answer });
+      // } else {
+      //   await sock.sendMessage(from, {
+      //     text: "⚠️ Maaf, saya belum punya jawaban untuk pertanyaan itu.",
+      //   });
+      // }
+      //  }
       // } else {
       //   await sock.sendMessage(from, {
       //     text: "I am not sure how to respond to that.",
