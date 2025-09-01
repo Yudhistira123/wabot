@@ -1,14 +1,14 @@
 const natural = require("natural");
 
 // Contoh knowledge base
-const knowledgeBase = [
-  { question: "Apa itu rudal balistik?", answer: "Rudal balistik adalah ..." },
-  { question: "Siapa penemu roket?", answer: "Penemu roket modern adalah ..." },
-  {
-    question: "Bagaimana cara kerja radar?",
-    answer: "Radar bekerja dengan ...",
-  },
-];
+// const knowledgeBase = [
+//   { question: "Apa itu rudal balistik?", answer: "Rudal balistik adalah ..." },
+//   { question: "Siapa penemu roket?", answer: "Penemu roket modern adalah ..." },
+//   {
+//     question: "Bagaimana cara kerja radar?",
+//     answer: "Radar bekerja dengan ...",
+//   },
+// ];
 
 // Fungsi TF-IDF
 async function searchWithTFIDF(query, knowledgeBase) {
