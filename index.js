@@ -103,7 +103,7 @@ async function startBot() {
           });
           return;
         }
-        console.log(`🔍 Mencari kode kota untuk: ${namaKota}`);
+        // console.log(`🔍 Mencari kode kota untuk: ${namaKota}`);
         const idKotaArray = await getKodeKota(namaKota);
         if (idKotaArray.length === 0) {
           await sock.sendMessage(from, {
