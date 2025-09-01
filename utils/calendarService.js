@@ -1,10 +1,13 @@
 const axios = require("axios");
+const https = require("https");
+const agent = new https.Agent({ family: 4 }); // IPv4 only
+
 let reply = "";
 //Yudhi
 async function getCalendar(year, month) {
   const url = `https://libur.deno.dev/api?year=${year}&month=${month}`;
   console.log(url);
-  const res = await axios.get(url);
+  const res = await axios.get(url, { httpsAgent: agent, timeout: 10000 });
   return res.data;
 }
 
