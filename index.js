@@ -10,6 +10,7 @@ const {
   getKodeKota,
   getDoaAcak,
   formatDoa,
+  getSuratAyat,
 } = require("./utils/sholat");
 const {
   getAirQuality,
@@ -302,6 +303,16 @@ async function startBot() {
         //   const avatarUrl = await contact.getProfilePicUrl();
         //   await sendAvatar(client, participant, adminNumber, name, avatarUrl);
         // }
+      } else if (text.toLowerCase().startsWith("quran:1/1")) {
+        const suratAyat = text.toLowerCase().replace("quran:", "").trim();
+        const parts = suratAyat.split("/");
+        const surat = parts[1];
+        const ayat = parts[2];
+        const outSuratAyat = await getSuratAyat(surat, ayat);
+        console.log(outSuratAyat);
+        // const tesxdoa = formatDoa(doa);
+        // await sock.sendMessage(from, { text: tesxdoa });
+        // 3. Cek kualitas udara dan cuaca berdasarkan lokasi
       }
       // !jadwalsholat <kota>
     } else {

@@ -60,6 +60,18 @@ async function getDoaAcak() {
   }
 }
 
+// Ambil doa acak dari MyQuran API
+async function getSuratAyat(surat, ayat) {
+  try {
+    const url = `https://api.myquran.com/v2/quran/ayat/${surat}/${ayat}`;
+    const res = await axios.get(url, { httpsAgent: agent, timeout: 10000 });
+    return res.data.data; // ambil bagian data doa
+  } catch (err) {
+    console.error("❌ Error getDoaAcak:", err.message);
+    return null;
+  }
+}
+
 // Format pesan WhatsApp
 function formatDoa(doa) {
   if (!doa) return "⚠️ Gagal mengambil doa.";
@@ -127,4 +139,10 @@ function emphasizeArabic(text) {
     .join("");
 }
 
-module.exports = { getSholatByLocation, getKodeKota, getDoaAcak, formatDoa };
+module.exports = {
+  getSholatByLocation,
+  getKodeKota,
+  getDoaAcak,
+  formatDoa,
+  getSuratAyat,
+};
