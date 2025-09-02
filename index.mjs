@@ -359,6 +359,8 @@ ${ayatData.arab}
 ${ayatData.text}
 🔤 
 ${result.info.surat.relevasi},  ${result.info.surat.ayat_max} ayat`;
+
+          await sock.sendMessage(from, { text: message });
           //
           const controller = new AbortController();
           const timeout = setTimeout(() => controller.abort(), 10000); // 10 detik
