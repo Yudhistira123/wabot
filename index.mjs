@@ -1,36 +1,72 @@
-// Yudhistira
-const {
+import {
   makeWASocket,
   useMultiFileAuthState,
   DisconnectReason,
-} = require("@whiskeysockets/baileys");
-const qrcode = require("qrcode-terminal");
-const {
+} from "@whiskeysockets/baileys";
+
+// const {
+//   makeWASocket,
+//   useMultiFileAuthState,
+//   DisconnectReason,
+// } = require("@whiskeysockets/baileys");
+
+// const qrcode = require("qrcode-terminal");
+import qrcode from "qrcode-terminal";
+// const {
+//   getSholatByLocation,
+//   getKodeKota,
+//   getDoaAcak,
+//   formatDoa,
+//   getSuratAyat,
+// } = require("./utils/sholat");
+
+import {
   getSholatByLocation,
   getKodeKota,
   getDoaAcak,
   formatDoa,
   getSuratAyat,
-} = require("./utils/sholat");
-const {
+} from "./utils/sholat.js";
+
+// const {
+//   getAirQuality,
+//   interpretAQI,
+//   formatAirQuality,
+// } = require("./utils/airQualityService.cjs");
+
+import {
   getAirQuality,
   interpretAQI,
   formatAirQuality,
-} = require("./utils/airQualityService.cjs");
-const { getWeather, formatWeather } = require("./utils/weather.cjs");
-const { getClubInfo, getClubActivities } = require("./utils/stravaService");
+} from "./utils/airQualityService.cjs";
+
+// const { getWeather, formatWeather } = require("./utils/weather.cjs");
+// const { getClubInfo, getClubActivities } = require("./utils/stravaService");
+import { getWeather, formatWeather } from "./utils/weather.cjs";
+import { getClubInfo, getClubActivities } from "./utils/stravaService.js";
+
 //const fetch = require("node-fetch");
+import fetch from "node-fetch";
 
-const fetch = (...args) =>
-  import("node-fetch").then(({ default: fetch }) => fetch(...args));
+// const fetch = (...args) =>
+//   import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
-const { getCalendar, formatCalendar } = require("./utils/calendarService");
-const axios = require("axios");
-const { sendAvatar, sendNewsMessage } = require("./utils/avatar");
-const { loadKnowledgeBase } = require("./utils/knowledgeBase");
-const Fuse = require("fuse.js");
+// const { getCalendar, formatCalendar } = require("./utils/calendarService");
+// const axios = require("axios");
+// const { sendAvatar, sendNewsMessage } = require("./utils/avatar");
+// const { loadKnowledgeBase } = require("./utils/knowledgeBase");
+// const Fuse = require("fuse.js");
 
-const { searchWithTFIDF } = require("./utils/algoritma");
+// const { searchWithTFIDF } = require("./utils/algoritma");
+
+import { getCalendar, formatCalendar } from "./utils/calendarService.js";
+import axios from "axios";
+//import { sendAvatar, sendNewsMessage } from "./utils/avatar.js";
+import { loadKnowledgeBase } from "./utils/knowledgeBase.js";
+import Fuse from "fuse.js";
+
+import { searchWithTFIDF } from "./utils/algoritma.js";
+
 // end of import
 
 let knowledgeBase = [];
@@ -51,8 +87,8 @@ loadKnowledgeBase("template_chatbot.csv").then((kb) => {
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 process.env.GAI_CONF = "/etc/gai.conf";
 
-const dns = require("dns");
-dns.setDefaultResultOrder("ipv4first");
+// const dns = require("dns");
+// dns.setDefaultResultOrder("ipv4first");
 
 async function startBot() {
   const { state, saveCreds } = await useMultiFileAuthState("baileys_auth");
@@ -248,10 +284,11 @@ async function startBot() {
           return;
         }
         const calUrl = `https://amdktirta.my.id/cal${year}/${month}.jpg`;
-
+        console.log("Calendar URL:", calUrl);
         if (calUrl) {
           try {
             const res = await fetch(calUrl);
+            console.log("Fetching calendar image from:", res);
             // const buffer = await res.arrayBuffer();
             const buffer = Buffer.from(await res.arrayBuffer());
             await sock.sendMessage(from, {
@@ -265,41 +302,36 @@ async function startBot() {
         // 6. Kirim avatar anggota grup ke admin
       } else if (text.toLowerCase().includes("sg4")) {
         // Change to your admin number
-        const groupId = from;
-        const contact = "";
-        // Ambil metadata grup
-        const metadata = await sock.groupMetadata(groupId);
-
-        for (const participant of metadata.participants) {
-          const id = participant.id; // misal "628123456789@s.whatsapp.net"
-
-          // Nama bisa dari pushname user, tapi kadang tidak tersedia, fallback ke nomor
-          // Untuk ambil nama kontak, perlu query vCard
-          let name = id.split("@")[0]; // default pakai nomor
-          try {
-            contact = await sock.onWhatsApp(id);
-            // onWhatsApp memberi info apakah user aktif, tapi tidak pushname
-          } catch (err) {
-            console.error("Error fetching contact:", err);
-          }
-
-          // Ambil profile picture
-          let avatarUrl = null;
-          try {
-            avatarUrl = await sock.profilePictureUrl(id, "image"); // 'image' atau 'preview'
-          } catch (err) {
-            avatarUrl = null; // jika tidak punya foto
-          }
-
-          console.log({
-            contact,
-            id,
-            name,
-            avatarUrl,
-            admin: participant.admin || "member",
-          });
-        }
-
+        // const groupId = from;
+        // const contact = "";
+        // // Ambil metadata grup
+        // const metadata = await sock.groupMetadata(groupId);
+        // for (const participant of metadata.participants) {
+        //   const id = participant.id; // misal "628123456789@s.whatsapp.net"
+        //   // Nama bisa dari pushname user, tapi kadang tidak tersedia, fallback ke nomor
+        //   // Untuk ambil nama kontak, perlu query vCard
+        //   let name = id.split("@")[0]; // default pakai nomor
+        //   try {
+        //     contact = await sock.onWhatsApp(id);
+        //     // onWhatsApp memberi info apakah user aktif, tapi tidak pushname
+        //   } catch (err) {
+        //     console.error("Error fetching contact:", err);
+        //   }
+        //   // Ambil profile picture
+        //   let avatarUrl = null;
+        //   try {
+        //     avatarUrl = await sock.profilePictureUrl(id, "image"); // 'image' atau 'preview'
+        //   } catch (err) {
+        //     avatarUrl = null; // jika tidak punya foto
+        //   }
+        //   console.log({
+        //     contact,
+        //     id,
+        //     name,
+        //     avatarUrl,
+        //     admin: participant.admin || "member",
+        //   });
+        // }
         // const adminNumber = "628122132341";
         // for (const participant of chat.participants) {
         //   const contact = await client.getContactById(

@@ -1,9 +1,9 @@
-const axios = require("axios");
-const https = require("https");
+import axios from "axios";
+// const https = require("https");
 
-const agent = new https.Agent({ family: 4 }); // IPv4 only
+// const agent = new https.Agent({ family: 4 }); // IPv4 only
 
-async function getSholatByLocation(kodeLokasi) {
+export async function getSholatByLocation(kodeLokasi) {
   const today = new Date();
   try {
     // const today = new Date().toISOString().split("T")[0];
@@ -19,7 +19,7 @@ async function getSholatByLocation(kodeLokasi) {
     // const res = await axios.get(
 
     // );
-    const res = await axios.get(url, { httpsAgent: agent, timeout: 10000 });
+    const res = await axios.get(url);
     // console.log(res.data);
     return res.data;
   } catch (err) {
@@ -28,15 +28,15 @@ async function getSholatByLocation(kodeLokasi) {
   }
 }
 
-async function getKodeKota(namaKota) {
+export async function getKodeKota(namaKota) {
   try {
     const url = `https://api.myquran.com/v2/sholat/kota/cari/${namaKota}`;
     console.log("Mencarixx kode kota untuk:", url);
     // const res = await axios.get(
     //   `https://api.myquran.com/v2/sholat/kota/cari/${namaKota}`
     // );
-    const res = await axios.get(url, { httpsAgent: agent, timeout: 10000 });
-    // console.log(res.data);
+    const res = await axios.get(url);
+    console.log(res.data);
     if (res.data.status && res.data.data.length > 0) {
       return res.data.data.map((k) => k.id);
     } else {
@@ -49,10 +49,10 @@ async function getKodeKota(namaKota) {
 }
 
 // Ambil doa acak dari MyQuran API
-async function getDoaAcak() {
+export async function getDoaAcak() {
   try {
     const url = "https://api.myquran.com/v2/doa/acak";
-    const res = await axios.get(url, { httpsAgent: agent, timeout: 10000 });
+    const res = await axios.get(url);
     return res.data.data; // ambil bagian data doa
   } catch (err) {
     console.error("❌ Error getDoaAcak:", err.message);
@@ -61,10 +61,10 @@ async function getDoaAcak() {
 }
 
 // Ambil doa acak dari MyQuran API
-async function getSuratAyat(surat, ayat) {
+export async function getSuratAyat(surat, ayat) {
   try {
     const url = `https://api.myquran.com/v2/quran/ayat/${surat}/${ayat}`;
-    const res = await axios.get(url, { httpsAgent: agent, timeout: 10000 });
+    const res = await axios.get(url);
     console.log(res.data);
     return res.data; // ambil bagian data doa
   } catch (err) {
@@ -74,7 +74,7 @@ async function getSuratAyat(surat, ayat) {
 }
 
 // Format pesan WhatsApp
-function formatDoa(doa) {
+export function formatDoa(doa) {
   if (!doa) return "⚠️ Gagal mengambil doa.";
 
   const header =
@@ -95,7 +95,7 @@ function formatDoa(doa) {
   );
 }
 
-function emphasizeArabic(text) {
+export function emphasizeArabic(text) {
   const mapping = {
     ا: "ﺍ",
     أ: "ﺃ",
@@ -140,10 +140,10 @@ function emphasizeArabic(text) {
     .join("");
 }
 
-module.exports = {
-  getSholatByLocation,
-  getKodeKota,
-  getDoaAcak,
-  formatDoa,
-  getSuratAyat,
-};
+// module.exports = {
+//   getSholatByLocation,
+//   getKodeKota,
+//   getDoaAcak,
+//   formatDoa,
+//   getSuratAyat,
+// };

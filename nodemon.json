@@ -1,4 +1,4 @@
 {
-  "watch": ["index.js"],
+  "watch": ["index.mjs"],
   "ignore": ["baileys_auth"]
 }

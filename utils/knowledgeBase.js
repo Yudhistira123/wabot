@@ -1,7 +1,7 @@
-const fs = require("fs");
-const csv = require("csv-parser");
+import fs from "fs";
+import csv from "csv-parser";
 
-function loadKnowledgeBase(filePath) {
+export function loadKnowledgeBase(filePath) {
   return new Promise((resolve, reject) => {
     let knowledgeBase = [];
 
@@ -23,4 +23,4 @@ function loadKnowledgeBase(filePath) {
   });
 }
 
-module.exports = { loadKnowledgeBase };
+//module.exports = { loadKnowledgeBase };

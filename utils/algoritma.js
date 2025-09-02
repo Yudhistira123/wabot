@@ -1,4 +1,4 @@
-const natural = require("natural");
+import natural from "natural";
 
 // Contoh knowledge base
 // const knowledgeBase = [
@@ -11,7 +11,7 @@ const natural = require("natural");
 // ];
 
 // Fungsi TF-IDF
-async function searchWithTFIDF(query, knowledgeBase) {
+export async function searchWithTFIDF(query, knowledgeBase) {
   const tfidf = new natural.TfIdf();
 
   // Tambahkan semua pertanyaan ke tf-idf index
@@ -63,7 +63,7 @@ async function searchWithTFIDF(query, knowledgeBase) {
 //   }
 // }
 
-module.exports = { searchWithTFIDF };
+//module.exports = { searchWithTFIDF };
 
 // // Kalau mau test langsung (tanpa WA bot), jalankan ini:
 // (async () => {

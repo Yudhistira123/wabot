@@ -1,151 +1,157 @@
-const axios = require("axios");
-const { MessageMedia } = require("whatsapp-web.js");
-const cheerio = require("cheerio");
+// import axios from "axios";
+// //import { MessageMedia } from "whatsapp-web.js";
+// import cheerio from "cheerio";
 
-const fetch = (...args) =>
-  import("node-fetch").then(({ default: fetch }) => fetch(...args));
+// const fetch = (...args) =>
+//   import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
-async function sendAvatar(client, participant, toNumber, name, avatarUrl) {
-  try {
-    if (!avatarUrl) {
-      console.log(`⚠️ ${name} has no avatar.`);
-      return;
-    }
-    // 🔹 Ambil nomor WA dari JID
-    let phone = participant.id._serialized.replace("@c.us", "");
-    if (phone.startsWith("62")) {
-      phone = "0" + phone.substring(2);
-    }
-    const response = await axios.get(avatarUrl, {
-      responseType: "arraybuffer",
-    });
-    const media = new MessageMedia(
-      "image/jpeg",
-      Buffer.from(response.data, "binary").toString("base64"),
-      `${name}.jpg`
-    );
-    await client.sendMessage(`${toNumber}@c.us`, media, {
-      caption: `📸 ${name} (📞 ${phone})`,
-    });
-    console.log(`✅ Avatar of ${name} sent to ${toNumber}`);
-  } catch (err) {
-    console.error(`❌ Failed for ${name}:`, err.message);
-  }
-}
+// export async function sendAvatar(
+//   client,
+//   participant,
+//   toNumber,
+//   name,
+//   avatarUrl
+// ) {
+//   try {
+//     if (!avatarUrl) {
+//       console.log(`⚠️ ${name} has no avatar.`);
+//       return;
+//     }
+//     // 🔹 Ambil nomor WA dari JID
+//     let phone = participant.id._serialized.replace("@c.us", "");
+//     if (phone.startsWith("62")) {
+//       phone = "0" + phone.substring(2);
+//     }
+//     const response = await axios.get(avatarUrl, {
+//       responseType: "arraybuffer",
+//     });
+//     const media = new MessageMedia(
+//       "image/jpeg",
+//       Buffer.from(response.data, "binary").toString("base64"),
+//       `${name}.jpg`
+//     );
+//     await client.sendMessage(`${toNumber}@c.us`, media, {
+//       caption: `📸 ${name} (📞 ${phone})`,
+//     });
+//     console.log(`✅ Avatar of ${name} sent to ${toNumber}`);
+//   } catch (err) {
+//     console.error(`❌ Failed for ${name}:`, err.message);
+//   }
+// }
 
-const penerima = [
-  "628122132341@c.us",
-  "6285183819833@c.us", //robot
-  // "6281220000306@c.us", // pa sahmudin
-  // "6281224733362@c.us", // risma
-  // "6281806000781@c.us", //yanti
-  // "6282124609104@c.us", // pa Er
-];
+// const penerima = [
+//   "628122132341@c.us",
+//   "6285183819833@c.us", //robot
+//   // "6281220000306@c.us", // pa sahmudin
+//   // "6281224733362@c.us", // risma
+//   // "6281806000781@c.us", //yanti
+//   // "6282124609104@c.us", // pa Er
+// ];
 
-const number = "628122132341"; // ganti ke nomor tujuan
-const chatId = number + "@c.us";
+// const number = "628122132341"; // ganti ke nomor tujuan
+// const chatId = number + "@c.us";
 
-function sanitizeUrl(url) {
-  // ganti underscore jadi dash
-  url = url.replace(/_/g, "-");
-  return url.replace(/,/g, "-");
-}
+// export function sanitizeUrl(url) {
+//   // ganti underscore jadi dash
+//   url = url.replace(/_/g, "-");
+//   return url.replace(/,/g, "-");
+// }
 
-async function sendNewsMessage(sock, newsUrl) {
-  try {
-    // 1. Fetch HTML
-    const { data } = await axios.get(newsUrl);
+// export async function sendNewsMessage(sock, newsUrl) {
+//   try {
+//     // 1. Fetch HTML
+//     const { data } = await axios.get(newsUrl);
 
-    // 2. Load ke cheerio
-    const $ = cheerio.load(data);
+//     // 2. Load ke cheerio
+//     const $ = cheerio.load(data);
 
-    // 3. Ambil meta image (Open Graph)
-    let imageUrl = $("meta[property='og:image']").attr("content");
+//     // 3. Ambil meta image (Open Graph)
+//     let imageUrl = $("meta[property='og:image']").attr("content");
 
-    // fallback kalau og:image ga ada → cari img pertama di artikel
-    if (!imageUrl) {
-      imageUrl = $("img").first().attr("src");
-    }
+//     // fallback kalau og:image ga ada → cari img pertama di artikel
+//     if (!imageUrl) {
+//       imageUrl = $("img").first().attr("src");
+//     }
 
-    // pastikan absolute URL
-    if (imageUrl && !imageUrl.startsWith("http")) {
-      const base = new URL(newsUrl).origin;
-      imageUrl = base + imageUrl;
-    }
+//     // pastikan absolute URL
+//     if (imageUrl && !imageUrl.startsWith("http")) {
+//       const base = new URL(newsUrl).origin;
+//       imageUrl = base + imageUrl;
+//     }
 
-    // 4. Ambil judul berita
-    let title =
-      $("meta[property='og:title']").attr("content") || $("title").text();
+//     // 4. Ambil judul berita
+//     let title =
+//       $("meta[property='og:title']").attr("content") || $("title").text();
 
-    // 5. Ambil deskripsi / paragraf pertama
-    // let description =
-    //   $("meta[name='description']").attr("content") ||
-    //   $("article p").first().text() ||
-    //   $("p").first().text();
+//     // 5. Ambil deskripsi / paragraf pertama
+//     // let description =
+//     //   $("meta[name='description']").attr("content") ||
+//     //   $("article p").first().text() ||
+//     //   $("p").first().text();
 
-    let description = $("meta[name='description']").attr("content");
-    description = $("article p")
-      .slice(0, 1) // ambil 3 paragraf pertama (bisa diperbesar jadi 5–10)
-      .map((i, el) => $(el).text().trim())
-      .get()
-      .join("\n\n"); // pisahkan antar paragraf dengan newline
+//     let description = $("meta[name='description']").attr("content");
+//     description = $("article p")
+//       .slice(0, 1) // ambil 3 paragraf pertama (bisa diperbesar jadi 5–10)
+//       .map((i, el) => $(el).text().trim())
+//       .get()
+//       .join("\n\n"); // pisahkan antar paragraf dengan newline
 
-    //console.log("Deskripsi lebih panjang:", description);
+//     //console.log("Deskripsi lebih panjang:", description);
 
-    //console.log("Deskripsi asli:", description);
-    if (description.length > 500) {
-      description = description.substring(0, 447) + "...";
-    }
+//     //console.log("Deskripsi asli:", description);
+//     if (description.length > 500) {
+//       description = description.substring(0, 447) + "...";
+//     }
 
-    // 6. Buat media WhatsApp
+//     // 6. Buat media WhatsApp
 
-    const res = await fetch(imageUrl);
-    //const buffer = await res.arrayBuffer();
-    const buffer = Buffer.from(await res.arrayBuffer());
+//     const res = await fetch(imageUrl);
+//     //const buffer = await res.arrayBuffer();
+//     const buffer = Buffer.from(await res.arrayBuffer());
 
-    // await sock.sendMessage(from, {
-    //   image: buffer,
-    //   caption: `🏃 *${clubInfo.name}*`,
-    // });
+//     // await sock.sendMessage(from, {
+//     //   image: buffer,
+//     //   caption: `🏃 *${clubInfo.name}*`,
+//     // });
 
-    //const media = await MessageMedia.fromUrl(imageUrl);
+//     //const media = await MessageMedia.fromUrl(imageUrl);
 
-    // // 6. Kirim dengan caption
-    // await client.sendMessage(chatId, media, {
-    //   caption: `📰 *${title}*\n\nBaca selengkapnya:\n${newsUrl}`,
-    // });
+//     // // 6. Kirim dengan caption
+//     // await client.sendMessage(chatId, media, {
+//     //   caption: `📰 *${title}*\n\nBaca selengkapnya:\n${newsUrl}`,
+//     // });
 
-    // 6. Bersihkan URL (trim & pastikan ada http)
-    newsUrl = newsUrl.trim();
-    if (!newsUrl.startsWith("http")) {
-      newsUrl = "https://" + newsUrl;
-    }
+//     // 6. Bersihkan URL (trim & pastikan ada http)
+//     newsUrl = newsUrl.trim();
+//     if (!newsUrl.startsWith("http")) {
+//       newsUrl = "https://" + newsUrl;
+//     }
 
-    const safeUrl = sanitizeUrl(newsUrl);
+//     const safeUrl = sanitizeUrl(newsUrl);
 
-    // 7. Kirim dengan caption
-    for (const number of penerima) {
-      try {
-        // await client.sendMessage(number, media, {
-        //   //   //  caption: `📰 *${title}*\n\n${description}....\n\nselengkapnya:\n${newsUrl}`
-        //   caption: `📰 *${title}*\n\n${description}\n\n🔗 Baca selengkapnya:\n\n${safeUrl}`,
-        // });
+//     // 7. Kirim dengan caption
+//     for (const number of penerima) {
+//       try {
+//         // await client.sendMessage(number, media, {
+//         //   //   //  caption: `📰 *${title}*\n\n${description}....\n\nselengkapnya:\n${newsUrl}`
+//         //   caption: `📰 *${title}*\n\n${description}\n\n🔗 Baca selengkapnya:\n\n${safeUrl}`,
+//         // });
 
-        await sock.sendMessage(number, {
-          image: buffer,
-          caption: `📰 *${title}*\n\n${description}\n\n🔗 Baca selengkapnya:\n\n${safeUrl}`,
-        });
-      } catch (err) {
-        console.error(`❌ Failed to send to ${number}:`, err);
-      }
-    }
-  } catch (err) {
-    console.error("❌ Gagal ambil berita:", err.message);
-    // fallback: kirim link saja
-    await sock.sendMessage(chatId, {
-      text: `📰 Berita selengkapnya:\n${safeUrl}`,
-    });
-  }
-}
+//         await sock.sendMessage(number, {
+//           image: buffer,
+//           caption: `📰 *${title}*\n\n${description}\n\n🔗 Baca selengkapnya:\n\n${safeUrl}`,
+//         });
+//       } catch (err) {
+//         console.error(`❌ Failed to send to ${number}:`, err);
+//       }
+//     }
+//   } catch (err) {
+//     console.error("❌ Gagal ambil berita:", err.message);
+//     // fallback: kirim link saja
+//     await sock.sendMessage(chatId, {
+//       text: `📰 Berita selengkapnya:\n${safeUrl}`,
+//     });
+//   }
+// }
 
-module.exports = { sendAvatar, sendNewsMessage };
+// //module.exports = { sendAvatar, sendNewsMessage };
