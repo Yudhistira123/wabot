@@ -341,7 +341,7 @@ async function startBot() {
         //   const avatarUrl = await contact.getProfilePicUrl();
         //   await sendAvatar(client, participant, adminNumber, name, avatarUrl);
         // }
-      } else if (text.toLowerCase().startsWith("quran:1/1")) {
+      } else if (text.toLowerCase().startsWith("quran:")) {
         const suratAyat = text.toLowerCase().replace("quran:", "").trim();
         const parts = suratAyat.split("/");
         const surat = parts[0];
@@ -353,15 +353,14 @@ async function startBot() {
         if (outSuratAyat) {
           const message = `
 📖 Surah: ${outSuratAyat.surah} | Ayat: ${outSuratAyat.ayah} | Juz: ${outSuratAyat.juz}
-🕌 Arabic:
+🕌
 ${outSuratAyat.arab}
-🔤 Latin:
-${outSuratAyat.latin}
-🌐 Translation:
+🌐
 ${outSuratAyat.text}
-🎧 Audio:
-${outSuratAyat.audio}
   `;
+
+          // 🎧 Audio:
+          // ${outSuratAyat.audio}
 
           console.log(message);
           await sock.sendMessage(from, { text: message });
