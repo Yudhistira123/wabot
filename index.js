@@ -306,8 +306,8 @@ async function startBot() {
       } else if (text.toLowerCase().startsWith("quran:1/1")) {
         const suratAyat = text.toLowerCase().replace("quran:", "").trim();
         const parts = suratAyat.split("/");
-        const surat = parts[1];
-        const ayat = parts[2];
+        const surat = parts[0];
+        const ayat = parts[1];
         console.log(`🔍 Mencari sura ${surat} ayat ${ayat}`);
         const outSuratAyat = await getSuratAyat(surat, ayat);
         console.log(outSuratAyat);
