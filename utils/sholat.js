@@ -68,7 +68,7 @@ async function getSuratAyat(surat, ayat) {
     console.log(res.data);
     return res.data; // ambil bagian data doa
   } catch (err) {
-    console.error("❌ Error getSuratAyat:", err.message);
+    console.error("❌ Errorx getSuratAyat:", err.message);
     return null;
   }
 }
