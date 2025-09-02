@@ -397,7 +397,7 @@ ${outSuratAyat.audio}
           text = text.replace("rn:", "").trim();
         }
 
-        console.log("Received for chatbot (TF-IDF):", text);
+        console.log("Receiveddd for chatbot (TF-IDF):", text);
 
         const found = await searchWithTFIDF(text, knowledgeBase);
 
