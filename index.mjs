@@ -359,16 +359,31 @@ ${ayatData.arab}
 ${ayatData.text}
 🔤 
 ${result.info.surat.relevasi},  ${result.info.surat.ayat_max} ayat`;
+          //
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 10000); // 10 detik
 
-          const res = await fetch(ayatData.audio);
-          console.log("Fetching audio from:", res);
-          // const buffer = await res.arrayBuffer();
+          const res = await fetch(ayatData.audio, {
+            signal: controller.signal,
+          });
           const buffer = Buffer.from(await res.arrayBuffer());
           await sock.sendMessage(from, {
             audio: buffer,
             mimetype: "audio/mpeg",
             caption: message,
           });
+
+          //
+
+          // const res = await fetch(ayatData.audio);
+          // console.log("Fetching audio from:", res);
+          // // const buffer = await res.arrayBuffer();
+          // const buffer = Buffer.from(await res.arrayBuffer());
+          // await sock.sendMessage(from, {
+          //   audio: buffer,
+          //   mimetype: "audio/mpeg",
+          //   caption: message,
+          // });
 
           //  await sock.sendMessage(from, { text: message });
         } else {
