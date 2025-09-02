@@ -67,7 +67,7 @@ async function getSuratAyat(surat, ayat) {
     const res = await axios.get(url, { httpsAgent: agent, timeout: 10000 });
     return res.data; // ambil bagian data doa
   } catch (err) {
-    console.error("❌ Error getDoaAcak:", err.message);
+    console.error("❌ Error getSuratAyat:", err.message);
     return null;
   }
 }
