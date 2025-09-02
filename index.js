@@ -310,10 +310,25 @@ async function startBot() {
         const ayat = parts[1];
         console.log(`🔍 Mencari sura ${surat} ayat ${ayat}`);
         const outSuratAyat = await getSuratAyat(surat, ayat);
-        console.log(outSuratAyat);
-        // const tesxdoa = formatDoa(doa);
-        // await sock.sendMessage(from, { text: tesxdoa });
-        // 3. Cek kualitas udara dan cuaca berdasarkan lokasi
+
+        if (outSuratAyat) {
+          const message = `
+📖 Surah: ${outSuratAyat.surah} | Ayat: ${outSuratAyat.ayah} | Juz: ${outSuratAyat.juz}
+🕌 Arabic:
+${outSuratAyat.arab}
+🔤 Latin:
+${outSuratAyat.latin}
+🌐 Translation:
+${outSuratAyat.text}
+🎧 Audio:
+${outSuratAyat.audio}
+  `;
+
+          console.log(message);
+          await sock.sendMessage(from, { text: message });
+        } else {
+          await sock.sendMessage(from, { text: "⚠️ Ayat tidak ditemukan." });
+        }
       }
       // !jadwalsholat <kota>
     } else {
