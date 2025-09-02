@@ -48,6 +48,12 @@ loadKnowledgeBase("template_chatbot.csv").then((kb) => {
   knowledgeBasePUB = kb;
 });
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+process.env.GAI_CONF = "/etc/gai.conf";
+
+const dns = require("dns");
+dns.setDefaultResultOrder("ipv4first");
+
 async function startBot() {
   const { state, saveCreds } = await useMultiFileAuthState("baileys_auth");
 
