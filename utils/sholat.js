@@ -65,7 +65,7 @@ export async function getSuratAyat(surat, ayat) {
   try {
     const url = `https://api.myquran.com/v2/quran/ayat/${surat}/${ayat}`;
     const res = await axios.get(url);
-    console.log(res.data);
+    // console.log(res.data);
     return res.data; // ambil bagian data doa
   } catch (err) {
     console.error("❌ Errorx getSuratAyat:", err.message);

@@ -346,28 +346,37 @@ async function startBot() {
         const parts = suratAyat.split("/");
         const surat = parts[0];
         const ayat = parts[1];
-        console.log(`🔍 Mencari sura ${surat} ayat ${ayat}`);
-        let osr = await getSuratAyat(surat, ayat);
-        const outSuratAyat = osr.data[0];
+        const result = await getSuratAyat(surat, ayat);
+        // console.log("Hasil API MyQuran:", result.info.surat);
 
-        if (outSuratAyat) {
-          const message = `
-📖 Surah: ${outSuratAyat.surah} | Ayat: ${outSuratAyat.ayah} | Juz: ${outSuratAyat.juz}
-🕌
-${outSuratAyat.arab}
-🌐
-${outSuratAyat.text}
-  `;
+        if (result && result.data && result.data[0]) {
+          const ayatData = result.data[0];
+          const message =`
+📖 ${result.info.surat.nama.id} (${result.info.surat.id}):${ayatData.ayah} | Juz: ${ayatData.juz}
+🕌 
+${ayatData.arab}
+🌐 
+${ayatData.text}
+🔤 
+${result.info.surat.relevasi},  ${result.info.surat.ayat_max} ayat`;
 
-          // 🎧 Audio:
-          // ${outSuratAyat.audio}
+          const res = await fetch(ayatData.audio);
+            console.log("Fetching audio from:", res);
+            // const buffer = await res.arrayBuffer();
+            const buffer = Buffer.from(await res.arrayBuffer());
+            await sock.sendMessage(from, {
+            audio: buffer,
+            mimetype: "audio/mpeg",
+              caption: message,
+            });
+          
 
-          console.log(message);
-          await sock.sendMessage(from, { text: message });
+       
+        //  await sock.sendMessage(from, { text: message });
         } else {
           await sock.sendMessage(from, { text: "⚠️ Ayat tidak ditemukan." });
         }
-      }
+      
       // !jadwalsholat <kota>
     } else {
       console.log("Pesan dari personal:", text);
