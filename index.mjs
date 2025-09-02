@@ -350,7 +350,7 @@ async function startBot() {
         let osr = await getSuratAyat(surat, ayat);
         const outSuratAyat = osr.data[0];
 
-        if (outSuratAyat.data[0]) {
+        if (outSuratAyat) {
           const message = `
 📖 Surah: ${outSuratAyat.surah} | Ayat: ${outSuratAyat.ayah} | Juz: ${outSuratAyat.juz}
 🕌 Arabic:
