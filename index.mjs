@@ -347,8 +347,9 @@ async function startBot() {
         const surat = parts[0];
         const ayat = parts[1];
         console.log(`🔍 Mencari sura ${surat} ayat ${ayat}`);
-        const outSuratAyat = await getSuratAyat(surat, ayat);
-        outSuratAyat = outSuratAyat.data[0];
+        let osr = await getSuratAyat(surat, ayat);
+        const outSuratAyat = osr.data[0];
+
         if (outSuratAyat.data[0]) {
           const message = `
 📖 Surah: ${outSuratAyat.surah} | Ayat: ${outSuratAyat.ayah} | Juz: ${outSuratAyat.juz}
