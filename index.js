@@ -308,6 +308,7 @@ async function startBot() {
         const parts = suratAyat.split("/");
         const surat = parts[1];
         const ayat = parts[2];
+        console.log(`🔍 Mencari surat ${surat} ayat ${ayat}`);
         const outSuratAyat = await getSuratAyat(surat, ayat);
         console.log(outSuratAyat);
         // const tesxdoa = formatDoa(doa);
