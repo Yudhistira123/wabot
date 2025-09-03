@@ -352,13 +352,16 @@ async function startBot() {
         if (result && result.data && result.data[0]) {
           const ayatData = result.data[0];
           const message = `
-📖 ${result.info.surat.nama.id} (${result.info.surat.id}):${ayatData.ayah} | Juz: ${ayatData.juz}
+📖 *${result.info.surat.nama.id} (${result.info.surat.id}):${ayatData.ayah} | Juz: ${ayatData.juz}*
+
 🕌 
 ${ayatData.arab}
+
 🌐 
 ${ayatData.text}
+
 🔤 
-${result.info.surat.relevasi},  ${result.info.surat.ayat_max} ayat`;
+*${result.info.surat.relevasi},  ${result.info.surat.ayat_max} ayat*`;
 
           await sock.sendMessage(from, { text: message });
           //
