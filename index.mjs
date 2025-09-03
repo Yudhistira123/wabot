@@ -374,139 +374,137 @@ ${result.info.surat.relevasi},  ${result.info.surat.ayat_max} ayat`;
             mimetype: "audio/mpeg",
             caption: message,
           });
-
-          //
-
-          // const res = await fetch(ayatData.audio);
-          // console.log("Fetching audio from:", res);
-          // // const buffer = await res.arrayBuffer();
-          // const buffer = Buffer.from(await res.arrayBuffer());
-          // await sock.sendMessage(from, {
-          //   audio: buffer,
-          //   mimetype: "audio/mpeg",
-          //   caption: message,
-          // });
-
-          //  await sock.sendMessage(from, { text: message });
         } else {
           await sock.sendMessage(from, { text: "⚠️ Ayat tidak ditemukan." });
         }
+      } else if (text.toLowerCase().startsWith("quran:all")) {
+        const data = await getNoSurat();
+        if (!data) {
+          console.log("⚠️ Data tidak bisa diambil.");
+          return;
+        }
+        let reply = "";
+        data.data.slice(0, data.data.length).forEach((surat, i) => {
+          reply += `${i + 1}. ${surat.name_id}/${surat.revelation_id} (${
+            surat.number_of_verses
+          } ayat)\n`;
+        });
+        await sock.sendMessage(from, { text: reply });
+      }
+      // !jadwalsholat <kota>
+    } else {
+      console.log("Pesan dari personal:", text);
+      if (text.toLowerCase() === "!ping") {
+        await sock.sendMessage(from, { text: "pong personal 🏓" });
+      } else if (text.startsWith("ambil ")) {
+        //console.log('Fetching data for noPasien:', noPasien);
+        try {
+          const noPasien = text.split(" ")[1].trim();
+          // 🔹 Call your webservice
+          let url = `https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}`;
+          console.log("Fetching data from URL:", url);
+          const response = await axios.get(url);
+          let base64String = response.data.gambar;
+          let nama = response.data.nama;
+          let dlahir = response.data.dlahir;
+          let jekel = response.data.jekel;
+          let alamat = response.data.alamat;
+          let tlp = response.data.tlp;
+          let alergi = response.data.alergi;
 
-        // !jadwalsholat <kota>
-      } else {
-        console.log("Pesan dari personal:", text);
-        if (text.toLowerCase() === "!ping") {
-          await sock.sendMessage(from, { text: "pong personal 🏓" });
-        } else if (text.startsWith("ambil ")) {
-          //console.log('Fetching data for noPasien:', noPasien);
-          try {
-            const noPasien = text.split(" ")[1].trim();
-            // 🔹 Call your webservice
-            let url = `https://harry.jurnalisproperti.com/find_ImagePasienWG.php?kode=${noPasien}`;
-            console.log("Fetching data from URL:", url);
-            const response = await axios.get(url);
-            let base64String = response.data.gambar;
-            let nama = response.data.nama;
-            let dlahir = response.data.dlahir;
-            let jekel = response.data.jekel;
-            let alamat = response.data.alamat;
-            let tlp = response.data.tlp;
-            let alergi = response.data.alergi;
+          // 🔹 Clean base64 if it has prefix
+          base64String = base64String.replace(/^data:image\/\w+;base64,/, "");
 
-            // 🔹 Clean base64 if it has prefix
-            base64String = base64String.replace(/^data:image\/\w+;base64,/, "");
+          const buffer = Buffer.from(base64String, "base64");
+          // let info = `🧾 Data pasien ${noPasien}
+          // 👤 Nama: ${nama}
+          // 🚻 JK: ${jekel}
+          // 🏠 Alamat: ${alamat}
+          // 📞 Tlp: ${tlp}
+          // 🎂 Tgl Lahir: ${dlahir}
+          // ⚠️ Alergi: ${alergi}`;
 
-            const buffer = Buffer.from(base64String, "base64");
-            // let info = `🧾 Data pasien ${noPasien}
-            // 👤 Nama: ${nama}
-            // 🚻 JK: ${jekel}
-            // 🏠 Alamat: ${alamat}
-            // 📞 Tlp: ${tlp}
-            // 🎂 Tgl Lahir: ${dlahir}
-            // ⚠️ Alergi: ${alergi}`;
-
-            await sock.sendMessage("628122132341@c.us", {
-              image: buffer,
-              caption: `🧾 Data pasien ${noPasien}
+          await sock.sendMessage("628122132341@c.us", {
+            image: buffer,
+            caption: `🧾 Data pasien ${noPasien}
 👤 Nama: ${nama}
 🚻 JK: ${jekel}
 🏠 Alamat: ${alamat}
 📞 Tlp: ${tlp}
 🎂 Tgl Lahir: ${dlahir}
 ⚠️ Alergi: ${alergi}`,
-            });
-          } catch (error) {
-            console.error("Error calling API:", error.message);
-            await sock.sendMessage(from, {
-              text: "❌ Failed to fetch data from API",
-            });
-          }
-        } else if (text.startsWith("test url")) {
-          const newsUrl = text.replace("test url", "").trim();
-          await sendNewsMessage(sock, newsUrl);
-        } else if (text.startsWith("ekyd:") || text.startsWith("rn:")) {
-          if (text.startsWith("ekyd:")) {
-            knowledgeBase = knowledgeBasePUB;
-            text = text.replace("ekyd:", "").trim();
-          } else if (text.startsWith("rn:")) {
-            knowledgeBase = knowledgeBaseRudal;
-            text = text.replace("rn:", "").trim();
-          }
-
-          console.log("Receiveddd for chatbot (TF-IDF):", text);
-
-          const found = await searchWithTFIDF(text, knowledgeBase);
-
-          if (found) {
-            await sock.sendMessage(from, { text: found.answer });
-          } else {
-            await sock.sendMessage(from, {
-              text: "⚠️ Maaf, saya belum punya jawaban untuk pertanyaan itu.",
-            });
-          }
+          });
+        } catch (error) {
+          console.error("Error calling API:", error.message);
+          await sock.sendMessage(from, {
+            text: "❌ Failed to fetch data from API",
+          });
+        }
+      } else if (text.startsWith("test url")) {
+        const newsUrl = text.replace("test url", "").trim();
+        await sendNewsMessage(sock, newsUrl);
+      } else if (text.startsWith("ekyd:") || text.startsWith("rn:")) {
+        if (text.startsWith("ekyd:")) {
+          knowledgeBase = knowledgeBasePUB;
+          text = text.replace("ekyd:", "").trim();
+        } else if (text.startsWith("rn:")) {
+          knowledgeBase = knowledgeBaseRudal;
+          text = text.replace("rn:", "").trim();
         }
 
-        // let tanya = "";
+        console.log("Receiveddd for chatbot (TF-IDF):", text);
 
-        // Kalau mau test langsung (tanpa WA bot), jalankan ini:
-        // (async () => {
-        //   const query = "cara kerja radar militer";
-        // const result = await searchWithTFIDF(text, knowledgeBase);
-        //   console.log("Hasil TF-IDF:", result);
-        // })();
+        const found = await searchWithTFIDF(text, knowledgeBase);
 
-        // if (text.startsWith("ekyd:")) {
-        //   knowledgeBase = knowledgeBasePUB;
-        //   tanya = text.replace("ekyd:", "").trim();
-        // } else if (text.startsWith("rn:")) {
-        //   knowledgeBase = knowledgeBaseRudal;
-        //   tanya = text.replace("rn:", "").trim();
-        // }
-
-        // console.log("Received for chatbot:", tanya);
-
-        // const fuse = new Fuse(knowledgeBase, {
-        //   keys: ["question"],
-        //   threshold: 0.4,
-        // });
-
-        // const results = fuse.search(tanya);
-        // if (results.length > 0) {
-        //   const found = results[0].item;
-        //   await sock.sendMessage(from, { text: found.answer });
-        // } else {
-        //   await sock.sendMessage(from, {
-        //     text: "⚠️ Maaf, saya belum punya jawaban untuk pertanyaan itu.",
-        //   });
-        // }
-        //  }
-        // } else {
-        //   await sock.sendMessage(from, {
-        //     text: "I am not sure how to respond to that.",
-        //   });
-        // }
-        // personal
+        if (found) {
+          await sock.sendMessage(from, { text: found.answer });
+        } else {
+          await sock.sendMessage(from, {
+            text: "⚠️ Maaf, saya belum punya jawaban untuk pertanyaan itu.",
+          });
+        }
       }
+
+      // let tanya = "";
+
+      // Kalau mau test langsung (tanpa WA bot), jalankan ini:
+      // (async () => {
+      //   const query = "cara kerja radar militer";
+      // const result = await searchWithTFIDF(text, knowledgeBase);
+      //   console.log("Hasil TF-IDF:", result);
+      // })();
+
+      // if (text.startsWith("ekyd:")) {
+      //   knowledgeBase = knowledgeBasePUB;
+      //   tanya = text.replace("ekyd:", "").trim();
+      // } else if (text.startsWith("rn:")) {
+      //   knowledgeBase = knowledgeBaseRudal;
+      //   tanya = text.replace("rn:", "").trim();
+      // }
+
+      // console.log("Received for chatbot:", tanya);
+
+      // const fuse = new Fuse(knowledgeBase, {
+      //   keys: ["question"],
+      //   threshold: 0.4,
+      // });
+
+      // const results = fuse.search(tanya);
+      // if (results.length > 0) {
+      //   const found = results[0].item;
+      //   await sock.sendMessage(from, { text: found.answer });
+      // } else {
+      //   await sock.sendMessage(from, {
+      //     text: "⚠️ Maaf, saya belum punya jawaban untuk pertanyaan itu.",
+      //   });
+      // }
+      //  }
+      // } else {
+      //   await sock.sendMessage(from, {
+      //     text: "I am not sure how to respond to that.",
+      //   });
+      // }
+      // personal
     }
   });
 }

@@ -73,6 +73,18 @@ export async function getSuratAyat(surat, ayat) {
   }
 }
 
+export async function getNoSurat() {
+  try {
+    const url = `https://api.myquran.com/v2/quran/surat/semua`;
+    const res = await axios.get(url);
+    // console.log(res.data);
+    return res.data; // ambil bagian data doa
+  } catch (err) {
+    console.error("❌ Errorx getSuratAyat:", err.message);
+    return null;
+  }
+}
+
 // Format pesan WhatsApp
 export function formatDoa(doa) {
   if (!doa) return "⚠️ Gagal mengambil doa.";
