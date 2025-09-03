@@ -381,7 +381,7 @@ ${ayatData.text}
         } else {
           await sock.sendMessage(from, { text: "⚠️ Ayat tidak ditemukan." });
         }
-      } else if (text.toLowerCase().startsWith("quran:all")) {
+      } else if (text.toLowerCase().startsWith("qr:all")) {
         const data = await getNoSurat();
         if (!data) {
           console.log("⚠️ Data tidak bisa diambil.");
