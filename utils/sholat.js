@@ -1,4 +1,20 @@
 import axios from "axios";
+import axiosRetry from "axios-retry";
+
+// konfigurasi retry
+axiosRetry(axios, {
+  retries: 3, // maksimal 3x coba ulang
+  retryDelay: axiosRetry.exponentialDelay, // jeda antar percobaan meningkat
+  retryCondition: (error) => {
+    // hanya retry kalau timeout atau response 5xx
+    return (
+      axiosRetry.isNetworkOrIdempotentRequestError(error) ||
+      error.code === "ECONNABORTED" ||
+      (error.response && error.response.status >= 500)
+    );
+  },
+});
+
 // const https = require("https");
 
 // const agent = new https.Agent({ family: 4 }); // IPv4 only
@@ -19,7 +35,7 @@ export async function getSholatByLocation(kodeLokasi) {
     // const res = await axios.get(
 
     // );
-    const res = await axios.get(url);
+    const res = await axios.get(url, { timeout: 5000 });
     // console.log(res.data);
     return res.data;
   } catch (err) {
@@ -35,7 +51,7 @@ export async function getKodeKota(namaKota) {
     // const res = await axios.get(
     //   `https://api.myquran.com/v2/sholat/kota/cari/${namaKota}`
     // );
-    const res = await axios.get(url);
+    const res = await axios.get(url, { timeout: 5000 });
     console.log(res.data);
     if (res.data.status && res.data.data.length > 0) {
       return res.data.data.map((k) => k.id);
@@ -52,7 +68,7 @@ export async function getKodeKota(namaKota) {
 export async function getDoaAcak() {
   try {
     const url = "https://api.myquran.com/v2/doa/acak";
-    const res = await axios.get(url);
+    const res = await axios.get(url, { timeout: 5000 });
     return res.data.data; // ambil bagian data doa
   } catch (err) {
     console.error("❌ Error getDoaAcak:", err.message);
@@ -64,7 +80,7 @@ export async function getDoaAcak() {
 export async function getSuratAyat(surat, ayat) {
   try {
     const url = `https://api.myquran.com/v2/quran/ayat/${surat}/${ayat}`;
-    const res = await axios.get(url);
+    const res = await axios.get(url, { timeout: 5000 });
     // console.log(res.data);
     return res.data; // ambil bagian data doa
   } catch (err) {
@@ -76,7 +92,7 @@ export async function getSuratAyat(surat, ayat) {
 export async function getNoSurat() {
   try {
     const url = `https://api.myquran.com/v2/quran/surat/semua`;
-    const res = await axios.get(url);
+    const res = await axios.get(url, { timeout: 5000 });
     // console.log(res.data);
     return res.data; // ambil bagian data doa
   } catch (err) {
