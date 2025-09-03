@@ -26,6 +26,7 @@ import {
   getDoaAcak,
   formatDoa,
   getSuratAyat,
+  getNoSurat,
 } from "./utils/sholat.js";
 
 // const {
