@@ -54,22 +54,26 @@ export async function getSholatByLocation(kodeLokasi) {
     const res = await axios.get(url, { timeout: 15000 });
 
     //======
-    // const hijriDate = toHijri(
-    //   today.getFullYear(),
-    //   today.getMonth() + 1,
-    //   today.getDate()
-    // );
-    // const hijriString = `${hijriDate.hd} ${hijriMonths[hijriDate.hm - 1]} ${
-    //   hijriDate.hy
-    // }`;
+    const correctedDate = new Date(jakarta);
+    correctedDate.setDate(correctedDate.getDate() - 1);
+
+    const hijriDate = toHijri(
+      correctedDate.getFullYear(),
+      correctedDate.getMonth() + 1,
+      correctedDate.getDate()
+    );
+    const hijriString = `${hijriDate.hd} ${hijriMonths[hijriDate.hm - 1]} ${
+      hijriDate.hy
+    }`;
 
     let sholatData = res.data;
     let jadwal = sholatData.data.jadwal;
-    //console.log("Hijri Date:", hijriString);
-    //`🗓️ ${jadwal.tanggal} (${hijriString}) \n\n` +
+    console.log("Hijri Date:", hijriString);
+
+    //  `🗓️ ${jadwal.tanggal} \n\n` +
     let replyMsg =
       `🕌 *Jadwal Sholat ${sholatData.data.lokasi}*\n` +
-      `🗓️ ${jadwal.tanggal} \n\n` +
+      `🗓️ ${jadwal.tanggal} (${hijriString}) \n\n` +
       `🌅 Imsak     : ${jadwal.imsak} WIB\n` +
       `🌄 Subuh     : ${jadwal.subuh} WIB\n` +
       `🌤️ Terbit    : ${jadwal.terbit} WIB\n` +
