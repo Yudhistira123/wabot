@@ -1,6 +1,6 @@
 import axios from "axios";
 import axiosRetry from "axios-retry";
-import { toHijri } from "hijri-converter";
+//import { toHijri } from "hijri-converter";
 
 // konfigurasi retry
 axiosRetry(axios, {
@@ -54,22 +54,22 @@ export async function getSholatByLocation(kodeLokasi) {
     const res = await axios.get(url, { timeout: 5000 });
 
     //======
-    const hijriDate = toHijri(
-      today.getFullYear(),
-      today.getMonth() + 1,
-      today.getDate()
-    );
-    const hijriString = `${hijriDate.hd} ${hijriMonths[hijriDate.hm - 1]} ${
-      hijriDate.hy
-    }`;
+    // const hijriDate = toHijri(
+    //   today.getFullYear(),
+    //   today.getMonth() + 1,
+    //   today.getDate()
+    // );
+    // const hijriString = `${hijriDate.hd} ${hijriMonths[hijriDate.hm - 1]} ${
+    //   hijriDate.hy
+    // }`;
 
     let sholatData = res.data;
     let jadwal = sholatData.data.jadwal;
-    console.log("Hijri Date:", hijriString);
-
+    //console.log("Hijri Date:", hijriString);
+    //`🗓️ ${jadwal.tanggal} (${hijriString}) \n\n` +
     let replyMsg =
       `🕌 *Jadwal Sholat ${sholatData.data.lokasi}*\n` +
-      `🗓️ ${jadwal.tanggal} (${hijriString}) \n\n` +
+      `🗓️ ${jadwal.tanggal} \n\n` +
       `🌅 Imsak     : ${jadwal.imsak} WIB\n` +
       `🌄 Subuh     : ${jadwal.subuh} WIB\n` +
       `🌤️ Terbit    : ${jadwal.terbit} WIB\n` +
