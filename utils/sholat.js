@@ -133,7 +133,7 @@ export async function getSuratAyat(surat, ayat) {
   }
 }
 
-export async function getSholatByLocationgetNoSurat() {
+export async function getNoSurat() {
   try {
     const url = `https://api.myquran.com/v2/quran/surat/semua`;
     const res = await axios.get(url, { timeout: 5000 });
