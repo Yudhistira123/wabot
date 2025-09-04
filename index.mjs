@@ -158,28 +158,10 @@ async function startBot() {
           return;
         }
         for (const idKota of idKotaArray) {
-          const sholatData = await getSholatByLocation(idKota);
-          if (sholatData && sholatData.data) {
-            const jadwal = sholatData.data.jadwal;
-            let replyMsg =
-              `🕌 *Jadwal Sholat ${sholatData.data.lokasi}*\n` +
-              `📅 Hari,Tgl: ${jadwal.tanggal}\n\n` +
-              `🌅 Imsak     : ${jadwal.imsak} WIB\n` +
-              `🌄 Subuh     : ${jadwal.subuh} WIB\n` +
-              `🌤️ Terbit    : ${jadwal.terbit} WIB\n` +
-              `🌞 Dhuha     : ${jadwal.dhuha} WIB\n` +
-              `☀️ Dzuhur    : ${jadwal.dzuhur} WIB\n` +
-              `🌇 Ashar     : ${jadwal.ashar} WIB\n` +
-              `🌆 Maghrib   : ${jadwal.maghrib} WIB\n` +
-              `🌙 Isya      : ${jadwal.isya} WIB`;
-
-            await sock.sendMessage(from, { text: replyMsg });
-          } else {
-            await sock.sendMessage(from, {
-              text: "⚠️ Gagal mengambil jadwal sholat.",
-            });
-          }
+          const replyMsg = await getSholatByLocation(idKota);
+          await sock.sendMessage(from, { text: replyMsg });
         }
+
         // 2. Doa Hari Ini
       } else if (text.toLowerCase().startsWith("doa hari ini")) {
         const doa = await getDoaAcak();

@@ -1,5 +1,6 @@
 import axios from "axios";
 import axiosRetry from "axios-retry";
+import { toHijri } from "hijri-converter";
 
 // konfigurasi retry
 axiosRetry(axios, {
@@ -19,6 +20,21 @@ axiosRetry(axios, {
 
 // const agent = new https.Agent({ family: 4 }); // IPv4 only
 
+const hijriMonths = [
+  "Muharram",
+  "Safar",
+  "Rabi’ al-Awwal",
+  "Rabi’ al-Thani",
+  "Jumada al-Ula",
+  "Jumada al-Thaniyah",
+  "Rajab",
+  "Sha’ban",
+  "Ramadhan",
+  "Shawwal",
+  "Dhul Qa’dah",
+  "Dhul Hijjah",
+];
+
 export async function getSholatByLocation(kodeLokasi) {
   const today = new Date();
   try {
@@ -36,8 +52,36 @@ export async function getSholatByLocation(kodeLokasi) {
 
     // );
     const res = await axios.get(url, { timeout: 5000 });
+
+    //======
+    const hijriDate = toHijri(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      today.getDate()
+    );
+    const hijriString = `${hijriDate.hd} ${hijriMonths[hijriDate.hm - 1]} ${
+      hijriDate.hy
+    }`;
+
+    let sholatData = res.data;
+    let jadwal = sholatData.data.jadwal;
+    console.log("Hijri Date:", hijriString);
+
+    let replyMsg =
+      `🕌 *Jadwal Sholat ${sholatData.data.lokasi}*\n` +
+      `🗓️ ${jadwal.tanggal} (${hijriString}) \n\n` +
+      `🌅 Imsak     : ${jadwal.imsak} WIB\n` +
+      `🌄 Subuh     : ${jadwal.subuh} WIB\n` +
+      `🌤️ Terbit    : ${jadwal.terbit} WIB\n` +
+      `🌞 Dhuha     : ${jadwal.dhuha} WIB\n` +
+      `☀️ Dzuhur    : ${jadwal.dzuhur} WIB\n` +
+      `🌇 Ashar     : ${jadwal.ashar} WIB\n` +
+      `🌆 Maghrib   : ${jadwal.maghrib} WIB\n` +
+      `🌙 Isya      : ${jadwal.isya} WIB`;
+    //======
+
     // console.log(res.data);
-    return res.data;
+    return replyMsg;
   } catch (err) {
     console.error("❌ Gagal ambil jadwal sholat:", err.message);
     return null;
@@ -89,7 +133,7 @@ export async function getSuratAyat(surat, ayat) {
   }
 }
 
-export async function getNoSurat() {
+export async function getSholatByLocationgetNoSurat() {
   try {
     const url = `https://api.myquran.com/v2/quran/surat/semua`;
     const res = await axios.get(url, { timeout: 5000 });

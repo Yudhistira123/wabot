@@ -1,25 +1,11 @@
 // testSurat.js
-import { getNoSurat } from "./utils/sholat.js";
+import { getSholatByLocation } from "./utils/sholat.js";
 
 async function main() {
-  const data = await getNoSurat();
+  const idKota = "1632"; // Ganti dengan kode kota yang diinginkan
+  const replyMsg = await getSholatByLocation(idKota);
 
-  if (!data) {
-    console.log("⚠️ Data tidak bisa diambil.");
-    return;
-  }
-
-  // tampilkan jumlah surat
-  console.log("📖 Jumlah surat:", data.data.length);
-
-  // contoh: tampilkan 5 surat pertama
-  let reply = "";
-  data.data.slice(0, data.data.length).forEach((surat, i) => {
-    reply += `${i + 1}. ${surat.name_id}/${surat.revelation_id} (${
-      surat.number_of_verses
-    } ayat)\n`;
-  });
-  console.log(reply);
+  console.log(replyMsg);
 }
 
 main();

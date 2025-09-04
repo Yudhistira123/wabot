@@ -6,7 +6,6 @@
   "main": "index.mjs",
   "scripts": {
     "start": "nodemon index.mjs",
-    
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -16,10 +15,12 @@
     "@quranjs/api": "^1.8.0",
     "@whiskeysockets/baileys": "^6.7.19",
     "axios": "^1.11.0",
+    "axios-retry": "^4.5.0",
     "cheerio": "^1.1.2",
     "csv-parser": "^3.2.0",
     "express": "^5.1.0",
     "fuse.js": "^7.1.0",
+    "hijri-converter": "^1.1.1",
     "natural": "^8.1.0",
     "puppeteer": "^24.16.2",
     "qrcode-terminal": "^0.12.0",
