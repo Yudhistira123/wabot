@@ -115,7 +115,14 @@ export async function getDoaAcak() {
     const res = await axios.get(url, { timeout: 5000 });
     return res.data.data; // ambil bagian data doa
   } catch (err) {
-    console.error("❌ Error getDoaAcak:", err.message);
+    console.error("❌ Error getDoaAcak:");
+    console.error("Message:", err.message || "No message");
+    console.error("Code:", err.code || "No code");
+    if (err.response) {
+      console.error("Status:", err.response.status);
+      console.error("Response:", err.response.data);
+    }
+    console.error("Stack:", err.stack || "No stack");
     return null;
   }
 }
