@@ -73,7 +73,8 @@ export async function getSholatByLocation(kodeLokasi) {
     //  `🗓️ ${jadwal.tanggal} \n\n` +
     let replyMsg =
       `🕌 *Jadwal Sholat ${sholatData.data.lokasi}*\n` +
-      `🗓️ ${jadwal.tanggal} (${hijriString}) \n\n` +
+      `🗓️ ${jadwal.tanggal} \n` +
+      `  ${hijriString} \n\n` +
       `🌅 Imsak     : ${jadwal.imsak} WIB\n` +
       `🌄 Subuh     : ${jadwal.subuh} WIB\n` +
       `🌤️ Terbit    : ${jadwal.terbit} WIB\n` +
