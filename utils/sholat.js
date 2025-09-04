@@ -1,6 +1,6 @@
 import axios from "axios";
 import axiosRetry from "axios-retry";
-//import { toHijri } from "hijri-converter";
+import { toHijri } from "hijri-converter";
 
 // konfigurasi retry
 axiosRetry(axios, {
