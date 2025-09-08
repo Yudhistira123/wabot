@@ -18,7 +18,8 @@ async function getWeather(lat, lon, apiKey) {
 // Fungsi format output cuaca
 function formatWeather(weather) {
   return (
-    `🌍 *Informasi Cuaca Lengkap*\n\n` +
+    `🌍 *Informasi Cuaca Lengkap*\n` +
+    `🌍 *(${weather.coord.lat},${weather.coord.lon})*\n\n` +
     `🌤️ Cuaca: ${weather.weather[0].main} - ${weather.weather[0].description}\n` +
     `🌡️ Suhu: ${weather.main.temp}°C\n` +
     `🤒 Terasa: ${weather.main.feels_like}°C\n` +
@@ -27,23 +28,38 @@ function formatWeather(weather) {
     `💧 Kelembapan: ${weather.main.humidity}%\n` +
     `🌬️ Tekanan: ${weather.main.pressure} hPa\n` +
     `🌊 Tekanan Laut: ${weather.main.sea_level ?? "-"} hPa\n` +
-    `🏞️ Tekanan Darat: ${weather.main.grnd_level ?? "-"} hPa\n\n` +
+    `🏞️ Tekanan Darat: ${weather.main.grnd_level ?? "-"} hPa\n` +
+    `🗻 Altitude: ${calculateAltitude(
+      weather.main.sea_level,
+      weather.main.grnd_level
+    ).toFixed(2)} m\n` +
     `👀 Jarak Pandang: ${weather.visibility} m\n` +
     `💨 Angin: ${weather.wind.speed} m/s, Arah ${weather.wind.deg}°, Gust ${
       weather.wind.gust ?? "-"
     } m/s\n` +
-    `☁️ Awan: ${weather.clouds.all}%\n\n` +
+    `☁️ Awan: ${weather.clouds.all}%\n` +
     `🌅 Sunrise: ${new Date(weather.sys.sunrise * 1000).toLocaleTimeString(
       "id-ID"
     )}\n` +
     `🌇 Sunset: ${new Date(weather.sys.sunset * 1000).toLocaleTimeString(
       "id-ID"
-    )}\n\n` +
+    )}\n` +
     `🕒 Zona Waktu: UTC${weather.timezone / 3600}\n` +
-    `🆔 City ID: ${weather.id}\n` +
+    `🆔 City ID: ${weather.id},${weather.name}\n` +
     `📡 Source: ${weather.base}\n` +
     `⏱️ Data Timestamp: ${new Date(weather.dt * 1000).toLocaleString("id-ID")}`
   );
+}
+
+function calculateAltitude(seaLevel, groundLevel) {
+  // Constants
+  const P0 = seaLevel; // sea level pressure (hPa) from API
+  const P = groundLevel; // ground level pressure (hPa) from API
+
+  // Barometric formula
+  const altitude = 44330 * (1 - Math.pow(P / P0, 0.1903));
+
+  return altitude; // in meters
 }
 
 module.exports = { getWeather, formatWeather };
