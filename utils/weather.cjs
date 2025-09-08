@@ -19,7 +19,7 @@ async function getWeather(lat, lon, apiKey) {
 function formatWeather(weather) {
   return (
     `🌍 *Informasi Cuaca Lengkap*\n` +
-    `🌍 *(${weather.coord.lat},${weather.coord.lon})*\n\n` +
+    `*(${weather.coord.lat},${weather.coord.lon})*\n\n` +
     `🌤️ Cuaca: ${weather.weather[0].main} - ${weather.weather[0].description}\n` +
     `🌡️ Suhu: ${weather.main.temp}°C\n` +
     `🤒 Terasa: ${weather.main.feels_like}°C\n` +
