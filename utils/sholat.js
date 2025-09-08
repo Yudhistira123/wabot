@@ -82,7 +82,7 @@ export async function getSholatByLocation(kodeLokasi) {
       `☀️ Dzuhur    : ${jadwal.dzuhur} WIB\n` +
       `🌇 Ashar     : ${jadwal.ashar} WIB\n` +
       `🌆 Maghrib   : ${jadwal.maghrib} WIB\n` +
-      `🌙 Isya     : ${jadwal.isya} WIB`;
+      `🌙 Isyaxx     : ${jadwal.isya} WIB`;
     //======
 
     // console.log(res.data);
