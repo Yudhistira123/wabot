@@ -36,7 +36,7 @@ export async function formatWeather(weather) {
     //   weather.main.sea_level,
     //   weather.main.grnd_level
     // ).toFixed(2)} m\n` +
-    `🗻 Altitude: ${elevation} m\n` +
+    `🗻 Altitude: ${elevation} mdpltest\n` +
     `👀 Jarak Pandang: ${weather.visibility} m\n` +
     `💨 Angin: ${weather.wind.speed} m/s, Arah ${weather.wind.deg}°, Gust ${
       weather.wind.gust ?? "-"
