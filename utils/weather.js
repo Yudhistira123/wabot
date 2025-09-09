@@ -4,7 +4,7 @@ import { getElevation } from "./googleApi.js";
 
 //const apiKey = "44747099862079d031d937f5cd84a57e"; // API Key OWM
 
-async function getWeather(lat, lon, apiKey) {
+export async function getWeather(lat, lon, apiKey) {
   const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=ID`;
   console.log("Fetching weather from:", url);
   try {
@@ -17,8 +17,8 @@ async function getWeather(lat, lon, apiKey) {
   }
 }
 
-// Fungsi format output cuaca
-async function formatWeather(weather) {
+// Fungsi format output cuasca
+export async function formatWeather(weather) {
   const elevation = await getElevation(weather.coord.lat, weather.coord.lon);
   return (
     `🌍 *Informasi Cuaca Lengkap*\n` +
