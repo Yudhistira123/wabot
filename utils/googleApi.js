@@ -1,6 +1,6 @@
 import fetch from "node-fetch"; // npm install node-fetch
 
-async function getElevation(lat, lon) {
+export async function getElevation(lat, lon) {
   // const url = `https://maps.googleapis.com/maps/api/elevation/json?locations=${lat},${lon}&key=${apiKey}`;
   const url = `https://api.opentopodata.org/v1/srtm90m?locations=${lat},${lon}`;
 
