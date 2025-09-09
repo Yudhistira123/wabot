@@ -21,11 +21,11 @@ async function getElevation(lat, lon) {
 }
 
 // === Test ===
-(async () => {
-  const lat = -6.7609; // Puncak Upas Hill
-  const lon = 107.6047;
-  //const apiKey = "AIzaSyAnZbNgeIwJIV567D1ELgrG2l6gttZBU54"; // ganti dengan key-mu
+// (async () => {
+//   const lat = -6.7609; // Puncak Upas Hill
+//   const lon = 107.6047;
+//   //const apiKey = "AIzaSyAnZbNgeIwJIV567D1ELgrG2l6gttZBU54"; // ganti dengan key-mu
 
-  const elevation = await getElevation(lat, lon);
-  console.log(`🌍 Elevation for (${lat}, ${lon}) is: ${elevation} mdpl`);
-})();
+//   const elevation = await getElevation(lat, lon);
+//   console.log(`🌍 Elevation for (${lat}, ${lon}) is: ${elevation} mdpl`);
+// })();
