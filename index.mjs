@@ -43,7 +43,7 @@ import {
 
 // const { getWeather, formatWeather } = require("./utils/weather.cjs");
 // const { getClubInfo, getClubActivities } = require("./utils/stravaService");
-import { getWeather, formatWeather } from "./utils/weather.cjs";
+import { getWeather, formatWeather } from "./utils/weather.js";
 import { getClubInfo, getClubActivities } from "./utils/stravaService.js";
 
 //const fetch = require("node-fetch");

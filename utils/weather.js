@@ -1,5 +1,5 @@
-const axios = require("axios");
-
+//const axios = require("axios");
+import axios from "axios";
 import { getElevation } from "./utils/googleApi.js";
 
 //const apiKey = "44747099862079d031d937f5cd84a57e"; // API Key OWM
@@ -68,4 +68,4 @@ function calculateAltitude(seaLevel, groundLevel) {
   return altitude; // in meters
 }
 
-module.exports = { getWeather, formatWeather };
+//module.exports = { getWeather, formatWeather };
