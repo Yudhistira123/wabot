@@ -55,17 +55,17 @@ export async function formatWeather(weather) {
   );
 }
 
-const elevation = await getElevation(lat, lon);
-console.log(`🌍 Elevation for (${lat}, ${lon}) is: ${elevation} mdpl`);
-function calculateAltitude(seaLevel, groundLevel) {
-  // Constants
-  const P0 = seaLevel; // sea level pressure (hPa) from API
-  const P = groundLevel; // ground level pressure (hPa) from API
+// const elevation = await getElevation(lat, lon);
+// console.log(`🌍 Elevation for (${lat}, ${lon}) is: ${elevation} mdpl`);
+// function calculateAltitude(seaLevel, groundLevel) {
+//   // Constants
+//   const P0 = seaLevel; // sea level pressure (hPa) from API
+//   const P = groundLevel; // ground level pressure (hPa) from API
 
-  // Barometric formula
-  const altitude = 44330 * (1 - Math.pow(P / P0, 0.1903));
+//   // Barometric formula
+//   const altitude = 44330 * (1 - Math.pow(P / P0, 0.1903));
 
-  return altitude; // in meters
-}
+//   return altitude; // in meters
+// }
 
 //module.exports = { getWeather, formatWeather };
