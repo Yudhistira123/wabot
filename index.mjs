@@ -184,7 +184,7 @@ async function startBot() {
         const data = await getAirQuality(latitude, longitude, apiKey);
         const replyMsg1 = formatAirQuality(description, data);
         const weather = await getWeather(latitude, longitude, apiKey);
-        const replyMsg2 = formatWeather(weather);
+        const replyMsg2 = await formatWeather(weather);
         await sock.sendMessage(from, { text: replyMsg1 + "\n\n" + replyMsg2 });
         // 4. Hasil Club Lari (Strava)
       } else if (text.toLowerCase() === "hasil club lari") {

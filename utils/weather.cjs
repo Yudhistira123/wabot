@@ -1,5 +1,7 @@
 const axios = require("axios");
 
+import { getElevation } from "./utils/googleApi.js";
+
 //const apiKey = "44747099862079d031d937f5cd84a57e"; // API Key OWM
 
 async function getWeather(lat, lon, apiKey) {
@@ -16,7 +18,8 @@ async function getWeather(lat, lon, apiKey) {
 }
 
 // Fungsi format output cuaca
-function formatWeather(weather) {
+async function formatWeather(weather) {
+  const elevation = await getElevation(weather.coord.lat, weather.coord.lon);
   return (
     `🌍 *Informasi Cuaca Lengkap*\n` +
     `*(${weather.coord.lat},${weather.coord.lon})*\n\n` +
@@ -29,10 +32,11 @@ function formatWeather(weather) {
     `🌬️ Tekanan: ${weather.main.pressure} hPa\n` +
     `🌊 Tekanan Laut: ${weather.main.sea_level ?? "-"} hPa\n` +
     `🏞️ Tekanan Darat: ${weather.main.grnd_level ?? "-"} hPa\n` +
-    `🗻 Altitude: ${calculateAltitude(
-      weather.main.sea_level,
-      weather.main.grnd_level
-    ).toFixed(2)} m\n` +
+    // `🗻 Altitude: ${calculateAltitude(
+    //   weather.main.sea_level,
+    //   weather.main.grnd_level
+    // ).toFixed(2)} m\n` +
+    `🗻 Altitude: ${elevation} m\n` +
     `👀 Jarak Pandang: ${weather.visibility} m\n` +
     `💨 Angin: ${weather.wind.speed} m/s, Arah ${weather.wind.deg}°, Gust ${
       weather.wind.gust ?? "-"
@@ -51,6 +55,8 @@ function formatWeather(weather) {
   );
 }
 
+const elevation = await getElevation(lat, lon);
+console.log(`🌍 Elevation for (${lat}, ${lon}) is: ${elevation} mdpl`);
 function calculateAltitude(seaLevel, groundLevel) {
   // Constants
   const P0 = seaLevel; // sea level pressure (hPa) from API
