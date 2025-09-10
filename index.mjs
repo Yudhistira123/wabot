@@ -330,9 +330,22 @@ async function startBot() {
         const parts = suratAyat.split("/");
         const surat = parts[0];
         const ayat = parts[1];
+
+        let startAyat, endAyat;
+
+        if (ayatPart.includes("-")) {
+          // Range ayat, contoh "5-8"
+          const range = ayatPart.split("-");
+          startAyat = parseInt(range[0]);
+          endAyat = parseInt(range[1]);
+        } else {
+          // Hanya 1 ayat, contoh "5"
+          startAyat = parseInt(ayatPart);
+          endAyat = startAyat;
+        }
         //--- mulai looping
         // const result = await getSuratAyat(surat, ayat);
-        await sendAyatLoop(surat, ayat, 5, sock, from);
+        await sendAyatLoop(surat, startAyat, endAyat, sock, from);
 
         //         if (result && result.data && result.data[0]) {
         //           const ayatData = result.data[0];
