@@ -383,7 +383,7 @@ async function startBot() {
         //         } else {
         //           await sock.sendMessage(from, { text: "⚠️ Ayat tidak ditemukan." });
         //         }
-      } else if (text.toLowerCase().startsWith("qr:all")) {
+      } else if (text.toLowerCase().startsWith("qs:all")) {
         const data = await getNoSurat();
         if (!data) {
           console.log("⚠️ Data tidak bisa diambil.");
