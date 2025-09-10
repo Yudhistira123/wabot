@@ -227,7 +227,7 @@ export function emphasizeArabic(text) {
 // kirim n ayat berurutan
 export async function sendAyatLoop(surat, startAyat, n, sock, from) {
   for (let i = 0; i < n; i++) {
-    const currentAyat = startAyat + i;
+    const currentAyat = parseInt(startAyat) + i;
 
     const result = await getSuratAyat(surat, currentAyat);
     if (result && result.data && result.data[0]) {
