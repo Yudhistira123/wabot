@@ -328,8 +328,8 @@ async function startBot() {
       } else if (text.toLowerCase().startsWith("qs:")) {
         const suratAyat = text.toLowerCase().replace("qs:", "").trim();
         const parts = suratAyat.split("/");
-        const surat = parts[0];
-        const ayat = parts[1];
+        const surat = parseInt(parts[0]); // nomor surat
+        const ayatPart = parts[1]; // bisa "5" atau "5-8"
 
         let startAyat, endAyat;
 
