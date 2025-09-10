@@ -57,14 +57,17 @@ ${footer}
 
     // gabungkan semua audio jadi satu file
     const listFile = "/tmp/audio_list.txt";
-    fs.writeFileSync(listFile, audioFiles.map(f => `file '${f}'`).join("\n"));
+    fs.writeFileSync(listFile, audioFiles.map((f) => `file '${f}'`).join("\n"));
 
     const finalAudio = "/tmp/final_audio.mp3";
     await new Promise((resolve, reject) => {
-      exec(`ffmpeg -y -f concat -safe 0 -i ${listFile} -c copy ${finalAudio}`, (err) => {
-        if (err) reject(err);
-        else resolve();
-      });
+      exec(
+        `ffmpeg -y -f concat -safe 0 -i ${listFile} -c copy ${finalAudio}`,
+        (err) => {
+          if (err) reject(err);
+          else resolve();
+        }
+      );
     });
 
     // kirim audio final
@@ -76,9 +79,6 @@ ${footer}
     });
   }
 }
-
-
-
 
 // konfigurasi retry
 axiosRetry(axios, {
@@ -303,27 +303,27 @@ export function emphasizeArabic(text) {
 }
 
 // kirim n ayat berurutan
-export async function sendAyatLoop(surat, startAyat, n, sock, from) {
-  for (let i = 0; i < n; i++) {
-    const currentAyat = parseInt(startAyat) + i;
+// export async function sendAyatLoop(surat, startAyat, n, sock, from) {
+//   for (let i = 0; i < n; i++) {
+//     const currentAyat = parseInt(startAyat) + i;
 
-    const result = await getSuratAyat(surat, currentAyat);
-    if (result && result.data && result.data[0]) {
-      const ayatData = result.data[0];
+//     const result = await getSuratAyat(surat, currentAyat);
+//     if (result && result.data && result.data[0]) {
+//       const ayatData = result.data[0];
 
-      const message = `
-📖 *${result.info.surat.nama.id} (${result.info.surat.id}):${ayatData.ayah} | Juz: ${ayatData.juz}*
+//       const message = `
+// 📖 *${result.info.surat.nama.id} (${result.info.surat.id}):${ayatData.ayah} | Juz: ${ayatData.juz}*
 
-🕌 
-${ayatData.arab}
+// 🕌
+// ${ayatData.arab}
 
-🌐 
-${ayatData.text}
+// 🌐
+// ${ayatData.text}
 
-🔤 
-*${result.info.surat.relevasi}, ${result.info.surat.ayat_max} ayat*`;
+// 🔤
+// *${result.info.surat.relevasi}, ${result.info.surat.ayat_max} ayat*`;
 
-      // kirim teks
+// kirim teks
 //       await sock.sendMessage(from, { text: message });
 
 //       // kirim audio
