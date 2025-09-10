@@ -2,6 +2,84 @@ import axios from "axios";
 import axiosRetry from "axios-retry";
 import { toHijri } from "hijri-converter";
 
+import fs from "fs";
+import { exec } from "child_process";
+import fetch from "node-fetch";
+
+export async function sendAyatLoop(surat, startAyat, n, sock, from) {
+  let allArabic = "";
+  let allTranslation = "";
+  let header = "";
+  let footer = "";
+  let audioFiles = [];
+
+  for (let i = 0; i < n; i++) {
+    const currentAyat = parseInt(startAyat) + i;
+    const result = await getSuratAyat(surat, currentAyat);
+
+    if (result && result.data && result.data[0]) {
+      const ayatData = result.data[0];
+
+      // header/footer sekali saja
+      if (!header) {
+        header = `📖 *${result.info.surat.nama.id} (${result.info.surat.id}) | Juz: ${ayatData.juz}*`;
+        footer = `🔤 *${result.info.surat.relevasi}, ${result.info.surat.ayat_max} ayat*`;
+      }
+
+      // kumpul teks
+      allArabic += `${ayatData.arab}\n`;
+      allTranslation += `${ayatData.text}\n`;
+
+      // download audio tiap ayat
+      const res = await fetch(ayatData.audio);
+      const buffer = Buffer.from(await res.arrayBuffer());
+      const filePath = `/tmp/ayat_${currentAyat}.mp3`;
+      fs.writeFileSync(filePath, buffer);
+      audioFiles.push(filePath);
+    }
+  }
+
+  if (allArabic && allTranslation) {
+    const message = `
+${header}
+
+🕌 
+${allArabic}
+
+🌐 
+${allTranslation}
+
+${footer}
+`;
+
+    // kirim teks
+    await sock.sendMessage(from, { text: message });
+
+    // gabungkan semua audio jadi satu file
+    const listFile = "/tmp/audio_list.txt";
+    fs.writeFileSync(listFile, audioFiles.map(f => `file '${f}'`).join("\n"));
+
+    const finalAudio = "/tmp/final_audio.mp3";
+    await new Promise((resolve, reject) => {
+      exec(`ffmpeg -y -f concat -safe 0 -i ${listFile} -c copy ${finalAudio}`, (err) => {
+        if (err) reject(err);
+        else resolve();
+      });
+    });
+
+    // kirim audio final
+    const buffer = fs.readFileSync(finalAudio);
+    await sock.sendMessage(from, {
+      audio: buffer,
+      mimetype: "audio/mpeg",
+      caption: header,
+    });
+  }
+}
+
+
+
+
 // konfigurasi retry
 axiosRetry(axios, {
   retries: 3, // maksimal 3x coba ulang
@@ -246,30 +324,30 @@ ${ayatData.text}
 *${result.info.surat.relevasi}, ${result.info.surat.ayat_max} ayat*`;
 
       // kirim teks
-      await sock.sendMessage(from, { text: message });
+//       await sock.sendMessage(from, { text: message });
 
-      // kirim audio
-      try {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 10000); // 10 detik
-        const res = await fetch(ayatData.audio, { signal: controller.signal });
-        const buffer = Buffer.from(await res.arrayBuffer());
+//       // kirim audio
+//       try {
+//         const controller = new AbortController();
+//         const timeout = setTimeout(() => controller.abort(), 10000); // 10 detik
+//         const res = await fetch(ayatData.audio, { signal: controller.signal });
+//         const buffer = Buffer.from(await res.arrayBuffer());
 
-        await sock.sendMessage(from, {
-          audio: buffer,
-          mimetype: "audio/mpeg",
-          caption: message,
-        });
+//         await sock.sendMessage(from, {
+//           audio: buffer,
+//           mimetype: "audio/mpeg",
+//           caption: message,
+//         });
 
-        clearTimeout(timeout);
-      } catch (err) {
-        console.error(`❌ Error fetch audio ayat ${currentAyat}:`, err.message);
-      }
-    } else {
-      console.log(`⚠️ Ayat ${currentAyat} tidak ditemukan`);
-    }
-  }
-}
+//         clearTimeout(timeout);
+//       } catch (err) {
+//         console.error(`❌ Error fetch audio ayat ${currentAyat}:`, err.message);
+//       }
+//     } else {
+//       console.log(`⚠️ Ayat ${currentAyat} tidak ditemukan`);
+//     }
+//   }
+// }
 
 // module.exports = {
 //   getSholatByLocation,
