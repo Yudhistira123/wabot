@@ -25,9 +25,8 @@ export async function sendAyatLoop(surat, startAyat, n, sock, from) {
       if (firstAyat === null) firstAyat = ayatData.ayah;
       lastAyat = ayatData.ayah;
 
-      // header/footer sekali saja
       if (!header) {
-        header = `📖 *${result.info.surat.nama.id} (${result.info.surat.id})|Ayat ${firstAyat}–${lastAyat}|Juz: ${ayatData.juz}*`;
+        header = `📖 *${result.info.surat.nama.id} (${result.info.surat.id})|Juz: ${ayatData.juz}*`;
 
         footer = `🔤 *${result.info.surat.relevasi}, ${result.info.surat.ayat_max} ayat*`;
       }
@@ -44,6 +43,10 @@ export async function sendAyatLoop(surat, startAyat, n, sock, from) {
       audioFiles.push(filePath);
     }
   }
+
+  // header/footer sekali saja
+
+  header += `|Ayat ${firstAyat}–${lastAyat}`;
 
   if (allArabic && allTranslation) {
     const message = `
