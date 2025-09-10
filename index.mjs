@@ -345,7 +345,8 @@ async function startBot() {
         } else {
           // Hanya 1 ayat, contoh "5"
           startAyat = parseInt(ayatPart);
-          endAyat = startAyat;
+          // endAyat = startAyat;
+          endAyat = 1;
         }
         //--- mulai looping
         // const result = await getSuratAyat(surat, ayat);
