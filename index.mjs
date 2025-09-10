@@ -27,6 +27,7 @@ import {
   formatDoa,
   getSuratAyat,
   getNoSurat,
+  sendAyatLoop,
 } from "./utils/sholat.js";
 
 // const {
@@ -324,45 +325,47 @@ async function startBot() {
         //   const avatarUrl = await contact.getProfilePicUrl();
         //   await sendAvatar(client, participant, adminNumber, name, avatarUrl);
         // }
-      } else if (text.toLowerCase().startsWith("quran:")) {
-        const suratAyat = text.toLowerCase().replace("quran:", "").trim();
+      } else if (text.toLowerCase().startsWith("qs:")) {
+        const suratAyat = text.toLowerCase().replace("qs:", "").trim();
         const parts = suratAyat.split("/");
         const surat = parts[0];
         const ayat = parts[1];
-        const result = await getSuratAyat(surat, ayat);
-        // console.log("Hasil API MyQuran:", result.info.surat);
+        //--- mulai looping
+        // const result = await getSuratAyat(surat, ayat);
+        await sendAyatLoop(surat, ayat, 5, sock, from);
 
-        if (result && result.data && result.data[0]) {
-          const ayatData = result.data[0];
-          const message = `
-📖 *${result.info.surat.nama.id} (${result.info.surat.id}):${ayatData.ayah} | Juz: ${ayatData.juz}*
+        //         if (result && result.data && result.data[0]) {
+        //           const ayatData = result.data[0];
+        //           const message = `
+        // 📖 *${result.info.surat.nama.id} (${result.info.surat.id}):${ayatData.ayah} | Juz: ${ayatData.juz}*
 
-🕌 
-${ayatData.arab}
+        // 🕌
+        // ${ayatData.arab}
 
-🌐 
-${ayatData.text}
+        // 🌐
+        // ${ayatData.text}
 
-🔤 
-*${result.info.surat.relevasi},  ${result.info.surat.ayat_max} ayat*`;
+        // 🔤
+        // *${result.info.surat.relevasi},  ${result.info.surat.ayat_max} ayat*`;
 
-          await sock.sendMessage(from, { text: message });
-          //
-          const controller = new AbortController();
-          const timeout = setTimeout(() => controller.abort(), 10000); // 10 detik
+        //           await sock.sendMessage(from, { text: message });
+        //           //
+        //           const controller = new AbortController();
+        //           const timeout = setTimeout(() => controller.abort(), 10000); // 10 detik
+        //           const res = await fetch(ayatData.audio, {
+        //             signal: controller.signal,
+        //           });
+        //           const buffer = Buffer.from(await res.arrayBuffer());
+        //           await sock.sendMessage(from, {
+        //             audio: buffer,
+        //             mimetype: "audio/mpeg",
+        //             caption: message,
+        //           });
 
-          const res = await fetch(ayatData.audio, {
-            signal: controller.signal,
-          });
-          const buffer = Buffer.from(await res.arrayBuffer());
-          await sock.sendMessage(from, {
-            audio: buffer,
-            mimetype: "audio/mpeg",
-            caption: message,
-          });
-        } else {
-          await sock.sendMessage(from, { text: "⚠️ Ayat tidak ditemukan." });
-        }
+        //           // end of loop
+        //         } else {
+        //           await sock.sendMessage(from, { text: "⚠️ Ayat tidak ditemukan." });
+        //         }
       } else if (text.toLowerCase().startsWith("qr:all")) {
         const data = await getNoSurat();
         if (!data) {

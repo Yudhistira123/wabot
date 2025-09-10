@@ -224,6 +224,53 @@ export function emphasizeArabic(text) {
     .join("");
 }
 
+// kirim n ayat berurutan
+export async function sendAyatLoop(surat, startAyat, n, sock, from) {
+  for (let i = 0; i < n; i++) {
+    const currentAyat = startAyat + i;
+
+    const result = await getSuratAyat(surat, currentAyat);
+    if (result && result.data && result.data[0]) {
+      const ayatData = result.data[0];
+
+      const message = `
+📖 *${result.info.surat.nama.id} (${result.info.surat.id}):${ayatData.ayah} | Juz: ${ayatData.juz}*
+
+🕌 
+${ayatData.arab}
+
+🌐 
+${ayatData.text}
+
+🔤 
+*${result.info.surat.relevasi}, ${result.info.surat.ayat_max} ayat*`;
+
+      // kirim teks
+      await sock.sendMessage(from, { text: message });
+
+      // kirim audio
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 10000); // 10 detik
+        const res = await fetch(ayatData.audio, { signal: controller.signal });
+        const buffer = Buffer.from(await res.arrayBuffer());
+
+        await sock.sendMessage(from, {
+          audio: buffer,
+          mimetype: "audio/mpeg",
+          caption: message,
+        });
+
+        clearTimeout(timeout);
+      } catch (err) {
+        console.error(`❌ Error fetch audio ayat ${currentAyat}:`, err.message);
+      }
+    } else {
+      console.log(`⚠️ Ayat ${currentAyat} tidak ditemukan`);
+    }
+  }
+}
+
 // module.exports = {
 //   getSholatByLocation,
 //   getKodeKota,
