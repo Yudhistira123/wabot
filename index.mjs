@@ -338,6 +338,10 @@ async function startBot() {
           const range = ayatPart.split("-");
           startAyat = parseInt(range[0]);
           endAyat = parseInt(range[1]);
+          // 🚨 Batasi maksimal 5 ayat
+          if (endAyat - startAyat > 4) {
+            endAyat = startAyat + 4;
+          }
         } else {
           // Hanya 1 ayat, contoh "5"
           startAyat = parseInt(ayatPart);
