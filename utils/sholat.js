@@ -12,6 +12,8 @@ export async function sendAyatLoop(surat, startAyat, n, sock, from) {
   let header = "";
   let footer = "";
   let audioFiles = [];
+  let firstAyat = null;
+  let lastAyat = null;
 
   for (let i = 0; i < n; i++) {
     const currentAyat = parseInt(startAyat) + i;
@@ -20,9 +22,13 @@ export async function sendAyatLoop(surat, startAyat, n, sock, from) {
     if (result && result.data && result.data[0]) {
       const ayatData = result.data[0];
 
+      if (firstAyat === null) firstAyat = ayatData.ayah;
+      lastAyat = ayatData.ayah;
+
       // header/footer sekali saja
       if (!header) {
-        header = `📖 *${result.info.surat.nama.id} (${result.info.surat.id}) | Juz: ${ayatData.juz}*`;
+        header = `📖 *${result.info.surat.nama.id} (${result.info.surat.id})|Ayat ${firstAyat}–${lastAyat}|Juz: ${ayatData.juz}*`;
+
         footer = `🔤 *${result.info.surat.relevasi}, ${result.info.surat.ayat_max} ayat*`;
       }
 
