@@ -69,6 +69,8 @@ import Fuse from "fuse.js";
 
 import { searchWithTFIDF } from "./utils/algoritma.js";
 
+import { getFilteredPOISorted } from "./utils/googleApi.js";
+
 // end of import
 
 let knowledgeBase = [];
@@ -186,7 +188,21 @@ async function startBot() {
         const replyMsg1 = formatAirQuality(description, data);
         const weather = await getWeather(latitude, longitude, apiKey);
         const replyMsg2 = await formatWeather(weather);
-        await sock.sendMessage(from, { text: replyMsg1 + "\n\n" + replyMsg2 });
+        //POI
+        const places = await getFilteredPOISorted(latitude, longitude, 1000);
+
+        // Format semua hasil jadi satu string
+        let replyMsg3 = "📍 *Hasil Penting Saat Turing*:\n\n";
+        places.slice(0, 20).forEach((p, i) => {
+          const mapsLink = `https://www.google.com/maps?q=${p.lat},${p.lon}`;
+          replyMsg3 += `${i + 1}. ${p.name} - 📏 ${
+            p.distance_km
+          } km\n👉 [Lihat di Maps](${mapsLink})\n\n`;
+        });
+
+        await sock.sendMessage(from, {
+          text: replyMsg1 + "\n\n" + replyMsg2 + "\n\n" + replyMsg3,
+        });
         // 4. Hasil Club Lari (Strava)
       } else if (text.toLowerCase() === "hasil club lari") {
         const CLUB_ID = "728531"; // ID Club Laris

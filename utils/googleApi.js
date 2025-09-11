@@ -1,29 +1,7 @@
 import fetch from "node-fetch"; // npm install node-fetch
 
-export async function getElevation(lat, lon) {
-  // const url = `https://maps.googleapis.com/maps/api/elevation/json?locations=${lat},${lon}&key=${apiKey}`;
-  const url = `https://api.opentopodata.org/v1/srtm90m?locations=${lat},${lon}`;
-
-  https: try {
-    const res = await fetch(url);
-    const data = await res.json();
-
-    if (data.status === "OK" && data.results.length > 0) {
-      const elevation = data.results[0].elevation;
-      return elevation; // dalam meter
-    } else {
-      throw new Error(`Google API error: ${data.status}`);
-    }
-  } catch (err) {
-    console.error("❌ Error fetching elevation:", err.message);
-    return null;
-  }
-}
-
 export function getDistance(lat1, lon1, lat2, lon2) {
-  const R = 6371; // Radius bumi dalam kilometer
-
-  // konversi derajat ke radian
+  const R = 6371; // km
   const toRad = (deg) => (deg * Math.PI) / 180;
 
   const dLat = toRad(lat2 - lat1);
@@ -36,26 +14,72 @@ export function getDistance(lat1, lon1, lat2, lon2) {
       Math.sin(dLon / 2) *
       Math.sin(dLon / 2);
 
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-  const distance = R * c;
-  return distance; // dalam kilometer
+  return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))); // km
 }
 
-// // 🔹 Contoh penggunaan:
+/**
+ * Ambil POI dari OSM hanya untuk kategori tertentu
+ * lalu sort berdasarkan kategori → distance
+ */
+export async function getFilteredPOISorted(lat, lon, radius = 1000) {
+  const categories = ["restaurant", "fast_food", "fuel", "bank"];
+
+  const query = `
+    [out:json];
+    (
+      node(around:${radius},${lat},${lon})[amenity=restaurant];
+      node(around:${radius},${lat},${lon})[amenity=fast_food];
+      node(around:${radius},${lat},${lon})[amenity=fuel];
+      node(around:${radius},${lat},${lon})[amenity=bank];
+    );
+    out;
+  `;
+
+  const url = "https://overpass-api.de/api/interpreter";
+
+  try {
+    const res = await fetch(url, { method: "POST", body: query });
+    const data = await res.json();
+
+    let places = data.elements.map((el) => ({
+      id: el.id,
+      name: el.tags?.name || "Tidak ada nama",
+      type: el.tags?.amenity || "unknown", // ✅ tambahkan kategori
+      lat: el.lat,
+      lon: el.lon,
+      distance_km: parseFloat(getDistance(lat, lon, el.lat, el.lon).toFixed(2)),
+    }));
+
+    // ✅ sort berdasarkan kategori dulu → jarak
+    places.sort((a, b) => {
+      const catA = categories.indexOf(a.type);
+      const catB = categories.indexOf(b.type);
+
+      if (catA === catB) {
+        return a.distance_km - b.distance_km; // urut jarak dalam kategori sama
+      }
+      return catA - catB; // urut kategori
+    });
+
+    return places;
+  } catch (err) {
+    console.error("❌ Error fetch Overpass API:", err.message);
+    return [];
+  }
+}
+
+// 🔹 Contoh penggunaan:
 // (async () => {
-//   const lat1 = -6.2,
-//     lon1 = 106.816; // Jakarta
+//   const lat = -6.8970504600460645;
+//   const lon = 107.58031439654695;
+//   const radius = 1000; // 1 km
 
-//   const lat2 = -6.911795100890996,
-//     lon2 = 107.60176888280753; // Bandung
-//   //   const lat2 = -7.797,
-//   //     lon2 = 110.37; // Yogyakarta
+//   const places = await getFilteredPOISorted(lat, lon, radius);
 
-//   const distance = getDistance(lat1, lon1, lat2, lon2);
-//   console.log(`📍 Jarak Jakarta - Yogyakarta: ${distance.toFixed(2)} km`);
-
-//   const elev1 = await getElevation(lat1, lon1);
-//   const elev2 = await getElevation(lat2, lon2);
-//   console.log(`🌄 Elevasi Jakarta: ${elev1} m, Bandung: ${elev2} m`);
+//   console.log("📍 Hasil pencarian (urut kategori → jarak):");
+//   places.slice(0, 20).forEach((p, i) => {
+//     console.log(
+//       `${i + 1}. ${p.name} - 📏 ${p.distance_km} km (${p.lat}, ${p.lon})`
+//     );
+//   });
 // })();
