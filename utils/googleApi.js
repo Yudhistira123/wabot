@@ -55,6 +55,8 @@ export async function getFilteredPOISorted(lat, lon, radius = 1000) {
       node(around:${radius},${lat},${lon})[amenity=fast_food];
       node(around:${radius},${lat},${lon})[amenity=fuel];
       node(around:${radius},${lat},${lon})[amenity=bank];
+      node(around:${radius},${lat},${lon})[amenity=cafe];
+      node(around:${radius},${lat},${lon})[amenity=hotel];
     );
     out;
   `;
