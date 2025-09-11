@@ -1,7 +1,29 @@
 import fetch from "node-fetch"; // npm install node-fetch
 
+export async function getElevation(lat, lon) {
+  // const url = `https://maps.googleapis.com/maps/api/elevation/json?locations=${lat},${lon}&key=${apiKey}`;
+  const url = `https://api.opentopodata.org/v1/srtm90m?locations=${lat},${lon}`;
+
+  https: try {
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (data.status === "OK" && data.results.length > 0) {
+      const elevation = data.results[0].elevation;
+      return elevation; // dalam meter
+    } else {
+      throw new Error(`Google API error: ${data.status}`);
+    }
+  } catch (err) {
+    console.error("❌ Error fetching elevation:", err.message);
+    return null;
+  }
+}
+
 export function getDistance(lat1, lon1, lat2, lon2) {
-  const R = 6371; // km
+  const R = 6371; // Radius bumi dalam kilometer
+
+  // konversi derajat ke radian
   const toRad = (deg) => (deg * Math.PI) / 180;
 
   const dLat = toRad(lat2 - lat1);
@@ -14,9 +36,11 @@ export function getDistance(lat1, lon1, lat2, lon2) {
       Math.sin(dLon / 2) *
       Math.sin(dLon / 2);
 
-  return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))); // km
-}
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
+  const distance = R * c;
+  return distance; // dalam kilometer
+}
 /**
  * Ambil POI dari OSM hanya untuk kategori tertentu
  * lalu sort berdasarkan kategori → distance
