@@ -192,10 +192,10 @@ async function startBot() {
         const places = await getFilteredPOISorted(latitude, longitude, 1000);
 
         // Format semua hasil jadi satu string
-        let replyMsg3 = "📍 *Tempat Penting Saat Turing*:\n\n";
+        let replyMsg3 = "📍 *Tempat Penting Saat Turing*\n\n";
         places.slice(0, 20).forEach((p, i) => {
           const mapsLink = `https://www.google.com/maps?q=${p.lat},${p.lon}`;
-          replyMsg3 += `${i + 1}. ${p.name} - 📏 ${
+          replyMsg3 += `${i + 1}. ${p.name}-${
             p.distance_km
           } km\n${mapsLink}\n\n`;
         });
