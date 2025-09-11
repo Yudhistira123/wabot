@@ -197,7 +197,7 @@ async function startBot() {
           const mapsLink = `https://www.google.com/maps?q=${p.lat},${p.lon}`;
           replyMsg3 += `${i + 1}. ${p.name} - 📏 ${
             p.distance_km
-          } km\n👉 [Lihat di Maps](${mapsLink})\n\n`;
+          } km\n👉${mapsLink}\n\n`;
         });
 
         await sock.sendMessage(from, {
