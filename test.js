@@ -30,17 +30,21 @@ export async function searchWithTFIDF(query, documents) {
 
 async function main() {
   // Load KB
-  const knowledgeBaseRudal = await loadKnowledgeBase("rudalrn01ss.csv");
+  const knowledgeBaseRudal = await loadKnowledgeBase("template_chatbot.csv");
   console.log("✅ Knowledge base loaded:", knowledgeBaseRudal.length);
 
-  const query = "spek dari rn01-ss";
+  //const query = "bagai mana cara untuk daftar beasiswa PBU";
+  const query = "bagaimana profile lulusan PUB";
 
   // ---- TF-IDF Search ----
   const tfidfResults = await searchWithTFIDF(query, knowledgeBaseRudal);
   console.log("TF-IDF Results:", tfidfResults.slice(0, 3)); // top 3
 
-  let tfidfBest = tfidfResults[0] || null;
-  let tfidfScore = tfidfBest ? tfidfBest.score : 0;
+  // ambil jawaban yang relevan (misalnya skor > 0.1 atau top 2 saja)
+  const tfidfBestAnswers = tfidfResults
+    .filter((r) => r.score > 0.1)
+    .slice(0, 2);
+  console.log("TF-IDF Best Answers:", tfidfBestAnswers);
 
   // ---- Fuse.js Search ----
   const fuse = new Fuse(knowledgeBaseRudal, {
@@ -49,22 +53,55 @@ async function main() {
     includeScore: true,
   });
   const fuseResults = fuse.search(query);
-  let fuseBest = null;
-  let fuseScore = 1; // default worst
-  if (fuseResults.length > 0) {
-    fuseBest = fuseResults[0].item;
-    fuseScore = fuseResults[0].score; // 0 best, 1 worst
-  }
+  const fuseBestAnswers = fuseResults.slice(0, 2).map((r) => r.item); // ambil 2 teratas
+  console.log("Fuse Best Answers:", fuseBestAnswers);
 
-  // // ---- Combine Scores ----
-  // // Normalize: TFIDF (higher=better), Fuse (lower=better → invert)
-  const finalScoreTFIDF = tfidfScore; // already high=good
-  const finalScoreFuse = 1 - fuseScore; // invert Fuse
+  // ---- Merge hasil ----
+  let finalAnswers = [
+    ...tfidfBestAnswers.map((a) => a.answer),
+    ...fuseBestAnswers.map((a) => a.answer),
+  ];
 
-  console.log("TF-IDF Best:", tfidfBest);
-  console.log("Fuse Best:", fuseBest);
-  console.log("TF-IDF Score:", finalScoreTFIDF);
-  console.log("Fuse Score:", finalScoreFuse);
+  // hilangkan duplikat
+
+  finalAnswers = [...new Set(finalAnswers)];
+  let formattedAnswer = "🔎 Saya temukan beberapa jawaban terkait:\n";
+  finalAnswers.forEach((ans, i) => {
+    formattedAnswer += `${i + 1}. ${ans}\n`;
+  });
+
+  console.log("Final Answers:", formattedAnswer);
+
+  // ---- TF-IDF Search ----
+  // const tfidfResults = await searchWithTFIDF(query, knowledgeBaseRudal);
+  // console.log("TF-IDF Results:", tfidfResults.slice(0, 3)); // top 3
+
+  // let tfidfBest = tfidfResults[0] || null;
+  // let tfidfScore = tfidfBest ? tfidfBest.score : 0;
+
+  // // ---- Fuse.js Search ----
+  // const fuse = new Fuse(knowledgeBaseRudal, {
+  //   keys: ["question"],
+  //   threshold: 0.4,
+  //   includeScore: true,
+  // });
+  // const fuseResults = fuse.search(query);
+  // let fuseBest = null;
+  // let fuseScore = 1; // default worst
+  // if (fuseResults.length > 0) {
+  //   fuseBest = fuseResults[0].item;
+  //   fuseScore = fuseResults[0].score; // 0 best, 1 worst
+  // }
+
+  // // // ---- Combine Scores ----
+  // // // Normalize: TFIDF (higher=better), Fuse (lower=better → invert)
+  // const finalScoreTFIDF = tfidfScore; // already high=good
+  // const finalScoreFuse = 1 - fuseScore; // invert Fuse
+
+  // console.log("TF-IDF Best:", tfidfBest);
+  // console.log("Fuse Best:", fuseBest);
+  // console.log("TF-IDF Score:", finalScoreTFIDF);
+  // console.log("Fuse Score:", finalScoreFuse);
 
   // // Weighted combo (tweak weights as needed)
   // const combinedScore = 0.6 * finalScoreTFIDF + 0.4 * finalScoreFuse;

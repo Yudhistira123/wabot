@@ -35,7 +35,7 @@ export async function getClubInfo(CLUB_ID) {
       }
     );
 
-    //  console.log("📊 Club Info:", JSON.stringify(res.data, null, 2));
+    console.log("📊 Club Info:", JSON.stringify(res.data, null, 2));
     return res.data;
   } catch (err) {
     console.error("❌ Error getClubInfo:", err.message);
