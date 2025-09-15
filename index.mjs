@@ -505,15 +505,15 @@ async function startBot() {
       }
 
       // === Perintah START ===
-      else if (body.startsWith("!start")) {
-        const parts = body.split(" ");
+      else if (text.startsWith("!start")) {
+        const parts = text.split(" ");
         const key = parts[1]?.trim() || "mc1"; // default pakai mc1
         const msg = await startServer(key);
         sock.sendMessage(from, { text: msg }, { quoted: msgInfo });
       }
 
-      if (body.startsWith("!stop")) {
-        const parts = body.split(" ");
+      if (text.startsWith("!stop")) {
+        const parts = text.split(" ");
         const key = parts[1]?.trim() || "mc1";
         const msg = await stopServer(key);
         sock.sendMessage(from, { text: msg }, { quoted: msgInfo });
