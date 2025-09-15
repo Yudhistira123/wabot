@@ -94,6 +94,9 @@ process.env.GAI_CONF = "/etc/gai.conf";
 // const dns = require("dns");
 // dns.setDefaultResultOrder("ipv4first");
 
+const PANEL_API = "https://valofity.zakzz.web.id"; // ganti dengan URL Pterodactyl-mu
+const API_KEY = "ptlc_PmQFOSKoKWPop9p8QBW8pSRdnPPFJelIYzkPFbgadaB"; // API Key dari panel
+
 async function startBot() {
   const { state, saveCreds } = await useMultiFileAuthState("baileys_auth");
 
@@ -484,6 +487,74 @@ async function startBot() {
         } else {
           await sock.sendMessage(from, {
             text: "⚠️ Maaf, saya belum punya jawaban untuk pertanyaan itu.",
+          });
+        }
+      } // === Perintah STATUS ===
+      else if (text.startsWith("!status")) {
+        const serverId = text.split(" ")[1];
+        try {
+          const res = await fetch(
+            `${PANEL_API}/servers/${serverId}/resources`,
+            {
+              headers: {
+                Authorization: `Bearer ${API_KEY}`,
+                Accept: "application/json",
+              },
+            }
+          );
+          const data = await res.json();
+          await sock.sendMessage(from, {
+            text: `🖥 Server ${serverId} status: ${data.attributes.current_state}`,
+          });
+        } catch (err) {
+          await sock.sendMessage(from, {
+            text: `⚠️ Error ambil status: ${err.message}`,
+          });
+        }
+      }
+
+      // === Perintah START ===
+      else if (text.startsWith("!start")) {
+        const serverId = text.split(" ")[1];
+        try {
+          await fetch(`${PANEL_API}/servers/${serverId}/power`, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${API_KEY}`,
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ signal: "start" }),
+          });
+          await sock.sendMessage(from, {
+            text: `🚀 Server ${serverId} sedang dinyalakan...`,
+          });
+        } catch (err) {
+          await sock.sendMessage(from, {
+            text: `⚠️ Error start server: ${err.message}`,
+          });
+        }
+      }
+
+      // === Perintah STOP ===
+      else if (text.startsWith("!stop")) {
+        const serverId = text.split(" ")[1];
+        try {
+          await fetch(`${PANEL_API}/servers/${serverId}/power`, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${API_KEY}`,
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ signal: "stop" }),
+          });
+          await sock.sendMessage(from, {
+            text: `🛑 Server ${serverId} dimatikan.`,
+          });
+        } catch (err) {
+          await sock.sendMessage(from, {
+            text: `⚠️ Error stop server: ${err.message}`,
           });
         }
       }
