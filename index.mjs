@@ -97,6 +97,9 @@ process.env.GAI_CONF = "/etc/gai.conf";
 const PANEL_API =
   "https://valofity.zakzz.web.id/api/client/servers/mc1/resources"; // ganti dengan URL Pterodactyl-mu
 const API_KEY = "ptlc_PmQFOSKoKWPop9p8QBW8pSRdnPPFJelIYzkPFbgadaB"; // API Key dari panel
+const serverMap = {
+  mc1: "b81775cb", // alias mc1 untuk server Faraz Sanhua
+};
 
 async function startBot() {
   const { state, saveCreds } = await useMultiFileAuthState("baileys_auth");
@@ -608,10 +611,6 @@ async function startBot() {
     }
   });
 }
-
-const serverMap = {
-  mc1: "b81775cb", // alias mc1 untuk server Faraz Sanhua
-};
 
 async function getServerStatus(serverKey) {
   const serverId = serverMap[serverKey] || serverKey; // pakai mapping atau langsung id
