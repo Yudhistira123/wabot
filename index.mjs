@@ -103,7 +103,7 @@ async function startBot() {
 
   const sock = makeWASocket({
     auth: state,
-    // jangan pakai printQRInTerminal
+    // jangan pakai printQRInTerminal test
   });
 
   // Save creds setiap ada update
