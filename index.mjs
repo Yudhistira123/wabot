@@ -96,7 +96,10 @@ process.env.GAI_CONF = "/etc/gai.conf";
 
 const PANEL_API =
   "https://valofity.zakzz.web.id/api/client/servers/mc1/resources"; // ganti dengan URL Pterodactyl-mu
-const API_KEY = "ptlc_PmQFOSKoKWPop9p8QBW8pSRdnPPFJelIYzkPFbgadaB"; // API Key dari panel
+const API_KEY = "ptlc_vzwA4AE4fHLvYpatWNgwjQj6TUPgbOEbFPMajI2DLsl"; // API Key dari panel
+
+// const PANEL_API = "https://valofity.zakzz.web.id"; // ganti dengan URL Pterodactyl-mu
+// const API_KEY = "ptlc_vzwA4AE4fHLvYpatWNgwjQj6TUPgbOEbFPMajI2DLsl"; // API Key dari panel
 
 const serverMap = {
   mc1: "b81775cb", // alias mc1 → server ID
