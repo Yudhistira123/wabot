@@ -574,7 +574,7 @@ async function startBot() {
 async function getServerStatus(key) {
   try {
     const res = await fetch(
-      `https://valofity.zakzz.web.id/api/client/servers/${servers[key]}/resources`,
+      `https://valofity.zakzz.web.id/api/client/servers/${serverMap[key]}/resources`,
       {
         headers: {
           Authorization: `Bearer ${API_KEY}`,
