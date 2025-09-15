@@ -609,7 +609,13 @@ async function startBot() {
   });
 }
 
-async function getServerStatus(serverId) {
+const serverMap = {
+  mc1: "b81775cb", // alias mc1 untuk server Faraz Sanhua
+};
+
+async function getServerStatus(serverKey) {
+  const serverId = serverMap[serverKey] || serverKey; // pakai mapping atau langsung id
+
   const res = await fetch(
     `https://valofity.zakzz.web.id/api/client/servers/${serverId}/resources`,
     {
@@ -621,18 +627,21 @@ async function getServerStatus(serverId) {
   );
 
   const data = await res.json();
+
+  if (!data || !data.attributes) {
+    return `⚠️ Gagal ambil status server ${serverKey}. Respon tidak valid.`;
+  }
+
   const attr = data.attributes;
 
-  const msg = `
-🖥️ Server ID: ${serverId}
+  return `
+🖥️ Server: ${serverKey}
 📌 Status: ${attr.current_state}
 💾 RAM: ${(attr.resources.memory_bytes / 1024 / 1024).toFixed(2)} MB
 💿 Disk: ${(attr.resources.disk_bytes / 1024 / 1024).toFixed(2)} MB
 ⚡ CPU: ${attr.resources.cpu_absolute} %
 ⏱️ Uptime: ${Math.floor(attr.resources.uptime / 1000)} detik
     `.trim();
-
-  return msg;
 }
 
 startBot();
