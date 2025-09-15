@@ -500,7 +500,7 @@ async function startBot() {
         const parts = text.split(" ");
         const key = parts[1]?.trim() || "b81775cb"; // default ke 1 server
 
-        const statusMsg = await getServerStatus(key);
+        const replyMsg = await getServerStatus(key);
 
         //const replyMsg = await getServerStatus("mc1");
         await sock.sendMessage(
