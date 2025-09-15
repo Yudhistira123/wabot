@@ -495,10 +495,10 @@ async function startBot() {
         const serverMap = {
           mc1: "b81775cb", // alias mc1 untuk server Faraz Sanhua
         };
-        // const parts = text.split(" ");
-        // const key = parts[1]?.trim() || "b81775cb"; // default ke 1 server
+        const parts = text.split(" ");
+        const key = parts[1]?.trim() || "b81775cb"; // default ke 1 server
 
-        const statusMsg = await getServerStatus(serverMap);
+        const statusMsg = await getServerStatus(key);
         await sock.sendMessage(msg.key.remoteJid, { text: statusMsg });
         // const serverId = text.split(" ")[1];
         // try {
