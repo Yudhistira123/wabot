@@ -102,7 +102,7 @@ const API_KEY = "ptlc_vzwA4AE4fHLvYpatWNgwjQj6TUPgbOEbFPMajI2DLsl"; // API Key d
 // const API_KEY = "ptlc_vzwA4AE4fHLvYpatWNgwjQj6TUPgbOEbFPMajI2DLsl"; // API Key dari panel
 
 const serverMap = {
-  mc1: "b81775cb", // alias mc1 → server ID
+  mc1: "2954ae8b", // alias mc1 → server ID
   // bisa tambah alias lain di sini
 };
 
