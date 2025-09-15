@@ -501,7 +501,15 @@ async function startBot() {
         const key = parts[1]?.trim() || "b81775cb"; // default ke 1 server
 
         const statusMsg = await getServerStatus(key);
-        await sock.sendMessage(from, { text: msg });
+
+        //const replyMsg = await getServerStatus("mc1");
+        await sock.sendMessage(
+          from,
+          { text: replyMsg },
+          msg ? { quoted: msg } : {}
+        );
+
+        //  await sock.sendMessage(from, { text: msg });
       }
 
       // === Perintah START ===
@@ -576,12 +584,18 @@ async function getServerStatus(key) {
     );
 
     const data = await res.json();
+
     if (!data.attributes) {
-      return `⚠️ Gagal ambil status server *${key}*. Respon tidak valid.`;
+      return `⚠️ Gagal ambil status server *${key}* (respon tidak valid).`;
     }
 
-    const attr = data.attributes;
-    return `📌 Status server *${key}*\n- State: ${attr.current_state}\n- CPU: ${attr.resources.cpu_absolute}%\n- RAM: ${attr.resources.memory_bytes} MB`;
+    const { current_state, resources } = data.attributes;
+
+    return `📌 Status server *${key}*:
+- State: ${current_state}
+- CPU: ${resources.cpu_absolute}%
+- RAM: ${(resources.memory_bytes / 1024 / 1024).toFixed(2)} MB
+- Disk: ${(resources.disk_bytes / 1024 / 1024).toFixed(2)} MB`;
   } catch (err) {
     return `⚠️ Error ambil status server *${key}*: ${err.message}`;
   }
