@@ -492,26 +492,31 @@ async function startBot() {
         }
       } // === Perintah STATUS ===
       else if (text.startsWith("!status")) {
-        const serverId = text.split(" ")[1];
-        try {
-          const res = await fetch(
-            `${PANEL_API}/servers/${serverId}/resources`,
-            {
-              headers: {
-                Authorization: `Bearer ${API_KEY}`,
-                Accept: "application/json",
-              },
-            }
-          );
-          const data = await res.json();
-          await sock.sendMessage(from, {
-            text: `🖥 Server ${serverId} status: ${data.attributes.current_state}`,
-          });
-        } catch (err) {
-          await sock.sendMessage(from, {
-            text: `⚠️ Error ambil status: ${err.message}`,
-          });
-        }
+        const parts = text.split(" ");
+        const key = parts[1]?.trim() || "b81775cb"; // default ke 1 server
+
+        const statusMsg = await getServerStatus(key);
+        await sock.sendMessage(msg.key.remoteJid, { text: statusMsg });
+        // const serverId = text.split(" ")[1];
+        // try {
+        //   const res = await fetch(
+        //     `${PANEL_API}/servers/${serverId}/resources`,
+        //     {
+        //       headers: {
+        //         Authorization: `Bearer ${API_KEY}`,
+        //         Accept: "application/json",
+        //       },
+        //     }
+        //   );
+        //   const data = await res.json();
+        //   await sock.sendMessage(from, {
+        //     text: `🖥 Server ${serverId} status: ${data.attributes.current_state}`,
+        //   });
+        // } catch (err) {
+        //   await sock.sendMessage(from, {
+        //     text: `⚠️ Error ambil status: ${err.message}`,
+        //   });
+        // }
       }
 
       // === Perintah START ===
@@ -602,6 +607,32 @@ async function startBot() {
       // personal
     }
   });
+}
+
+async function getServerStatus(serverId) {
+  const res = await fetch(
+    `https://valofity.zakzz.web.id/api/client/servers/${serverId}/resources`,
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.PTERO_API_KEY}`,
+        Accept: "application/json",
+      },
+    }
+  );
+
+  const data = await res.json();
+  const attr = data.attributes;
+
+  const msg = `
+🖥️ Server ID: ${serverId}
+📌 Status: ${attr.current_state}
+💾 RAM: ${(attr.resources.memory_bytes / 1024 / 1024).toFixed(2)} MB
+💿 Disk: ${(attr.resources.disk_bytes / 1024 / 1024).toFixed(2)} MB
+⚡ CPU: ${attr.resources.cpu_absolute} %
+⏱️ Uptime: ${Math.floor(attr.resources.uptime / 1000)} detik
+    `.trim();
+
+  return msg;
 }
 
 startBot();
