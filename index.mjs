@@ -563,35 +563,28 @@ async function startBot() {
   });
 }
 
-async function getServerStatus(serverKey) {
-  const serverId = serverMap[serverKey] || serverKey; // pakai mapping atau langsung id
+async function getServerStatus(key) {
+  try {
+    const res = await fetch(
+      `https://valofity.zakzz.web.id/api/client/servers/${servers[key]}/resources`,
+      {
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+          Accept: "application/json",
+        },
+      }
+    );
 
-  const res = await fetch(
-    `https://valofity.zakzz.web.id/api/client/servers/${serverId}/resources`,
-    {
-      headers: {
-        Authorization: `Bearer ${process.env.PTERO_API_KEY || API_KEY}`,
-        Accept: "application/json",
-      },
+    const data = await res.json();
+    if (!data.attributes) {
+      return `⚠️ Gagal ambil status server *${key}*. Respon tidak valid.`;
     }
-  );
 
-  const data = await res.json();
-
-  if (!data || !data.attributes) {
-    return `⚠️ Gagal ambil status server ${serverKey}. Respon tidak valid.`;
+    const attr = data.attributes;
+    return `📌 Status server *${key}*\n- State: ${attr.current_state}\n- CPU: ${attr.resources.cpu_absolute}%\n- RAM: ${attr.resources.memory_bytes} MB`;
+  } catch (err) {
+    return `⚠️ Error ambil status server *${key}*: ${err.message}`;
   }
-
-  const attr = data.attributes;
-
-  return `
-🖥️ Server: ${serverKey}
-📌 Status: ${attr.current_state}
-💾 RAM: ${(attr.resources.memory_bytes / 1024 / 1024).toFixed(2)} MB
-💿 Disk: ${(attr.resources.disk_bytes / 1024 / 1024).toFixed(2)} MB
-⚡ CPU: ${attr.resources.cpu_absolute} %
-⏱️ Uptime: ${Math.floor(attr.resources.uptime / 1000)} detik
-    `.trim();
 }
 
 // Start server
