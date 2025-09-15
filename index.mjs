@@ -502,72 +502,21 @@ async function startBot() {
 
         const statusMsg = await getServerStatus(key);
         await sock.sendMessage(msg.key.remoteJid, { text: statusMsg });
-        // const serverId = text.split(" ")[1];
-        // try {
-        //   const res = await fetch(
-        //     `${PANEL_API}/servers/${serverId}/resources`,
-        //     {
-        //       headers: {
-        //         Authorization: `Bearer ${API_KEY}`,
-        //         Accept: "application/json",
-        //       },
-        //     }
-        //   );
-        //   const data = await res.json();
-        //   await sock.sendMessage(from, {
-        //     text: `🖥 Server ${serverId} status: ${data.attributes.current_state}`,
-        //   });
-        // } catch (err) {
-        //   await sock.sendMessage(from, {
-        //     text: `⚠️ Error ambil status: ${err.message}`,
-        //   });
-        // }
       }
 
       // === Perintah START ===
-      else if (text.startsWith("!start")) {
-        const serverId = text.split(" ")[1];
-        try {
-          await fetch(`${PANEL_API}/servers/${serverId}/power`, {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${API_KEY}`,
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ signal: "start" }),
-          });
-          await sock.sendMessage(from, {
-            text: `🚀 Server ${serverId} sedang dinyalakan...`,
-          });
-        } catch (err) {
-          await sock.sendMessage(from, {
-            text: `⚠️ Error start server: ${err.message}`,
-          });
-        }
+      else if (body.startsWith("!start")) {
+        const parts = body.split(" ");
+        const key = parts[1]?.trim() || "mc1"; // default pakai mc1
+        const msg = await startServer(key);
+        sock.sendMessage(from, { text: msg }, { quoted: msgInfo });
       }
 
-      // === Perintah STOP ===
-      else if (text.startsWith("!stop")) {
-        const serverId = text.split(" ")[1];
-        try {
-          await fetch(`${PANEL_API}/servers/${serverId}/power`, {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${API_KEY}`,
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ signal: "stop" }),
-          });
-          await sock.sendMessage(from, {
-            text: `🛑 Server ${serverId} dimatikan.`,
-          });
-        } catch (err) {
-          await sock.sendMessage(from, {
-            text: `⚠️ Error stop server: ${err.message}`,
-          });
-        }
+      if (body.startsWith("!stop")) {
+        const parts = body.split(" ");
+        const key = parts[1]?.trim() || "mc1";
+        const msg = await stopServer(key);
+        sock.sendMessage(from, { text: msg }, { quoted: msgInfo });
       }
 
       // let tanya = "";
@@ -643,6 +592,58 @@ async function getServerStatus(serverKey) {
 ⚡ CPU: ${attr.resources.cpu_absolute} %
 ⏱️ Uptime: ${Math.floor(attr.resources.uptime / 1000)} detik
     `.trim();
+}
+
+// Start server
+async function startServer(serverKey) {
+  const serverId = serverMap[serverKey] || serverKey;
+
+  const res = await fetch(
+    `https://valofity.zakzz.web.id/api/client/servers/${serverId}/power`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.PTERO_API_KEY || API_KEY}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ signal: "start" }),
+    }
+  );
+
+  if (!res.ok) {
+    const err = await res.text();
+    console.log("DEBUG start error:", err);
+    return `⚠️ Gagal start server ${serverKey}`;
+  }
+
+  return `🟢 Server ${serverKey} sedang di-*start*...`;
+}
+
+// Stop server
+async function stopServer(serverKey) {
+  const serverId = serverMap[serverKey] || serverKey;
+
+  const res = await fetch(
+    `https://valofity.zakzz.web.id/api/client/servers/${serverId}/power`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.PTERO_API_KEY || API_KEY}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ signal: "stop" }),
+    }
+  );
+
+  if (!res.ok) {
+    const err = await res.text();
+    console.log("DEBUG stop error:", err);
+    return `⚠️ Gagal stop server ${serverKey}`;
+  }
+
+  return `🔴 Server ${serverKey} sedang di-*stop*...`;
 }
 
 startBot();
