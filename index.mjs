@@ -501,7 +501,7 @@ async function startBot() {
         const key = parts[1]?.trim() || "b81775cb"; // default ke 1 server
 
         const statusMsg = await getServerStatus(key);
-        await sock.sendMessage(msg.key.remoteJid, { text: msg });
+        await sock.sendMessage(from, { text: msg });
       }
 
       // === Perintah START ===
@@ -509,14 +509,14 @@ async function startBot() {
         const parts = text.split(" ");
         const key = parts[1]?.trim() || "mc1"; // default pakai mc1
         const msg = await startServer(key);
-        sock.sendMessage(from, { text: msg }, { quoted: msg });
+        sock.sendMessage(from, { text: msg });
       }
 
       if (text.startsWith("!stop")) {
         const parts = text.split(" ");
         const key = parts[1]?.trim() || "mc1";
         const msg = await stopServer(key);
-        sock.sendMessage(from, { text: msg }, { quoted: msgInfo });
+        sock.sendMessage(from, { text: msg });
       }
 
       // let tanya = "";
