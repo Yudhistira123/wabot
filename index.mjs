@@ -241,24 +241,26 @@ async function startBot() {
         const surat = parseInt(parts[0]); // nomor surat
         const ayatPart = parts[1]; // bisa "5" atau "5-8"
 
-        let startAyat, endAyat;
+        let startAyat, endAyat, banyakAyat;
 
         if (ayatPart.includes("-")) {
           // Range ayat, contoh "5-8"
           const range = ayatPart.split("-");
           startAyat = parseInt(range[0]);
           endAyat = parseInt(range[1]);
+          banyakAyat = endAyat - startAyat + 1;
           // 🚨 Batasi maksimal 5 ayat
-          if (endAyat - startAyat > 4) {
-            endAyat = startAyat + 4;
+          if (endAyat - startAyat > 5) {
+            banyakAyat = startAyat + 4;
           }
         } else {
           // Hanya 1 ayat, contoh "5"
           startAyat = parseInt(ayatPart);
           // endAyat = startAyat;
-          endAyat = 1;
+          banyakAyat = startAyat;
+          // endAyat = 1;
         }
-        await sendAyatLoop(surat, startAyat, endAyat, sock, from);
+        await sendAyatLoop(surat, startAyat, banyakAyat, sock, from);
       } else if (text.toLowerCase().startsWith("qsall")) {
         const data = await getNoSurat();
         if (!data) {
