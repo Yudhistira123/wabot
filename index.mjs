@@ -71,6 +71,8 @@ import { searchWithTFIDF } from "./utils/algoritma.js";
 
 import { getFilteredPOISorted } from "./utils/googleApi.js";
 
+import { openKelas, absen, daftarHadir, endKelas } from "./utils/attendance.js";
+
 // end of import
 
 let knowledgeBase = [];
@@ -183,7 +185,8 @@ async function startBot() {
         const tesxdoa = formatDoa(doa);
         await sock.sendMessage(from, { text: tesxdoa });
         // 3. Cek kualitas udara dan cuaca berdasarkan lokasi
-      } else if (msg.message.locationMessage) {
+        // } else if (msg.message.locationMessage) {
+      } else if (text.toLowerCase().startsWith("xxxxx")) {
         const loc = msg.message.locationMessage;
         const latitude = loc.degreesLatitude;
         const longitude = loc.degreesLongitude;
@@ -376,42 +379,7 @@ async function startBot() {
           // endAyat = startAyat;
           endAyat = 1;
         }
-        //--- mulai looping
-        // const result = await getSuratAyat(surat, ayat);
         await sendAyatLoop(surat, startAyat, endAyat, sock, from);
-
-        //         if (result && result.data && result.data[0]) {
-        //           const ayatData = result.data[0];
-        //           const message = `
-        // 📖 *${result.info.surat.nama.id} (${result.info.surat.id}):${ayatData.ayah} | Juz: ${ayatData.juz}*
-
-        // 🕌
-        // ${ayatData.arab}
-
-        // 🌐
-        // ${ayatData.text}
-
-        // 🔤
-        // *${result.info.surat.relevasi},  ${result.info.surat.ayat_max} ayat*`;
-
-        //           await sock.sendMessage(from, { text: message });
-        //           //
-        //           const controller = new AbortController();
-        //           const timeout = setTimeout(() => controller.abort(), 10000); // 10 detik
-        //           const res = await fetch(ayatData.audio, {
-        //             signal: controller.signal,
-        //           });
-        //           const buffer = Buffer.from(await res.arrayBuffer());
-        //           await sock.sendMessage(from, {
-        //             audio: buffer,
-        //             mimetype: "audio/mpeg",
-        //             caption: message,
-        //           });
-
-        //           // end of loop
-        //         } else {
-        //           await sock.sendMessage(from, { text: "⚠️ Ayat tidak ditemukan." });
-        //         }
       } else if (text.toLowerCase().startsWith("qsall")) {
         const data = await getNoSurat();
         if (!data) {
@@ -427,6 +395,39 @@ async function startBot() {
         await sock.sendMessage(from, { text: reply });
       }
       // !jadwalsholat <kota>
+      // absensi
+      else if (text.startsWith("/openkelas")) {
+        // contoh: /openkelas IF101 Lab-Komputer
+        const parts = text.split(" ");
+        const kode = parts[1] || "UNKNOWN";
+        const ruang = parts.slice(2).join(" ") || "Tanpa Ruang";
+        // lokasi default (kampus)
+        // const lat = -6.89148,
+        //   lng = 107.61078;
+
+        const lat = -6.897134193872105,
+          lng = 107.5802957155738;
+        const reply = openKelas(from, kode, ruang, lat, lng);
+        await sock.sendMessage(from, { text: reply });
+      } else if (text === "/daftarhadir") {
+        const reply = daftarHadir(from);
+        await sock.sendMessage(from, { text: reply });
+      } else if (text === "/endkelas") {
+        const reply = endKelas(from);
+        await sock.sendMessage(from, { text: reply });
+      } else if (m.message.locationMessage) {
+        const loc = m.message.locationMessage;
+        const reply = absen(
+          from,
+          sender,
+          pushName,
+          loc.degreesLatitude,
+          loc.degreesLongitude
+        );
+        await sock.sendMessage(from, { text: reply });
+      }
+
+      // end absensi
     } else {
       console.log("Pesan dari personal:", text);
       if (text.toLowerCase() === "!ping") {
