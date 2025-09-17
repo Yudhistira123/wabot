@@ -253,6 +253,7 @@ async function startBot() {
           if (banyakAyat > 6) {
             banyakAyat = 5;
           }
+          console.log({ startAyat, endAyat, banyakAyat });
         } else {
           // Hanya 1 ayat, contoh "5"
           startAyat = parseInt(ayatPart);
