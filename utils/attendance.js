@@ -7,9 +7,9 @@ import {
   getAirQuality,
   interpretAQI,
   formatAirQuality,
-} from "./utils/airQualityService.cjs";
+} from "airQualityService.cjs";
 
-import { getWeather, formatWeather } from "./utils/weather.js";
+import { getWeather, formatWeather } from "weather.js";
 
 // helper untuk ambil nomor WA dari JID
 export async function jidToNumber(jid, sock) {
