@@ -71,7 +71,13 @@ import { searchWithTFIDF } from "./utils/algoritma.js";
 
 import { getFilteredPOISorted } from "./utils/googleApi.js";
 
-import { openKelas, absen, daftarHadir, endKelas } from "./utils/attendance.js";
+import {
+  openKelas,
+  absen,
+  daftarHadir,
+  endKelas,
+  jidToNumber,
+} from "./utils/attendance.js";
 
 // end of import
 
@@ -150,9 +156,11 @@ async function startBot() {
     const sender = msg.key.participant || msg.key.remoteJid;
     const pushName = msg.pushName || sender;
 
-    // const from = m.key.remoteJid;
-    // const sender = m.key.participant || m.key.remoteJid;
-    // const pushName = m.pushName || sender;
+    const nomorWA = await jidToNumber(sender, sock);
+    //const pushName = m.pushName || nomorWA;
+
+    console.log("Pesan dari grup:");
+    console.log({ nomor: nomorWA, nama: pushName });
 
     const text =
       msg.message.conversation || msg.message.extendedTextMessage?.text || "";

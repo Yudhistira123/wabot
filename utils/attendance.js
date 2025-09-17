@@ -4,21 +4,25 @@ import { fileURLToPath } from "url";
 import { jidDecode } from "@whiskeysockets/baileys";
 
 // helper untuk ambil nomor WA dari JID
-function jidToNumber(jid, sock) {
+export async function jidToNumber(jid, sock) {
   if (!jid) return null;
 
-  // kalau format normal
+  // kalau sudah format nomor normal
   if (jid.endsWith("@s.whatsapp.net")) {
     return jid.split("@")[0];
   }
 
-  // kalau format @lid, coba cari di contacts store
-  const contact = sock?.store?.contacts[jid];
-  if (contact?.id) {
-    return contact.id.split("@")[0]; // ambil nomor aslinya
+  // kalau masih lid, cek langsung ke WhatsApp
+  try {
+    const result = await sock.onWhatsApp(jid);
+    if (result && result[0] && result[0].jid) {
+      return result[0].jid.split("@")[0]; // nomor asli
+    }
+  } catch (e) {
+    console.error("onWhatsApp error:", e);
   }
 
-  // fallback: kembalikan ID mentah
+  // fallback terakhir
   return jid.split("@")[0];
 }
 
