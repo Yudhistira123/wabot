@@ -146,6 +146,8 @@ async function startBot() {
     if (!msg.message) return;
 
     const from = msg.key.remoteJid;
+    const sender = msg.sender || msg.author || msg.from; // varian field
+
     const text =
       msg.message.conversation || msg.message.extendedTextMessage?.text || "";
     console.log("📩 Message from", from, ":", text);
