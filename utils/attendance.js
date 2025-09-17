@@ -61,7 +61,7 @@ function haversineMeters(lat1, lon1, lat2, lon2) {
   return R * c;
 }
 function nowJakarta() {
-  return new Date()
+  return new Date()s
     .toLocaleString("sv-SE", { timeZone: "Asia/Jakarta" })
     .replace(" ", "T");
 }
@@ -146,8 +146,8 @@ export async function handleLocationMessage(msg, sock) {
       DB.hadir[from][sender] = {
         name: nama,
         no: nomor,
-        lat,
-        lng,
+        latitude,
+        longitude,
         distance: Math.round(dist) + " meter",
         time: nowJakarta(),
       };
