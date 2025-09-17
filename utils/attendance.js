@@ -131,8 +131,10 @@ export async function handleLocationMessage(msg, sock) {
   const from = msg.key.remoteJid;
   const sender = msg.key.participant;
   const sess = DB.sessions[from];
+
   // === FITUR 2: INFO LINGKUNGAN ===
   const loc = msg.message.locationMessage;
+  const nama = msg.pushName;
   const latitude = loc.degreesLatitude;
   const longitude = loc.degreesLongitude;
   const description = loc.name; // Deskripsi lokasi opsional
