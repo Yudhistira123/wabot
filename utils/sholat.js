@@ -37,7 +37,7 @@ export async function sendAyatLoop(surat, startAyat, n, sock, from) {
 
       allArabic += `${ayatData.ayah}. ${ayatData.arab}\n`;
       // translation pakai counter 1,2,3,...
-      allTranslation += `${i + 1}. ${ayatData.text}\n`;
+      allTranslation += `${ayatData.ayah}. ${ayatData.text}\n`;
 
       // download audio tiap ayat
       const res = await fetch(ayatData.audio);
