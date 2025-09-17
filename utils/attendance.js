@@ -4,13 +4,22 @@ import { fileURLToPath } from "url";
 import { jidDecode } from "@whiskeysockets/baileys";
 
 // helper untuk ambil nomor WA dari JID
-function jidToNumber(jid) {
+function jidToNumber(jid, sock) {
   if (!jid) return null;
-  const decode = jidDecode(jid);
-  if (decode?.user) {
-    return decode.user; // hasilnya string angka
+
+  // kalau format normal
+  if (jid.endsWith("@s.whatsapp.net")) {
+    return jid.split("@")[0];
   }
-  return jid.split("@")[0]; // fallback manual
+
+  // kalau format @lid, coba cari di contacts store
+  const contact = sock?.store?.contacts[jid];
+  if (contact?.id) {
+    return contact.id.split("@")[0]; // ambil nomor aslinya
+  }
+
+  // fallback: kembalikan ID mentah
+  return jid.split("@")[0];
 }
 
 const __filename = fileURLToPath(import.meta.url);
@@ -53,14 +62,15 @@ export function openKelas(from, kode, ruang, lat, lng) {
   return `✅ Kelas ${kode} di ${ruang} dibuka!`;
 }
 
-export function absen(from, sender, nama, lat, lng) {
+export function absen(from, sender, nama, lat, lng, sock) {
   const sess = DB.sessions[from];
   if (!sess) return "❌ Tidak ada kelas aktif.";
   const dist = haversineMeters(sess.lat, sess.lng, lat, lng);
+  const nomor = jidToNumber(sender, sock);
   if (dist < 700) {
     DB.hadir[from][sender] = {
       name: nama,
-      no: jidToNumber(sender),
+      no: nomor,
       lat,
       lng,
       distance: Math.round(dist) + " meter",
