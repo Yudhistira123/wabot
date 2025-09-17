@@ -431,7 +431,7 @@ async function startBot() {
           pushName,
           loc.degreesLatitude,
           loc.degreesLongitude,
-          x
+          sock
         );
         await sock.sendMessage(from, { text: reply });
       }
