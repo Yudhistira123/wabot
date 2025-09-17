@@ -4,21 +4,7 @@ import {
   DisconnectReason,
 } from "@whiskeysockets/baileys";
 
-// const {
-//   makeWASocket,
-//   useMultiFileAuthState,
-//   DisconnectReason,
-// } = require("@whiskeysockets/baileys");
-
-// const qrcode = require("qrcode-terminal");
 import qrcode from "qrcode-terminal";
-// const {
-//   getSholatByLocation,
-//   getKodeKota,
-//   getDoaAcak,
-//   formatDoa,
-//   getSuratAyat,
-// } = require("./utils/sholat");
 
 import {
   getSholatByLocation,
@@ -29,46 +15,12 @@ import {
   getNoSurat,
   sendAyatLoop,
 } from "./utils/sholat.js";
-
-// const {
-//   getAirQuality,
-//   interpretAQI,
-//   formatAirQuality,
-// } = require("./utils/airQualityService.cjs");
-
-// import {
-//   getAirQuality,
-//   interpretAQI,
-//   formatAirQuality,
-// } from "./utils/airQualityService.cjs";
-
-// const { getWeather, formatWeather } = require("./utils/weather.cjs");
-// const { getClubInfo, getClubActivities } = require("./utils/stravaService");
-// import { getWeather, formatWeather } from "./utils/weather.js";
 import { getClubInfo, getClubActivities } from "./utils/stravaService.js";
-
-//const fetch = require("node-fetch");
 import fetch from "node-fetch";
-
-// const fetch = (...args) =>
-//   import("node-fetch").then(({ default: fetch }) => fetch(...args));
-
-// const { getCalendar, formatCalendar } = require("./utils/calendarService");
-// const axios = require("axios");
-// const { sendAvatar, sendNewsMessage } = require("./utils/avatar");
-// const { loadKnowledgeBase } = require("./utils/knowledgeBase");
-// const Fuse = require("fuse.js");
-
-// const { searchWithTFIDF } = require("./utils/algoritma");
-
 import { getCalendar, formatCalendar } from "./utils/calendarService.js";
 import axios from "axios";
-//import { sendAvatar, sendNewsMessage } from "./utils/avatar.js";
 import { loadKnowledgeBase } from "./utils/knowledgeBase.js";
-import Fuse from "fuse.js";
-
 import { searchWithTFIDF } from "./utils/algoritma.js";
-
 import {
   openKelas,
   daftarHadir,
@@ -77,8 +29,7 @@ import {
   handleLocationMessage,
 } from "./utils/attendance.js";
 
-// end of import
-
+// end of declaration
 let knowledgeBase = [];
 let knowledgeBaseRudal = [];
 
@@ -97,20 +48,17 @@ loadKnowledgeBase("template_chatbot.csv").then((kb) => {
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 process.env.GAI_CONF = "/etc/gai.conf";
 
-// const dns = require("dns");
-// dns.setDefaultResultOrder("ipv4first");
-
+// faraz game
 const PANEL_API =
   "https://valofity.zakzz.web.id/api/client/servers/mc1/resources"; // ganti dengan URL Pterodactyl-mu
 const API_KEY = "ptlc_vzwA4AE4fHLvYpatWNgwjQj6TUPgbOEbFPMajI2DLsl"; // API Key dari panel
-
-// const PANEL_API = "https://valofity.zakzz.web.id"; // ganti dengan URL Pterodactyl-mu
-// const API_KEY = "ptlc_vzwA4AE4fHLvYpatWNgwjQj6TUPgbOEbFPMajI2DLsl"; // API Key dari panel
 
 const serverMap = {
   mc1: "2954ae8b", // alias mc1 → server ID
   // bisa tambah alias lain di sini
 };
+
+// end faraz game
 
 async function startBot() {
   const { state, saveCreds } = await useMultiFileAuthState("baileys_auth");
@@ -148,18 +96,7 @@ async function startBot() {
   sock.ev.on("messages.upsert", async (m) => {
     const msg = m.messages[0];
     if (!msg.message) return;
-
     const from = msg.key.remoteJid;
-    //sconst sender = msg.sender || msg.author || msg.from; // varian field
-    const sender = msg.key.participant || msg.key.remoteJid;
-    const pushName = msg.pushName || sender;
-
-    const nomorWA = await jidToNumber(sender, sock);
-    //const pushName = m.pushName || nomorWA;
-
-    // console.log("Pesan dari grup:");
-    // console.log({ nomor: nomorWA, nama: pushName });
-
     const text =
       msg.message.conversation || msg.message.extendedTextMessage?.text || "";
     console.log("📩 Message from", from, ":", text);
@@ -200,36 +137,9 @@ async function startBot() {
         await sock.sendMessage(from, { text: tesxdoa });
         // 3. Cek kualitas udara dan cuaca berdasarkan lokasi
         // } else if (msg.message.locationMessage) {
-      } else if (text.toLowerCase().startsWith("xxxxx")) {
-        // const loc = msg.message.locationMessage;
-        // const latitude = loc.degreesLatitude;
-        // const longitude = loc.degreesLongitude;
-        // const description = loc.name; // Deskripsi lokasi opsional
-        // console.log(
-        //   `📍 Lokasi diterima: ${latitude}, ${longitude} (${
-        //     description || "tanpa deskripsi"
-        //   })`
-        // );
-        // const apiKey = "44747099862079d031d937f5cd84a57e"; // <- pakai key kamu
-        // const data = await getAirQuality(latitude, longitude, apiKey);
-        // const replyMsg1 = formatAirQuality(description, data);
-        // const weather = await getWeather(latitude, longitude, apiKey);
-        // const replyMsg2 = await formatWeather(weather);
-        // //POI
-        // const places = await getFilteredPOISorted(latitude, longitude, 1000);
-        // // Format semua hasil jadi satu string
-        // let replyMsg3 = "📍 *Tempat Penting Saat Turing*\n\n";
-        // places.slice(0, 20).forEach((p, i) => {
-        //   const mapsLink = `https://www.google.com/maps?q=${p.lat},${p.lon}`;
-        //   replyMsg3 += `${i + 1}. ${p.name}-${
-        //     p.distance_km
-        //   } km\n${mapsLink}\n\n`;
-        // });
-        // await sock.sendMessage(from, {
-        //   text: replyMsg1 + "\n\n" + replyMsg2 + "\n\n" + replyMsg3,
-        // });
-        // 4. Hasil Club Lari (Strava)
-      } else if (text.toLowerCase() === "hasil club lari") {
+      }
+      // 4. Hasil Club Lari (Strava)
+      else if (text.toLowerCase() === "hasil club lari") {
         const CLUB_ID = "728531"; // ID Club Laris
         const clubInfo = await getClubInfo(CLUB_ID);
         const activities = await getClubActivities(CLUB_ID);
@@ -325,47 +235,6 @@ async function startBot() {
           }
         }
         // 6. Kirim avatar anggota grup ke admin
-      } else if (text.toLowerCase().includes("sg4")) {
-        // Change to your admin number
-        // const groupId = from;
-        // const contact = "";
-        // // Ambil metadata grup
-        // const metadata = await sock.groupMetadata(groupId);
-        // for (const participant of metadata.participants) {
-        //   const id = participant.id; // misal "628123456789@s.whatsapp.net"
-        //   // Nama bisa dari pushname user, tapi kadang tidak tersedia, fallback ke nomor
-        //   // Untuk ambil nama kontak, perlu query vCard
-        //   let name = id.split("@")[0]; // default pakai nomor
-        //   try {
-        //     contact = await sock.onWhatsApp(id);
-        //     // onWhatsApp memberi info apakah user aktif, tapi tidak pushname
-        //   } catch (err) {
-        //     console.error("Error fetching contact:", err);
-        //   }
-        //   // Ambil profile picture
-        //   let avatarUrl = null;
-        //   try {
-        //     avatarUrl = await sock.profilePictureUrl(id, "image"); // 'image' atau 'preview'
-        //   } catch (err) {
-        //     avatarUrl = null; // jika tidak punya foto
-        //   }
-        //   console.log({
-        //     contact,
-        //     id,
-        //     name,
-        //     avatarUrl,
-        //     admin: participant.admin || "member",
-        //   });
-        // }
-        // const adminNumber = "628122132341";
-        // for (const participant of chat.participants) {
-        //   const contact = await client.getContactById(
-        //     participant.id._serialized
-        //   );
-        //   const name = contact.pushname || contact.number;
-        //   const avatarUrl = await contact.getProfilePicUrl();
-        //   await sendAvatar(client, participant, adminNumber, name, avatarUrl);
-        // }
       } else if (text.toLowerCase().startsWith("qs:")) {
         const suratAyat = text.toLowerCase().replace("qs:", "").trim();
         const parts = suratAyat.split("/");
@@ -427,16 +296,6 @@ async function startBot() {
         await sock.sendMessage(from, { text: reply });
       } else if (msg.message.locationMessage) {
         let reply = await handleLocationMessage(msg, sock);
-
-        // const loc = msg.message.locationMessage;
-        // const reply = absen(
-        //   from,
-        //   sender,
-        //   pushName,
-        //   loc.degreesLatitude,
-        //   loc.degreesLongitude,
-        //   sock
-        // );
         await sock.sendMessage(from, { text: reply });
       }
 
@@ -465,13 +324,6 @@ async function startBot() {
           base64String = base64String.replace(/^data:image\/\w+;base64,/, "");
 
           const buffer = Buffer.from(base64String, "base64");
-          // let info = `🧾 Data pasien ${noPasien}
-          // 👤 Nama: ${nama}
-          // 🚻 JK: ${jekel}
-          // 🏠 Alamat: ${alamat}
-          // 📞 Tlp: ${tlp}
-          // 🎂 Tgl Lahir: ${dlahir}
-          // ⚠️ Alergi: ${alergi}`;
 
           await sock.sendMessage("628122132341@c.us", {
             image: buffer,
@@ -525,10 +377,7 @@ async function startBot() {
           { text: replyMsg },
           msg ? { quoted: msg } : {}
         );
-
-        //  await sock.sendMessage(from, { text: msg });
       }
-
       // === Perintah START ===
       else if (text.startsWith("!start")) {
         const parts = text.split(" ");
