@@ -258,7 +258,7 @@ async function startBot() {
           // Hanya 1 ayat, contoh "5"
           startAyat = parseInt(ayatPart);
           // endAyat = startAyat;
-          banyakAyat = startAyat;
+          banyakAyat = 2;
           // endAyat = 1;
         }
         await sendAyatLoop(surat, startAyat, banyakAyat, sock, from);
