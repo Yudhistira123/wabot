@@ -67,6 +67,7 @@ export function absen(from, sender, nama, lat, lng, sock) {
   if (!sess) return "❌ Tidak ada kelas aktif.";
   const dist = haversineMeters(sess.lat, sess.lng, lat, lng);
   const nomor = jidToNumber(sender, sock);
+  console.log({ nomor });
   if (dist < 700) {
     DB.hadir[from][sender] = {
       name: nama,
