@@ -73,7 +73,6 @@ import { getFilteredPOISorted } from "./utils/googleApi.js";
 
 import {
   openKelas,
-  absen,
   daftarHadir,
   endKelas,
   jidToNumber,
