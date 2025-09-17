@@ -74,27 +74,27 @@ export function openKelas(from, kode, ruang, lat, lng) {
   return `✅ Kelas ${kode} di ${ruang} dibuka!`;
 }
 
-export function absen(from, sender, nama, lat, lng, sock) {
-  const sess = DB.sessions[from];
-  if (!sess) return "❌ Tidak ada kelas aktif.";
-  const dist = haversineMeters(sess.lat, sess.lng, lat, lng);
-  const nomor = jidToNumber(sender, sock);
-  console.log({ nomor });
-  if (dist < 700) {
-    DB.hadir[from][sender] = {
-      name: nama,
-      no: nomor,
-      lat,
-      lng,
-      distance: Math.round(dist) + " meter",
-      time: nowJakarta(),
-    };
-    saveData(DB);
-    return `✅ Absen diterima ${nama}, jarak ${Math.round(dist)} m`;
-  } else {
-    return `❌ Absen gagal ${nama}, jarak ${Math.round(dist)} m (terlalu jauh)`;
-  }
-}
+// export function absen(from, sender, nama, lat, lng, sock) {
+//   const sess = DB.sessions[from];
+//   if (!sess) return "❌ Tidak ada kelas aktif.";
+//   const dist = haversineMeters(sess.lat, sess.lng, lat, lng);
+//   const nomor = jidToNumber(sender, sock);
+//   console.log({ nomor });
+//   if (dist < 700) {
+//     DB.hadir[from][sender] = {
+//       name: nama,
+//       no: nomor,
+//       lat,
+//       lng,
+//       distance: Math.round(dist) + " meter",
+//       time: nowJakarta(),
+//     };
+//     saveData(DB);
+//     return `✅ Absen diterima ${nama}, jarak ${Math.round(dist)} m`;
+//   } else {
+//     return `❌ Absen gagal ${nama}, jarak ${Math.round(dist)} m (terlalu jauh)`;
+//   }
+// }
 
 export function daftarHadir(from) {
   const hadir = DB.hadir[from] || {};
@@ -131,8 +131,13 @@ export async function handleLocationMessage(msg, sock) {
   const from = msg.key.remoteJid;
   const sender = msg.key.participant;
   const sess = DB.sessions[from];
+  // === FITUR 2: INFO LINGKUNGAN ===
+  const loc = msg.message.locationMessage;
+  const latitude = loc.degreesLatitude;
+  const longitude = loc.degreesLongitude;
+  const description = loc.name; // Deskripsi lokasi opsional
   if (sess) {
-    const dist = haversineMeters(sess.lat, sess.lng, lat, lng);
+    const dist = haversineMeters(sess.lat, sess.lng, latitude, longitude);
     const nomor = jidToNumber(sender, sock);
     console.log({ nomor });
     if (dist < 700) {
@@ -152,12 +157,6 @@ export async function handleLocationMessage(msg, sock) {
       )} m (terlalu jauh)`;
     }
   } else {
-    // === FITUR 2: INFO LINGKUNGAN ===
-    const loc = msg.message.locationMessage;
-    const latitude = loc.degreesLatitude;
-    const longitude = loc.degreesLongitude;
-    const description = loc.name; // Deskripsi lokasi opsional
-
     console.log(
       `📍 Lokasi diterima: ${latitude}, ${longitude} (${
         description || "tanpa deskripsi"
