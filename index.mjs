@@ -250,8 +250,8 @@ async function startBot() {
           endAyat = parseInt(range[1]);
           banyakAyat = endAyat - startAyat + 1;
           // 🚨 Batasi maksimal 5 ayat
-          if (endAyat - startAyat > 5) {
-            banyakAyat = startAyat + 4;
+          if (banyakAyat > 6) {
+            banyakAyat = 5;
           }
         } else {
           // Hanya 1 ayat, contoh "5"
