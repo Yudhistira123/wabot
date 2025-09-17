@@ -1,6 +1,17 @@
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import { jidDecode } from "@whiskeysockets/baileys";
+
+// helper untuk ambil nomor WA dari JID
+function jidToNumber(jid) {
+  if (!jid) return null;
+  const decode = jidDecode(jid);
+  if (decode?.user) {
+    return decode.user; // hasilnya string angka
+  }
+  return jid.split("@")[0]; // fallback manual
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -49,7 +60,7 @@ export function absen(from, sender, nama, lat, lng) {
   if (dist < 700) {
     DB.hadir[from][sender] = {
       name: nama,
-      no: sender,
+      no: jidToNumber(sender),
       lat,
       lng,
       distance: Math.round(dist) + " meter",
