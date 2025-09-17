@@ -160,8 +160,8 @@ async function startBot() {
     const nomorWA = await jidToNumber(sender, sock);
     //const pushName = m.pushName || nomorWA;
 
-    console.log("Pesan dari grup:");
-    console.log({ nomor: nomorWA, nama: pushName });
+    // console.log("Pesan dari grup:");
+    // console.log({ nomor: nomorWA, nama: pushName });
 
     const text =
       msg.message.conversation || msg.message.extendedTextMessage?.text || "";
