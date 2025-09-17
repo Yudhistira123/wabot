@@ -10,6 +10,7 @@ import {
 } from "./airQualityService.cjs";
 
 import { getWeather, formatWeather } from "./weather.js";
+import { getFilteredPOISorted } from "./googleApi.js";
 
 // helper untuk ambil nomor WA dari JID
 export async function jidToNumber(jid, sock) {

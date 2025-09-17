@@ -69,8 +69,6 @@ import Fuse from "fuse.js";
 
 import { searchWithTFIDF } from "./utils/algoritma.js";
 
-import { getFilteredPOISorted } from "./utils/googleApi.js";
-
 import {
   openKelas,
   daftarHadir,
