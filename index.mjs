@@ -415,8 +415,8 @@ async function startBot() {
       } else if (text === "/endkelas") {
         const reply = endKelas(from);
         await sock.sendMessage(from, { text: reply });
-      } else if (m.message.locationMessage) {
-        const loc = m.message.locationMessage;
+      } else if (msg.message.locationMessage) {
+        const loc = msg.message.locationMessage;
         const reply = absen(
           from,
           sender,
