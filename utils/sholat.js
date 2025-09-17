@@ -6,6 +6,23 @@ import fs from "fs";
 import { exec } from "child_process";
 import fetch from "node-fetch";
 
+export function numberToArabic(text) {
+  const mapping = {
+    0: "٠",
+    1: "١",
+    2: "٢",
+    3: "٣",
+    4: "٤",
+    5: "٥",
+    6: "٦",
+    7: "٧",
+    8: "٨",
+    9: "٩",
+  };
+
+  return text.replace(/[0-9]/g, (d) => mapping[d] || d);
+}
+
 export async function sendAyatLoop(surat, startAyat, n, sock, from) {
   let allArabic = "";
   let allTranslation = "";
@@ -35,7 +52,7 @@ export async function sendAyatLoop(surat, startAyat, n, sock, from) {
       // allArabic += `${ayatData.arab}\n`;
       // allTranslation += `${ayatData.text}\n`;
 
-      allArabic += `${ayatData.ayah}. ${ayatData.arab}\n`;
+      allArabic += `${numberToArabic(ayatData.ayah)}. ${ayatData.arab}\n`;
       // translation pakai counter 1,2,3,...
       allTranslation += `${ayatData.ayah}. ${ayatData.text}\n`;
 
