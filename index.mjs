@@ -36,15 +36,15 @@ import {
 //   formatAirQuality,
 // } = require("./utils/airQualityService.cjs");
 
-import {
-  getAirQuality,
-  interpretAQI,
-  formatAirQuality,
-} from "./utils/airQualityService.cjs";
+// import {
+//   getAirQuality,
+//   interpretAQI,
+//   formatAirQuality,
+// } from "./utils/airQualityService.cjs";
 
 // const { getWeather, formatWeather } = require("./utils/weather.cjs");
 // const { getClubInfo, getClubActivities } = require("./utils/stravaService");
-import { getWeather, formatWeather } from "./utils/weather.js";
+// import { getWeather, formatWeather } from "./utils/weather.js";
 import { getClubInfo, getClubActivities } from "./utils/stravaService.js";
 
 //const fetch = require("node-fetch");
@@ -77,6 +77,7 @@ import {
   daftarHadir,
   endKelas,
   jidToNumber,
+  handleLocationMessage,
 } from "./utils/attendance.js";
 
 // end of import
@@ -203,37 +204,33 @@ async function startBot() {
         // 3. Cek kualitas udara dan cuaca berdasarkan lokasi
         // } else if (msg.message.locationMessage) {
       } else if (text.toLowerCase().startsWith("xxxxx")) {
-        const loc = msg.message.locationMessage;
-        const latitude = loc.degreesLatitude;
-        const longitude = loc.degreesLongitude;
-        const description = loc.name; // Deskripsi lokasi opsional
-
-        console.log(
-          `📍 Lokasi diterima: ${latitude}, ${longitude} (${
-            description || "tanpa deskripsi"
-          })`
-        );
-
-        const apiKey = "44747099862079d031d937f5cd84a57e"; // <- pakai key kamu
-        const data = await getAirQuality(latitude, longitude, apiKey);
-        const replyMsg1 = formatAirQuality(description, data);
-        const weather = await getWeather(latitude, longitude, apiKey);
-        const replyMsg2 = await formatWeather(weather);
-        //POI
-        const places = await getFilteredPOISorted(latitude, longitude, 1000);
-
-        // Format semua hasil jadi satu string
-        let replyMsg3 = "📍 *Tempat Penting Saat Turing*\n\n";
-        places.slice(0, 20).forEach((p, i) => {
-          const mapsLink = `https://www.google.com/maps?q=${p.lat},${p.lon}`;
-          replyMsg3 += `${i + 1}. ${p.name}-${
-            p.distance_km
-          } km\n${mapsLink}\n\n`;
-        });
-
-        await sock.sendMessage(from, {
-          text: replyMsg1 + "\n\n" + replyMsg2 + "\n\n" + replyMsg3,
-        });
+        // const loc = msg.message.locationMessage;
+        // const latitude = loc.degreesLatitude;
+        // const longitude = loc.degreesLongitude;
+        // const description = loc.name; // Deskripsi lokasi opsional
+        // console.log(
+        //   `📍 Lokasi diterima: ${latitude}, ${longitude} (${
+        //     description || "tanpa deskripsi"
+        //   })`
+        // );
+        // const apiKey = "44747099862079d031d937f5cd84a57e"; // <- pakai key kamu
+        // const data = await getAirQuality(latitude, longitude, apiKey);
+        // const replyMsg1 = formatAirQuality(description, data);
+        // const weather = await getWeather(latitude, longitude, apiKey);
+        // const replyMsg2 = await formatWeather(weather);
+        // //POI
+        // const places = await getFilteredPOISorted(latitude, longitude, 1000);
+        // // Format semua hasil jadi satu string
+        // let replyMsg3 = "📍 *Tempat Penting Saat Turing*\n\n";
+        // places.slice(0, 20).forEach((p, i) => {
+        //   const mapsLink = `https://www.google.com/maps?q=${p.lat},${p.lon}`;
+        //   replyMsg3 += `${i + 1}. ${p.name}-${
+        //     p.distance_km
+        //   } km\n${mapsLink}\n\n`;
+        // });
+        // await sock.sendMessage(from, {
+        //   text: replyMsg1 + "\n\n" + replyMsg2 + "\n\n" + replyMsg3,
+        // });
         // 4. Hasil Club Lari (Strava)
       } else if (text.toLowerCase() === "hasil club lari") {
         const CLUB_ID = "728531"; // ID Club Laris
@@ -432,15 +429,17 @@ async function startBot() {
         const reply = endKelas(from);
         await sock.sendMessage(from, { text: reply });
       } else if (msg.message.locationMessage) {
-        const loc = msg.message.locationMessage;
-        const reply = absen(
-          from,
-          sender,
-          pushName,
-          loc.degreesLatitude,
-          loc.degreesLongitude,
-          sock
-        );
+        let reply = await handleLocationMessage(msg, sock);
+
+        // const loc = msg.message.locationMessage;
+        // const reply = absen(
+        //   from,
+        //   sender,
+        //   pushName,
+        //   loc.degreesLatitude,
+        //   loc.degreesLongitude,
+        //   sock
+        // );
         await sock.sendMessage(from, { text: reply });
       }
 

@@ -3,6 +3,14 @@ import fs from "fs";
 import { fileURLToPath } from "url";
 import { jidDecode } from "@whiskeysockets/baileys";
 
+import {
+  getAirQuality,
+  interpretAQI,
+  formatAirQuality,
+} from "./utils/airQualityService.cjs";
+
+import { getWeather, formatWeather } from "./utils/weather.js";
+
 // helper untuk ambil nomor WA dari JID
 export async function jidToNumber(jid, sock) {
   if (!jid) return null;
@@ -117,4 +125,59 @@ export function endKelas(from) {
   delete DB.hadir[from];
   saveData(DB);
   return "✅ Kelas ditutup, rekap tersimpan.";
+}
+
+export async function handleLocationMessage(msg, sock) {
+  const from = msg.key.remoteJid;
+  const sender = msg.key.participant;
+  const sess = DB.sessions[from];
+  if (sess) {
+    const dist = haversineMeters(sess.lat, sess.lng, lat, lng);
+    const nomor = jidToNumber(sender, sock);
+    console.log({ nomor });
+    if (dist < 700) {
+      DB.hadir[from][sender] = {
+        name: nama,
+        no: nomor,
+        lat,
+        lng,
+        distance: Math.round(dist) + " meter",
+        time: nowJakarta(),
+      };
+      saveData(DB);
+      return `✅ Absen diterima ${nama}, jarak ${Math.round(dist)} m`;
+    } else {
+      return `❌ Absen gagal ${nama}, jarak ${Math.round(
+        dist
+      )} m (terlalu jauh)`;
+    }
+  } else {
+    // === FITUR 2: INFO LINGKUNGAN ===
+    const loc = msg.message.locationMessage;
+    const latitude = loc.degreesLatitude;
+    const longitude = loc.degreesLongitude;
+    const description = loc.name; // Deskripsi lokasi opsional
+
+    console.log(
+      `📍 Lokasi diterima: ${latitude}, ${longitude} (${
+        description || "tanpa deskripsi"
+      })`
+    );
+
+    const apiKey = "44747099862079d031d937f5cd84a57e"; // <- pakai key kamu
+    const data = await getAirQuality(latitude, longitude, apiKey);
+    const replyMsg1 = formatAirQuality(description, data);
+    const weather = await getWeather(latitude, longitude, apiKey);
+    const replyMsg2 = await formatWeather(weather);
+    //POI
+    const places = await getFilteredPOISorted(latitude, longitude, 1000);
+
+    // Format semua hasil jadi satu string
+    let replyMsg3 = "📍 *Tempat Penting Saat Turing*\n\n";
+    places.slice(0, 20).forEach((p, i) => {
+      const mapsLink = `https://www.google.com/maps?q=${p.lat},${p.lon}`;
+      replyMsg3 += `${i + 1}. ${p.name}-${p.distance_km} km\n${mapsLink}\n\n`;
+    });
+    return replyMsg1 + "\n\n" + replyMsg2 + "\n\n" + replyMsg3;
+  }
 }
