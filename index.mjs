@@ -146,7 +146,8 @@ async function startBot() {
     if (!msg.message) return;
 
     const from = msg.key.remoteJid;
-    const sender = msg.sender || msg.author || msg.from; // varian field
+    //sconst sender = msg.sender || msg.author || msg.from; // varian field
+    const sender = msg.key.participant || msg.key.remoteJid;
     const pushName = msg.pushName || sender;
 
     // const from = m.key.remoteJid;
