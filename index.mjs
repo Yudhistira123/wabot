@@ -167,7 +167,7 @@ async function startBot() {
           `🌍 Lokasi: ${clubInfo.city}, ${clubInfo.state}, ${clubInfo.country}\n` +
           `👥 Member: ${clubInfo.member_count}\n\n` +
           `ℹ️ ${clubInfo.description || "No description"}\n\n` +
-          `=== 20 Aktivitas Terbaru ===\n\n`;
+          `=== 25 Aktivitas Terbaru ===\n\n`;
 
         activities.forEach((act, i) => {
           const distanceKm = act.distance / 1000;
