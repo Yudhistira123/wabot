@@ -104,7 +104,8 @@ async function startBot() {
     if (from.endsWith("@g.us")) {
       console.log("Pesan dari grup:", text);
       if (text.toLowerCase() === "!ping") {
-        await sock.sendMessage(from, { text: "pong grup 🏓" });
+        await sendButtons(from);
+        //  await sock.sendMessage(from, { text: "pong grup 🏓" });
         // 1. Jadwal sholat
       } else if (text.toLowerCase().startsWith("jadwal sholat")) {
         // jadwal sholat
@@ -307,6 +308,7 @@ async function startBot() {
       console.log("Pesan dari personal:", text);
       if (text.toLowerCase() === "!ping") {
         await sock.sendMessage(from, { text: "pong personal 🏓" });
+        await sendButtons("62xxxxxxxxxx@s.whatsapp.net");
       } else if (text.startsWith("ambil ")) {
         //console.log('Fetching data for noPasien:', noPasien);
         try {
@@ -520,6 +522,23 @@ async function stopServer(serverKey) {
   }
 
   return `🔴 Server ${serverKey} sedang di-*stop*...`;
+}
+
+// Kirim buttons
+async function sendButtons(jid) {
+  const buttons = [
+    { buttonId: "hifi", buttonText: { displayText: "HiFi" }, type: 1 },
+    { buttonId: "hifi_air", buttonText: { displayText: "HiFi Air" }, type: 1 },
+  ];
+
+  const buttonMessage = {
+    text: "Klik tombol berikut untuk memilih yang kamu butuhkan.\n\nType *English* if you want to change your language to English",
+    footer: "Indosat Hifi Assistant",
+    buttons: buttons,
+    headerType: 1,
+  };
+
+  await sock.sendMessage(jid, buttonMessage);
 }
 
 startBot();
