@@ -104,8 +104,7 @@ async function startBot() {
     if (from.endsWith("@g.us")) {
       console.log("Pesan dari grup:", text);
       if (text.toLowerCase() === "!ping") {
-        await sendButtons(from);
-        //  await sock.sendMessage(from, { text: "pong grup 🏓" });
+        await sock.sendMessage(from, { text: "pong grup 🏓" });
         // 1. Jadwal sholat
       } else if (text.toLowerCase().startsWith("jadwal sholat")) {
         // jadwal sholat
@@ -307,8 +306,8 @@ async function startBot() {
     } else {
       console.log("Pesan dari personal:", text);
       if (text.toLowerCase() === "!ping") {
-        await sock.sendMessage(from, { text: "pong personal 🏓" });
-        await sendButtons("62xxxxxxxxxx@s.whatsapp.net");
+        //  await sock.sendMessage(from, { text: "pong personal 🏓" });
+        await sendButtons(from, sock);
       } else if (text.startsWith("ambil ")) {
         //console.log('Fetching data for noPasien:', noPasien);
         try {
@@ -525,7 +524,7 @@ async function stopServer(serverKey) {
 }
 
 // Kirim buttons
-async function sendButtons(jid) {
+async function sendButtons(jid, sock) {
   const buttons = [
     { buttonId: "hifi", buttonText: { displayText: "HiFi" }, type: 1 },
     { buttonId: "hifi_air", buttonText: { displayText: "HiFi Air" }, type: 1 },
