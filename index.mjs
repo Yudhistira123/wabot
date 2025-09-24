@@ -530,11 +530,23 @@ async function sendButtons(jid, sock) {
     { buttonId: "hifi_air", buttonText: { displayText: "HiFi Air" }, type: 1 },
   ];
 
+  // const buttonMessage = {
+  //   text: "Klik tombol berikut untuk memilih yang kamu butuhkan.\n\nType *English* if you want to change your language to English",
+  //   footer: "Indosat Hifi Assistant",
+  //   buttons: buttons,
+  //   headerType: 1,
+  // };
+
   const buttonMessage = {
     text: "Klik tombol berikut untuk memilih yang kamu butuhkan.\n\nType *English* if you want to change your language to English",
     footer: "Indosat Hifi Assistant",
-    buttons: buttons,
-    headerType: 1,
+    templateButtons: [
+      { index: 1, quickReplyButton: { displayText: "HiFi", id: "hifi" } },
+      {
+        index: 2,
+        quickReplyButton: { displayText: "HiFi Air", id: "hifi_air" },
+      },
+    ],
   };
 
   await sock.sendMessage(jid, buttonMessage);
