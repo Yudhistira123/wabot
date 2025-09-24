@@ -524,60 +524,76 @@ async function stopServer(serverKey) {
 }
 
 // Kirim buttons
+// async function sendButtons(jid, sock) {
+//   const buttons = [
+//     { buttonId: "hifi", buttonText: { displayText: "HiFi" }, type: 1 },
+//     { buttonId: "hifi_air", buttonText: { displayText: "HiFi Air" }, type: 1 },
+//   ];
+
+// const buttonMessage = {
+//   text: "Klik tombol berikut untuk memilih yang kamu butuhkan.\n\nType *English* if you want to change your language to English",
+//   footer: "Indosat Hifi Assistant",
+//   buttons: buttons,
+//   headerType: 1,
+// };
+
+// const buttonMessage = {
+//   text: "Klik tombol berikut untuk memilih yang kamu butuhkan.\n\nType *English* if you want to change your language to English",
+//   footer: "Indosat Hifi Assistant",
+//   templateButtons: [
+//     { index: 1, quickReplyButton: { displayText: "HiFi", id: "hifi" } },
+//     {
+//       index: 2,
+//       quickReplyButton: { displayText: "HiFi Air", id: "hifi_air" },
+//     },
+//   ],
+// };
+
+//   const buttonMessage = {
+//     viewOnceMessage: {
+//       message: {
+//         templateMessage: {
+//           hydratedTemplate: {
+//             hydratedContentText:
+//               "Klik tombol berikut untuk memilih yang kamu butuhkan.\n\nType *English* if you want to change your language to English",
+//             hydratedFooterText: "Indosat Hifi Assistant",
+//             hydratedButtons: [
+//               {
+//                 quickReplyButton: {
+//                   displayText: "HiFi",
+//                   id: "hifi",
+//                 },
+//               },
+//               {
+//                 quickReplyButton: {
+//                   displayText: "HiFi Air",
+//                   id: "hifi_air",
+//                 },
+//               },
+//             ],
+//           },
+//         },
+//       },
+//     },
+//   };
+
+//   await sock.sendMessage(jid, buttonMessage);
+// }
+
 async function sendButtons(jid, sock) {
-  const buttons = [
-    { buttonId: "hifi", buttonText: { displayText: "HiFi" }, type: 1 },
-    { buttonId: "hifi_air", buttonText: { displayText: "HiFi Air" }, type: 1 },
-  ];
-
-  // const buttonMessage = {
-  //   text: "Klik tombol berikut untuk memilih yang kamu butuhkan.\n\nType *English* if you want to change your language to English",
-  //   footer: "Indosat Hifi Assistant",
-  //   buttons: buttons,
-  //   headerType: 1,
-  // };
-
-  // const buttonMessage = {
-  //   text: "Klik tombol berikut untuk memilih yang kamu butuhkan.\n\nType *English* if you want to change your language to English",
-  //   footer: "Indosat Hifi Assistant",
-  //   templateButtons: [
-  //     { index: 1, quickReplyButton: { displayText: "HiFi", id: "hifi" } },
-  //     {
-  //       index: 2,
-  //       quickReplyButton: { displayText: "HiFi Air", id: "hifi_air" },
-  //     },
-  //   ],
-  // };
-
-  const buttonMessage = {
-    viewOnceMessage: {
-      message: {
-        templateMessage: {
-          hydratedTemplate: {
-            hydratedContentText:
-              "Klik tombol berikut untuk memilih yang kamu butuhkan.\n\nType *English* if you want to change your language to English",
-            hydratedFooterText: "Indosat Hifi Assistant",
-            hydratedButtons: [
-              {
-                quickReplyButton: {
-                  displayText: "HiFi",
-                  id: "hifi",
-                },
-              },
-              {
-                quickReplyButton: {
-                  displayText: "HiFi Air",
-                  id: "hifi_air",
-                },
-              },
-            ],
-          },
-        },
+  const msg = {
+    text: "Klik tombol berikut untuk memilih yang kamu butuhkan.\n\nType *English* if you want to change your language to English",
+    footer: "Indosat Hifi Assistant",
+    templateButtons: [
+      { index: 1, quickReplyButton: { displayText: "HiFi", id: "hifi" } },
+      {
+        index: 2,
+        quickReplyButton: { displayText: "HiFi Air", id: "hifi_air" },
       },
-    },
+    ],
   };
 
-  await sock.sendMessage(jid, buttonMessage);
+  await sock.sendMessage(jid, msg);
 }
 
 startBot();
