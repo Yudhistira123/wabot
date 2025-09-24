@@ -581,19 +581,40 @@ async function stopServer(serverKey) {
 // }
 
 async function sendButtons(jid, sock) {
-  const msg = {
+  // const msg = {
+  //   text: "Klik tombol berikut untuk memilih yang kamu butuhkan.\n\nType *English* if you want to change your language to English",
+  //   footer: "Indosat Hifi Assistant",
+  //   templateButtons: [
+  //     { index: 1, quickReplyButton: { displayText: "HiFi", id: "hifi" } },
+  //     {
+  //       index: 2,
+  //       quickReplyButton: { displayText: "HiFi Air", id: "hifi_air" },
+  //     },
+  //   ],
+  // };
+
+  const buttonMessage = {
     text: "Klik tombol berikut untuk memilih yang kamu butuhkan.\n\nType *English* if you want to change your language to English",
     footer: "Indosat Hifi Assistant",
     templateButtons: [
-      { index: 1, quickReplyButton: { displayText: "HiFi", id: "hifi" } },
+      {
+        index: 1,
+        quickReplyButton: {
+          displayText: "HiFi",
+          id: "hifi",
+        },
+      },
       {
         index: 2,
-        quickReplyButton: { displayText: "HiFi Air", id: "hifi_air" },
+        quickReplyButton: {
+          displayText: "HiFi Air",
+          id: "hifi_air",
+        },
       },
     ],
   };
 
-  await sock.sendMessage(jid, msg);
+  await sock.sendMessage(jid, buttonMessage);
 }
 
 startBot();
