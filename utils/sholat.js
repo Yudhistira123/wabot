@@ -163,7 +163,7 @@ export async function getSholatByLocation(kodeLokasi) {
 
     //======
     const correctedDate = new Date(jakarta);
-    correctedDate.setDate(correctedDate.getDate() - 1);
+    correctedDate.setDate(correctedDate.getDate() - 1 + 1);
 
     const hijriDate = toHijri(
       correctedDate.getFullYear(),
