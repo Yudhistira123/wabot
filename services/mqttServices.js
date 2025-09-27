@@ -1,10 +1,11 @@
-const mqtt = require("mqtt");
-const { sendMessages } = require("../utils/mqttService");
+//const mqtt = require("mqtt");
+import mqtt from "mqtt";
+import { sendMessages } from "../utils/mqttService";
 
 const mqttBroker = "mqtt://103.27.206.14:1883";
 const mqttTopics = ["R1.JC.05", "R1.JC.06"];
 
-function initMQTT(client) {
+export function initMQTT(client) {
   const mqttClient = mqtt.connect(mqttBroker);
 
   mqttClient.on("connect", () => {
@@ -24,4 +25,4 @@ function initMQTT(client) {
   });
 }
 
-module.exports = { initMQTT };
+//module.exports = { initMQTT };

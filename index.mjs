@@ -5,6 +5,14 @@ import {
 } from "@whiskeysockets/baileys";
 
 import qrcode from "qrcode-terminal";
+import mqtt from "mqtt";
+import { sendMessages } from "./utils/mqttService";
+import { initMQTT } from "./services/mqttServices";
+
+// =============== MQTT SETUP =================
+const mqttBroker = "mqtt://103.27.206.14:1883"; // or your own broker
+const mqttTopics = ["R1.JC.05", "R1.JC.06"];
+const mqttClient = mqtt.connect(mqttBroker);
 
 import {
   getSholatByLocation,
@@ -67,6 +75,8 @@ async function startBot() {
     auth: state,
     // jangan pakai printQRInTerminal test
   });
+
+  initMQTT(sock);
 
   // Save creds setiap ada update
   sock.ev.on("creds.update", saveCreds);
