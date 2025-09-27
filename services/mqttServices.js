@@ -1,6 +1,6 @@
 //const mqtt = require("mqtt");
 import mqtt from "mqtt";
-import { sendMessages } from "../utils/mqttService";
+import { sendMessages } from "../utils/mqttService.js";
 
 const mqttBroker = "mqtt://103.27.206.14:1883";
 const mqttTopics = ["R1.JC.05", "R1.JC.06"];
