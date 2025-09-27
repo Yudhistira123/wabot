@@ -6,8 +6,8 @@ import {
 
 import qrcode from "qrcode-terminal";
 import mqtt from "mqtt";
-import { sendMessages } from "./utils/mqttService";
-import { initMQTT } from "./services/mqttServices";
+import { sendMessages } from "./utils/mqttService.js";
+import { initMQTT } from "./services/mqttServices.js";
 
 // =============== MQTT SETUP =================
 const mqttBroker = "mqtt://103.27.206.14:1883"; // or your own broker
