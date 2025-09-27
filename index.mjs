@@ -311,7 +311,8 @@ async function startBot() {
         let reply = await handleLocationMessage(msg, sock);
         await sock.sendMessage(from, { text: reply });
       } else if (text.toLowerCase().startsWith("led:")) {
-        const msg = text.toLowerCase().replace("led:", "").trim();
+        let msg = text.split(":")[1];
+        // const msg = text.toLowerCase().replace("led:", "").trim();
         publishMessage("parola/display", msg);
       }
 
