@@ -7,7 +7,7 @@ import {
 import qrcode from "qrcode-terminal";
 import mqtt from "mqtt";
 import { sendMessages } from "./utils/mqttService.js";
-import { initMQTT } from "./services/mqttServices.js";
+import { initMQTT, publishMessage } from "./services/mqttServices.js";
 
 // =============== MQTT SETUP =================
 const mqttBroker = "mqtt://103.27.206.14:1883"; // or your own broker
@@ -287,7 +287,7 @@ async function startBot() {
         await sock.sendMessage(from, { text: reply });
       }
       // !jadwalsholat <kota>
-      // absensi
+      // 7.absensi
       else if (text.startsWith("/openkelas")) {
         // contoh: /openkelas IF101 Lab-Komputer
         const parts = text.split(" ");
@@ -310,6 +310,9 @@ async function startBot() {
       } else if (msg.message.locationMessage) {
         let reply = await handleLocationMessage(msg, sock);
         await sock.sendMessage(from, { text: reply });
+      } else if (text.toLowerCase().startsWith("led:")) {
+        const msg = text.toLowerCase().replace("led:", "").trim();
+        publishMessage("parola/display", msg);
       }
 
       // end absensi
