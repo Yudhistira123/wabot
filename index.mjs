@@ -372,8 +372,9 @@ async function startBot() {
           response.data.data.forEach((item) => {
             msg += item.kode_prefix + "," + item.n_judul + "\n";
           });
-
-          await sendNewsMessage(sock, msg);
+          await sock.sendMessage(from, {
+            text: msg,
+          });
         } else {
         }
       } else if (text.startsWith("test url")) {
