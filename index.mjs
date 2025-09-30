@@ -364,7 +364,7 @@ async function startBot() {
         const indikator = text.toLowerCase().replace("rudal:", "").trim();
         if (indikator == "all") {
           let url = `https://harry.jurnalisproperti.com/getMainDataRudal.php`;
-          console.log("Fetching data from URL:", url);
+          //   console.log("Fetching data from URL:", url);
           const response = await axios.get(url);
           // let kode = response.data.kode_prefix;
           // let judul = response.data.n_judul;
@@ -379,6 +379,30 @@ async function startBot() {
             text: msg,
           });
         } else {
+          let url = `https://harry.jurnalisproperti.com/getDataRudalByKode.php?c_kode=${indikator}`;
+          //   console.log("Fetching data from URL:", url);
+          const response = await axios.get(url);
+          // let kode = response.data.kode_prefix;
+          // let judul = response.data.n_judul;
+          let msg = "";
+          let index = 1;
+          response.data.data.forEach((item) => {
+            msg +=
+              index +
+              ". (" +
+              item.c_kode +
+              ") " +
+              item.n_judul +
+              ":" +
+              item.c_revisi +
+              ":" +
+              item.d_appedm +
+              "\n";
+            index++;
+          });
+          await sock.sendMessage(from, {
+            text: msg,
+          });
         }
       } else if (text.startsWith("test url")) {
         const newsUrl = text.replace("test url", "").trim();
