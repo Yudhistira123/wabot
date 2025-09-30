@@ -389,12 +389,13 @@ async function startBot() {
           response.data.data.forEach((item) => {
             msg +=
               index +
-              ". (" +
-              item.c_kode +
-              ") " +
+              "." +
+              // ". (" +
+              // item.c_kode +
+              // ") " +
               item.n_judul +
-              ":" +
-              item.c_revisi +
+              // ":" +
+              // item.c_revisi +
               ":" +
               item.d_appedm +
               "\n";
