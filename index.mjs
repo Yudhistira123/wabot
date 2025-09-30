@@ -359,6 +359,23 @@ async function startBot() {
             text: "❌ Failed to fetch data from API",
           });
         }
+        // Rudal
+      } else if (text.toLowerCase().startsWith("rudal:")) {
+        const indikator = text.toLowerCase().replace("rudal:", "").trim();
+        if (indikator == "all") {
+          let url = `https://harry.jurnalisproperti.com/getMainDataRudal.php`;
+          console.log("Fetching data from URL:", url);
+          const response = await axios.get(url);
+          // let kode = response.data.kode_prefix;
+          // let judul = response.data.n_judul;
+          let msg = "";
+          response.data.data.forEach((item) => {
+            msg += item.kode_prefix + "," + item.n_judul + "\n";
+          });
+
+          await sendNewsMessage(sock, msg);
+        } else {
+        }
       } else if (text.startsWith("test url")) {
         const newsUrl = text.replace("test url", "").trim();
         await sendNewsMessage(sock, newsUrl);
