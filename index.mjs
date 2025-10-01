@@ -394,9 +394,9 @@ async function startBot() {
               "):" +
               item.c_revisi +
               ":" +
-              item.d_appedm.trim() +
+              item.d_appedm +
               "\n*" +
-              item.n_judul +
+              item.n_judul.trim().replace(/\n/g, " ") +
               "*\n\n";
             index++;
           });
