@@ -389,16 +389,15 @@ async function startBot() {
           response.data.data.forEach((item) => {
             msg +=
               index +
-              "." +
-              // ". (" +
-              // item.c_kode +
-              // ") " +
-              item.n_judul +
-              // ":" +
-              // item.c_revisi +
+              ". (" +
+              item.c_kode +
+              ":" +
+              item.c_revisi +
               ":" +
               item.d_appedm +
-              "\n";
+              "\n*" +
+              item.n_judul +
+              "*\n\n";
             index++;
           });
           await sock.sendMessage(from, {
