@@ -391,7 +391,7 @@ async function startBot() {
               index +
               ". (" +
               item.c_kode +
-              ":" +
+              "):" +
               item.c_revisi +
               ":" +
               item.d_appedm +
