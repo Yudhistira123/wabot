@@ -394,7 +394,7 @@ async function startBot() {
               "):" +
               item.c_revisi +
               ":" +
-              item.d_appedm +
+              item.d_appedm.trim() +
               "\n*" +
               item.n_judul +
               "*\n\n";
