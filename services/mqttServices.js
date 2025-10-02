@@ -34,6 +34,7 @@ export function initMQTT(client) {
 export function publishMessage(topic, msg) {
   if (mqttClient && mqttClient.connected) {
     mqttClient.publish(topic, msg);
+    mqttClient.publish("home/tts", msg);
     console.log(`📤 MQTT published to [${topic}]: ${msg}`);
   } else {
     console.error("❌ MQTT not connected, cannot publish");

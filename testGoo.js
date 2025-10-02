@@ -29,4 +29,12 @@ function castTTS(text) {
   });
 }
 
-castTTS(" tabungan Faraz udah habis loh di bapak, terus gimana nih?");
+//castTTS(" tabungan Faraz udah habis loh di bapak, terus gimana nih?");
+
+// castTTS(
+//   "ya Allah, sehatkanlah, lindungilah, jauhkanlah dari segala bencana dan marabahaya, serta lancarkanlah segala urusan hamba-hamba-Mu ini, aamiin"
+// );
+
+castTTS(
+  "Wahai paduka raja, hamba datang membawa titah suci dari negeri seberang."
+);
