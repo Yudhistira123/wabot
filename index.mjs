@@ -389,8 +389,7 @@ async function startBot() {
           let index = 1;
           response.data.data.forEach((item) => {
             msg +=
-              index +
-              ". (" +
+              "(" +
               item.c_kode +
               ")\n" +
               item.n_desc.trim().replace(/\n/g, " ") +
