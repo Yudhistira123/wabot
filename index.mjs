@@ -379,7 +379,7 @@ async function startBot() {
           await sock.sendMessage(from, {
             text: msg,
           });
-        } else if (indikator.includes("TD")) {
+        } else if (indikator.includes("td")) {
           let url = `https://harry.jurnalisproperti.com/getTDRudalByKode.php?c_kode=${indikator}`;
           console.log("Fetching data from URL:", url);
           const response = await axios.get(url);
