@@ -392,7 +392,7 @@ async function startBot() {
               index +
               ". (" +
               item.c_kode +
-              "):" +
+              ")\n" +
               item.n_desc.trim().replace(/\n/g, " ") +
               "*\n\n";
             index++;
