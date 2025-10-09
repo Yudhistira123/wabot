@@ -362,6 +362,7 @@ async function startBot() {
         // Rudal
       } else if (text.toLowerCase().startsWith("rudal:")) {
         const indikator = text.toLowerCase().replace("rudal:", "").trim();
+        console.log(`🔍 Mencari data rudal untuk: ${indikator}`);
         if (indikator == "all") {
           let url = `https://harry.jurnalisproperti.com/getMainDataRudal.php`;
           //   console.log("Fetching data from URL:", url);
