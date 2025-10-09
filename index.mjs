@@ -380,7 +380,7 @@ async function startBot() {
           });
         } else if (indikator.includes("TD")) {
           let url = `https://harry.jurnalisproperti.com/getTDRudalByKode.php?c_kode=${indikator}`;
-          //   console.log("Fetching data from URL:", url);
+          console.log("Fetching data from URL:", url);
           const response = await axios.get(url);
           // let kode = response.data.kode_prefix;
           // let judul = response.data.n_judul;
