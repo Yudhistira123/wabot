@@ -378,6 +378,27 @@ async function startBot() {
           await sock.sendMessage(from, {
             text: msg,
           });
+        } else if (indikator.includes("TD")) {
+          let url = `https://harry.jurnalisproperti.com/getTDRudalByKode.php?c_kode=${indikator}`;
+          //   console.log("Fetching data from URL:", url);
+          const response = await axios.get(url);
+          // let kode = response.data.kode_prefix;
+          // let judul = response.data.n_judul;
+          let msg = "";
+          let index = 1;
+          response.data.data.forEach((item) => {
+            msg +=
+              index +
+              ". (" +
+              item.c_kode +
+              "):" +
+              item.n_desc.trim().replace(/\n/g, " ") +
+              "*\n\n";
+            index++;
+          });
+          await sock.sendMessage(from, {
+            text: msg,
+          });
         } else {
           let url = `https://harry.jurnalisproperti.com/getDataRudalByKode.php?c_kode=${indikator}`;
           //   console.log("Fetching data from URL:", url);
